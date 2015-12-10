@@ -1,0 +1,178 @@
+The Maybe Monad
+===============
+
+.. automodule:: hymn.types.maybe
+  :members:
+  :show-inheritance:
+
+.. autodata:: Nothing
+.. autodata:: zero
+
+.. function:: from_maybe
+
+  alias of :meth:`~Maybe.from_maybe`
+
+.. function:: to_maybe
+
+  alias of :meth:`~Maybe.from_value`
+
+
+Hy Specific API
+---------------
+
+.. class:: maybe-m
+
+  alias of :class:`Maybe`
+
+
+Reader Macro
+^^^^^^^^^^^^
+
+.. function:: ? [f]
+
+  turn ``f`` into monadic function with :func:`maybe`
+
+
+Functions
+^^^^^^^^^
+
+.. function:: <-maybe
+.. function:: from-maybe
+
+  alias of :func:`Maybe.from_maybe`
+
+.. function:: ->maybe
+.. function:: to-maybe
+
+  alias of :func:`Maybe.from_value`
+
+.. function:: nothing?
+
+  alias of :func:`is_nothing`
+
+
+Examples
+--------
+
+
+Comparison
+^^^^^^^^^^
+
+Maybes are comparable if the wrapped values are comparable. :class:`Just` is
+greater than :data:`Nothing` in any case.
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [Just Nothing]])
+  => (> (Just 2) (Just 1))
+  True
+  => (= (Just 1) (Just 2))
+  False
+  => (= (Just 2) (Just 2))
+  True
+  => (= Nothing Nothing)
+  True
+  => (= Nothing (Just 1))
+  False
+  => (< (Just -1) Nothing)
+  False
+
+
+Do Notation
+^^^^^^^^^^^
+
+.. code-block:: clojure
+
+  => (require hymn.dsl)
+  => (import [hymn.types.maybe [Just Nothing]])
+  => (do-monad [a (Just 1) b (Just 2)] (+ a b))
+  Just(3)
+  => (do-monad [a (Just 1) b Nothing] (+ a b))
+  Nothing
+
+
+Do Notation with :when
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: clojure
+
+  => (require hymn.dsl)
+  => (import [hymn.types.maybe [maybe-m]])
+  => (defn safe-div [a b]
+  ...   (do-monad-with maybe-m [:when (not (zero? b))] (/ a b)))
+  => (safe-div 1 2)
+  Just(0.5)
+  => (safe-div 1 0)
+  Nothing
+
+
+Operations
+^^^^^^^^^^
+
+:func:`->maybe` create a :class:`Maybe` from value
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [->maybe]])
+  => (->maybe 42)
+  Just(42)
+  => (->maybe nil)
+  Nothing
+
+:func:`nothing?` returns ``True`` if the value is :data:`Nothing`
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [Just Nothing nothing?]])
+  => (nothing? Nothing)
+  True
+  => (nothing? (Just 1))
+  False
+
+:func:`<-maybe` returns the value in the monad, or a default value if it is
+:data:`Nothing`
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [<-maybe ->maybe]])
+  => (nothing? (->maybe nil))
+  True
+  => (def answer (->maybe 42))
+  => (def nothing (->maybe nil))
+  => (<-maybe answer "not this one")
+  42
+  => (<-maybe nothing "I got nothing")
+  "I got nothing"
+
+:func:`maybe` turns a function into monadic one
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [maybe]])
+  => (with-decorator maybe (defn add1 [n] (inc (int n))))
+  => (add1 "41")
+  Just(42)
+  => (add1 "nan")
+  Nothing
+  => (def safe-div (maybe /))
+  => (safe-div 1 2)
+  Just(0.5)
+  => (safe-div 1 0)
+  Nothing
+
+
+Reader Macro
+^^^^^^^^^^^^
+
+.. code-block:: clojure
+
+  => (require hymn.types.maybe)
+  => (#?int "42")
+  Just(42)
+  => (#?int "not a number")
+  Nothing
+  => (def safe-div #?/)
+  => (safe-div 1 2)
+  Just(0.5)
+  => (safe-div 1 0)
+  Nothing
