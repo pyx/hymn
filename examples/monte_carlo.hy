@@ -45,5 +45,5 @@
 
 (defmain [&rest args]
   (if (-> args len (!= 2))
-    (print "usage:" (get args 0) "number-of-points")
-    (print "the estimate for pi =" (-> args (get 1) int monte-carlo))))
+    (print "usage:" (first args) "number-of-points")
+    (print "the estimate for pi =" (-> args second int monte-carlo))))

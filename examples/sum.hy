@@ -13,5 +13,5 @@
 
 (defmain [&rest args]
   (if (-> args len (= 1))
-    (print "usage:" (get args 0) "number1 number2 .. numberN")
-    (print "sum:" (wicked-sum (map int (slice args 1))))))
+    (print "usage:" (first args) "number1 number2 .. numberN")
+    (print "sum:" (->> args rest (map int) wicked-sum))))
