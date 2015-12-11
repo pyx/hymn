@@ -101,8 +101,8 @@
   (def s {'a obj-a})
   (def change-a (modify (fn [s] (assoc s 'a new-obj-a))))
   (assert (instance? state-m change-a))
-  (assert (is-not obj-a (.evaluate change-a s)))
-  (assert (is new-obj-a (.evaluate (<- 'a) s))))
+  (assert (is-not obj-a (get (.evaluate change-a s) 'a)))
+  (assert (is new-obj-a (get s 'a))))
 
 (defn test-set-state []
   "set-state should replace the current state and return the previous one"
