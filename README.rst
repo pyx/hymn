@@ -33,7 +33,6 @@ The either monad
   => ;; do notation with either monad
   => (do-monad [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
-  => ;; Left value is mzero
   => (do-monad [a (Right 1) b (Left 'nan)] (/ a b))
   Left(nan)
   => ;; failsafe is a function decorator that wraps return value into either
@@ -178,6 +177,12 @@ Operations on monads
   => (def random (>> get-state (fn [s] (-> s (* 69069) inc (% (** 2 32)) set-state))))
   => (.run random 1234)
   (1234, 85231147)
+  => ;; random can be even shorter by using modify
+  => (import [hymn.types.state [modify]])
+  => (def random (modify (fn [s] (-> s (* 69069) inc (% (** 2 32))))))
+  => (.run random 1234)
+  (1234, 85231147)
+  => ;; use replicate to do computation repeatly
   => (import [hymn.operations [replicate]])
   => (.evaluate (replicate 5 random) 42)
   [42, 2900899, 2793697416, 2186085609, 1171637142]
