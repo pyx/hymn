@@ -34,9 +34,9 @@
         (infix-repr "(({a} {op3} {b}) {op2} {c}) {op1} {d}"))]))
 
 (defn combinations [numbers]
-  (def seemed (set))
   (do-monad
-    [[a b c d] #*(permutations numbers 4)
+    [:let [[seemed (set)]]
+     [a b c d] #*(permutations numbers 4)
      :when (not-in (, a b c d) seemed)]
     (do
       (.add seemed (, a b c d))
@@ -54,5 +54,5 @@
 
 (defmain [&rest args]
   (if (-> args len (!= 5))
-    (print "usage:" (get args 0) "number1 number2 number3 number4")
-    (print (->> (slice args 1) (map int) solve (.join "\n")))))
+    (print "usage:" (first args) "number1 number2 number3 number4")
+    (->> args rest (map int) solve (.join "\n") print)))
