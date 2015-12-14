@@ -23,6 +23,16 @@ The continuation monad
   => ;; chain with bind
   => (.run (>> (cont-m.unit [1 2 3]) length double))
   6
+  => (defn square [n] (call-cc (fn [k] (k (** n 2)))))
+  => (.run (square 12))
+  144
+  => (.run (square 12) inc)
+  145
+  => (.run (square 12) str)
+  '144'
+  => (.run (do-monad [sqr (square 42)] (.format "answer^2 = {}" sqr)))
+  'answer^2 = 1764'
+
 
 The either monad
 
@@ -126,6 +136,7 @@ The writer monad
 
 .. code-block:: clojure
 
+  => (require hymn.dsl)
   => (import [hymn.types.writer [tell]])
   => ;; do notation with writer monad
   => (do-monad [_ (tell "hello") _ (tell " world")] nil)
