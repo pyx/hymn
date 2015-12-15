@@ -6,6 +6,7 @@
 (import
   [itertools [chain]]
   [hymn.types.monadplus [MonadPlus]]
+  [hymn.types.monoid [Monoid]]
   [hymn.utils [CachedSequence]])
 
 (defreader * [seq]
@@ -16,7 +17,7 @@
   "descriptor that returns an empty List"
   [[--get-- (fn [self instance cls] (cls []))]])
 
-(defclass List [MonadPlus]
+(defclass List [MonadPlus Monoid]
   "the list monad
 
   nondeterministic computation"
@@ -29,11 +30,20 @@
    [join (fn [self]
            "join of list monad, concatenate list of list"
            (List (chain.from-iterable self)))]
+   [append (fn [self other]
+             "the append operation of :class:`List`"
+             (List (chain self other)))]
+   [concat (with-decorator classmethod
+             ;; overloaded for better performance
+             (fn [cls list-of-list]
+               "the concat operation of :class:`List`"
+               (List (chain.from-iterable list-of-list))))]
    [plus (fn [self other]
            "concatenate two list"
-           (List (chain self other)))]
+           (.append self other))]
    [unit (with-decorator classmethod (fn [cls value] (cls [value])))]
-   [zero (-Zero)]])
+   [zero (-Zero)]
+   [empty zero]])
 
 ;;; alias
 (def list-m List)

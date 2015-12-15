@@ -7,13 +7,14 @@
   [functools [partial wraps]]
   [hymn.mixins [Ord]]
   [hymn.types.monadplus [MonadPlus]]
+  [hymn.types.monoid [Monoid]]
   [hymn.utils [suppress]])
 
 (defreader ? [f]
   (with-gensyms [maybe]
     `(do (import [hymn.types.maybe [maybe :as ~maybe]]) (~maybe ~f))))
 
-(defclass Maybe [MonadPlus Ord]
+(defclass Maybe [MonadPlus Monoid Ord]
   "the maybe monad
 
   computation that may fail"
@@ -29,6 +30,15 @@
                [(nothing? self) true]
                [(nothing? other) false]
                [true (Ord.--lt-- self other)]))]
+   [append (fn [self other]
+             "the append operation of :class:`Maybe`"
+             (cond
+               [(nothing? self) other]
+               [(nothing? other) self]
+               ;; NOTE:
+               ;; assuming both are of type Maybe here, also assuming the
+               ;; underlying values are monoids with + as append.
+               [true (Just (+ self.value other.value))]))]
    [bind (fn [self f]
            "the bind operation of :class:`Maybe`
 
@@ -65,6 +75,7 @@
 ;;; shadow the class intensionally
 (def Nothing (Nothing (object)))
 (def Maybe.zero Nothing)
+(def Maybe.empty Nothing)
 
 ;;; alias
 (def maybe-m Maybe)
