@@ -14,7 +14,7 @@
   [hymn.types.either
     [Either either-m
      Left Right left? right? either failsafe]]
-  [hymn.types.list [List list-m]]
+  [hymn.types.list [List fmap list-m]]
   [hymn.types.maybe
     [Maybe maybe-m
      Just Nothing <-maybe ->maybe from-maybe maybe nothing? to-maybe]]
