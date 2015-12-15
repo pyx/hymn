@@ -219,10 +219,10 @@ Using Hymn in Python
   ... def safe_div(a, b):
   ...     return a / b
   ...
-  >>> safe_div(1, 2)
+  >>> safe_div(1.0, 2)
   Right(0.5)
   >>> safe_div(1, 0)
-  Left(ZeroDivisionError('division by zero',))
+  Left(ZeroDivisionError(...))
 
 
 Requirements
