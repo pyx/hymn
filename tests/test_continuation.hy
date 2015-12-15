@@ -19,7 +19,7 @@
 
 (defn test-module-level-run []
   "continuation module should have a module level run"
-  (def c (cont-m.util nil))
+  (def c (cont-m.unit nil))
   (assert (= (continuation-module.run c) (.run c))))
 
 (defn test-continuation-run []
