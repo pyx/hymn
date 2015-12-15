@@ -63,6 +63,22 @@ Do Notation with :when
 Operations
 ^^^^^^^^^^
 
+:attr:`~List.unit` accepts any number of initial values
+
+.. code-block:: clojure
+
+  => (list (list-m.unit))
+  []
+  => (list (list-m.unit 1))
+  [1]
+  => (list (list-m.unit 1 3))
+  [1, 3]
+  => (list (list-m.unit 1 3 5))
+  [1, 3, 5]
+
+:func:`fmap` works like the builtin `map` function, but creates :class:`List`
+instead of the builtin `list`
+
 .. code-block:: clojure
 
   => (require hymn.dsl)
