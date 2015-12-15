@@ -41,7 +41,10 @@
    [plus (fn [self other]
            "concatenate two list"
            (.append self other))]
-   [unit (with-decorator classmethod (fn [cls value] (cls [value])))]
+   [unit (with-decorator classmethod
+           (fn [cls &rest values]
+             "create a :class:`List` from `values`"
+             (cls values)))]
    [zero (-Zero)]
    [empty zero]])
 
