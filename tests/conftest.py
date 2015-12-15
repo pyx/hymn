@@ -2,6 +2,9 @@
 # Copyright (c) 2014-2015, Philip Xu <pyx@xrefactor.com>
 # License: BSD New, see LICENSE for details.
 
+from hymn.types.monadplus import MonadPlus
+from hymn.types.monoid import Monoid
+
 from hymn.types.continuation import Continuation
 from hymn.types.either import Either
 from hymn.types.identity import Identity
@@ -68,20 +71,32 @@ monad_ids = [monad.__name__ for monad in monads]
 monadplus_runners = [
     (monad, runner)
     for (monad, runner) in monad_runners
-    if hasattr(monad, 'plus')
+    if issubclass(monad, MonadPlus)
 ]
 
 monadplus = [monadplus for (monadplus, runner) in monadplus_runners]
 monadplus_ids = [monad.__name__ for monad in monadplus]
 
+monoid_runners = [
+    (monad, runner)
+    for (monad, runner) in monad_runners
+    if issubclass(monad, Monoid)
+]
+
+monoids = [monoid for (monoid, runner) in monoid_runners]
+monoid_ids = [monoid.__name__ for monoid in monoids]
+
+params = [
+    ('monad', monads, monad_ids),
+    ('monad_runner', monad_runners, monad_ids),
+    ('monadplus', monadplus, monadplus_ids),
+    ('monadplus_runner', monadplus_runners, monadplus_ids),
+    ('monoid', monoids, monoid_ids),
+    ('monoid_runner', monoid_runners, monoid_ids),
+]
+
 
 def pytest_generate_tests(metafunc):
-    if 'monad' in metafunc.funcargnames:
-        metafunc.parametrize('monad', monads, ids=monad_ids)
-    if 'monad_runner' in metafunc.funcargnames:
-        metafunc.parametrize('monad_runner', monad_runners, ids=monad_ids)
-    if 'monadplus' in metafunc.funcargnames:
-        metafunc.parametrize('monadplus', monadplus, ids=monadplus_ids)
-    if 'monadplus_runner' in metafunc.funcargnames:
-        metafunc.parametrize(
-            'monadplus_runner', monadplus_runners, ids=monadplus_ids)
+    for name, args, ids in params:
+        if name in metafunc.funcargnames:
+            metafunc.parametrize(name, args, ids=ids)
