@@ -6,6 +6,7 @@
 ;;; expose some types and actions here for easier import
 
 (import
+  [hymn.types.monoid [<> append]]
   [hymn.types.continuation
     [Continuation cont-m continuation-m
      call-cc
@@ -13,10 +14,10 @@
   [hymn.types.either
     [Either either-m
      Left Right left? right? either failsafe]]
-  [hymn.types.list [List List :as list-m]]
+  [hymn.types.list [List list-m]]
   [hymn.types.maybe
     [Maybe maybe-m
-     Just ->maybe maybe Nothing nothing? to-maybe]]
+     Just Nothing <-maybe ->maybe from-maybe maybe nothing? to-maybe]]
   [hymn.types.reader
     [Reader reader-m
      reader
