@@ -28,6 +28,14 @@
   (assert (instance? list-m (list-module.fmap identity [])))
   (assert (= [1 2 3] (list (list-module.fmap inc [0 1 2])))))
 
+(defn test-unit-empty []
+  "unit of list should accept no initial value"
+  (assert (= [] (list (list-m.unit)))))
+
+(defn test-unit-multiple-values []
+  "unit of list support multiple initial values"
+  (assert (= [1 2 3] (list (list-m.unit 1 2 3)))))
+
 (defn test-zero-is-empty []
   "zero of list monad should be empty"
   (assert (empty? list-module.zero))
