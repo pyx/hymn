@@ -5,10 +5,6 @@ The List Monad
   :members:
   :show-inheritance:
 
-.. data:: unit
-
-  the unit of list monad, an empty list
-
 .. data:: zero
 
   the zero of list monad, an empty list

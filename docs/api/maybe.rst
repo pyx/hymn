@@ -144,6 +144,18 @@ Operations
   => (<-maybe nothing "I got nothing")
   "I got nothing"
 
+:meth:`~Maybe.append` adds up the values, handling :data:`Nothing` gracefully
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [Just Nothing]])
+  => (.append (Just 42) Nothing)
+  Just(42)
+  => (.append (Just 42) (Just 42))
+  Just(84)
+  => (.append Nothing (Just 42))
+  Just(42)
+
 :func:`maybe` turns a function into monadic one
 
 .. code-block:: clojure
