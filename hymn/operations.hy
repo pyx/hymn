@@ -48,6 +48,11 @@
   "macro for sequencing monadic composition, with said monad as default"
   `(with-monad ~monad (do-monad ~binding-forms ~expr)))
 
+(defmacro m-for [[n seq] &rest mexpr]
+  "macro for sequencing monadic actions, flipped :func:`m-map`"
+  `(do (import [hymn.operations [m-map]])
+     (m-map (fn [~n] ~@mexpr) ~seq)))
+
 (defmacro m-when [test mexpr]
   "conditional execution of monadic expressions"
   `(if ~test ~mexpr (m-return nil)))
@@ -88,6 +93,11 @@
            (do-monad
              [unwrapped-kwargs values]
              (apply f [] (dict (zip keys unwrapped-kwargs))))))])))
+
+(defn m-map [mf seq]
+  "map monadic function ``mf`` to a sequence, then execute that sequence of
+  monadic values"
+  (sequence (map mf seq)))
 
 (defn replicate [n m]
   "perform the monadic action n times, gathering the results"
