@@ -98,7 +98,7 @@ The maybe monad
   => ;; Nothing yields Nothing
   => (do-monad [a Nothing b (Just 1)] (/ a b))
   Nothing
-  => ;; maybe is a function decorator the wraps return value into maybe
+  => ;; maybe is a function decorator that wraps return value into maybe
   => ;; a safe-div with maybe monad
   => (def safe-div (maybe /))
   => (safe-div 42 42)
