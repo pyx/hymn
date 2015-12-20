@@ -47,6 +47,21 @@ Macros
   => (do-monad-with maybe-m [:when false] 42)
   Nothing
 
+All do monad macros support :code:`:let` binding, like this:
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [Just]])
+  => (defn half [x]
+  ...  (do-monad
+  ...    [:let [[two 2]]
+  ...     a x
+  ...     :let [[b (/ a two)]]]
+  ...    b))
+  => (half (Just 42))
+  Just(21.0)
+
 All do monad macros support :code:`:when` if the monad is of type
 :class:`~hymn.types.monadplus.MonadPlus`.
 
