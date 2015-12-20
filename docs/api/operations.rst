@@ -77,7 +77,7 @@ All do monad macros support :code:`:when` if the monad is of type
 
 .. function:: m-for [[n seq] &rest expr]
 
-  macro for sequencing monadic actions, flipped :func:`m-map`
+  macro for sequencing monadic actions
 
 .. code-block:: clojure
 
