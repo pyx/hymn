@@ -155,7 +155,7 @@ Operation on Monads
 .. code-block:: clojure
 
   => (import [hymn.operations [k-pipe >=>]])
-  => (import [hymn.types.maybe [Just maybe]])
+  => (import [hymn.types.maybe [Just Nothing maybe]])
   => (def m-int (maybe int))
   => (defn m-array [n] (if (> n 0) (Just (* [0] n)) Nothing))
   => (def make-array (k-pipe m-int m-array))
