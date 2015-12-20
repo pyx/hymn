@@ -61,6 +61,14 @@
   (assert (m= (unit (inc data))
               (do-monad-with monad [a (m-return data)] (inc a)))))
 
+(defn test-m-for [monad-runner]
+  "monadic for macro should work"
+  (def [monad run] monad-runner)
+  (def unit monad.unit)
+  (assert (m= (unit (list (map inc (range 42))))
+              (m-for [n (range 42)]
+                (unit (inc n))))))
+
 (defn test-m-when [monad-runner]
   "conditional execution with m-when"
   (def [monad run] monad-runner)

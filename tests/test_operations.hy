@@ -4,7 +4,7 @@
 
 (import
   [hymn.types.identity [identity-m]]
-  [hymn.operations [k-compose <=< k-pipe >=> lift replicate sequence]])
+  [hymn.operations [k-compose <=< k-pipe >=> lift m-map replicate sequence]])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
@@ -74,6 +74,13 @@
   (def mcomplex (lift complex))
   (assert (m= (mcomplex :imag (unit data))
               (unit (complex :imag data)))))
+
+(defn test-m-map [monad-runner]
+  "m-map should work as ``sequence . map f``"
+  (def [monad run] monad-runner)
+  (def minc (monad.monadic inc))
+  (assert (= (list (run (sequence (map minc (range 42)))))
+             (list (run (m-map minc (range 42)))))))
 
 (defn test-replicate [monad-runner]
   "replicate should perform the monadic action said times"
