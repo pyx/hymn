@@ -60,6 +60,37 @@ All do monad macros support :code:`:when` if the monad is of type
   => (div 1 0)
   Nothing
 
+.. function:: m-for [[n seq] &rest expr]
+
+  macro for sequencing monadic actions, flipped :func:`m-map`
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => ;; with simple monad, e.g. maybe
+  => (import [hymn.types.maybe [maybe-m]])
+  => (m-for [a (range 3)] (maybe-m.unit a))
+  Just([0, 1, 2])
+  => ;; with reader monad
+  => (import [hymn.types.reader [<-]])
+  => (def readers
+  ...  (m-for [a (range 5)]
+  ...    (print "create reader" a)
+  ...    (<- a)))
+  create reader 0
+  create reader 1
+  create reader 2
+  create reader 3
+  create reader 4
+  => (.run readers [11 12 13 14 15 16])
+  [11, 12, 13, 14, 15]
+  => (.run readers "abcdefg")
+  ['a', 'b', 'c', 'd', 'e']
+  => ;; with writer monad
+  => (import [hymn.types.writer [tell]])
+  => (.execute (m-for [a (range 1 101)] (tell a)))
+  5050
+
 .. function:: m-when [test mexpr]
 
   conditional execution of monadic expressions
@@ -130,6 +161,23 @@ Operation on Monads
   => (def m+ (lift +))
   => (m+ (Just 1) (Just 2))
   Just(3)
+
+.. autofunction:: m_map
+.. function:: m-map
+
+  alias of :func:`m_map`
+
+.. code-block:: clojure
+
+  => (import [hymn.operations [m-map]])
+  => (import [hymn.types.maybe [maybe-m]])
+  => (m-map maybe-m.unit (range 5))
+  Just([0, 1, 2, 3, 4])
+  => (m-map (maybe-m.monadic inc) (range 5))
+  Just([1, 2, 3, 4, 5])
+  => (import [hymn.types.writer [tell]])
+  => (.execute (m-map tell (range 1 101)))
+  5050
 
 .. autofunction:: replicate
 
