@@ -49,9 +49,10 @@
   `(with-monad ~monad (do-monad ~binding-forms ~expr)))
 
 (defmacro m-for [[n seq] &rest mexpr]
-  "macro for sequencing monadic actions, flipped :func:`m-map`"
-  `(do (import [hymn.operations [m-map]])
-     (m-map (fn [~n] ~@mexpr) ~seq)))
+  "macro for sequencing monadic actions"
+  (with-gensyms [m-map]
+    `(do (import [hymn.operations [m-map :as ~m-map]])
+       (~m-map (fn [~n] ~@mexpr) ~seq))))
 
 (defmacro m-when [test mexpr]
   "conditional execution of monadic expressions"
