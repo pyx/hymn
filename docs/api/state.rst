@@ -162,7 +162,7 @@ of :func:`lookup`
   => (.run (set-value 2 42) [1 2 3])
   ([1, 2, 3], [1, 2, 42])
 
-:func:`set-value` sets multiple values at once
+:func:`set-values` sets multiple values at once
 
 .. code-block:: clojure
 
