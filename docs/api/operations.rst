@@ -116,12 +116,43 @@ All do monad macros support :code:`:when` if the monad is of type
 
 .. code-block:: clojure
 
-  => (require hymn.Operation)
+  => (require hymn.operation)
   => (import [hymn.types.maybe [maybe-m]])
   => (with-monad maybe-m (m-when (even? 1) (m-return 42)))
   Just(None)
   => (with-monad maybe-m (m-when (even? 2) (m-return 42)))
   Just(42)
+
+
+Reader Macros
+-------------
+
+.. function:: ^ [f]
+
+  :func:`lift` reader macro, :code:`#^f` is expanded to :code:`(lift f)`
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [Just Nothing]])
+  => (#^+ (Just 1) (Just 2))
+  Just(3)
+  => (#^+ (Just 1) Nothing)
+  Nothing
+
+.. function:: = [value]
+
+  reader macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
+  :code:`#=v` is expanded to :code:`(m-return v)`
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [Just maybe-m]])
+  => (do-monad-with maybe-m [a #=1 b #=2] (+ a b))
+  Just(3)
+  => (do-monad-m [a (Just 1)] #=(inc a))
+  Just(2)
 
 
 Operation on Monads
