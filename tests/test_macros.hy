@@ -38,6 +38,13 @@
   (assert (m= (unit (inc data))
               (do-monad [a (unit data)] (inc a)))))
 
+(defn test-do-monad-let-binding [monad-runner]
+  "do-monad macro should support let binding"
+  (def [monad run] monad-runner)
+  (def unit monad.unit)
+  (assert (m= (unit (inc data))
+              (do-monad [a (unit data) :let [[b (inc a)]]] b))))
+
 (defn test-do-monad-multiple-bindings [monad-runner]
   "do-monad macro should allow multiple bindings"
   (def [monad run] monad-runner)
@@ -45,6 +52,15 @@
   (def m-inc (monad.monadic inc))
   (assert (m= (unit (inc data))
               (do-monad [a (unit data) b (m-inc a)] b))))
+
+(defn test-do-monad-when [monadplus-runner]
+  "do-monad macro should support when with monadplus"
+  (def [monadplus run] monadplus-runner)
+  (def unit monadplus.unit)
+  (assert (m= (unit (inc data))
+              (do-monad [a (unit data) :when (= a data)] (inc a))))
+  (assert (m= monadplus.zero
+              (do-monad [a (unit data) :when (!= a data)] (inc a)))))
 
 (defn test-do-monad-m [monad-runner]
   "do-monad-m macro should work"
