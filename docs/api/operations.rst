@@ -123,6 +123,26 @@ All do monad macros support :code:`:when` if the monad is of type
   => (with-monad maybe-m (m-when (even? 2) (m-return 42)))
   Just(42)
 
+.. function:: monad-comp [expr binding-forms &optional condition]
+
+  different syntax for :code:`do-monad`, in the style of list/dict/set
+  comprehensions, the :code:`condition` part is optional and can only be used
+  with :class:`~hymn.types.monadplus.MonadPlus` as in :code:`do-monad`
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [Just]])
+  => (monad-comp (+ a b) [a (Just 1) b (Just 2)])
+  Just(3)
+  => (monad-comp (/ a b) [a (Just 1) b (Just 0)] (not (zero? b)))
+  Nothing
+  => (import [hymn.types.list [list-m]])
+  => (list (monad-comp (/ a b) [a (list-m [1 2]) b (list-m [4 8])]))
+  [0.25, 0.125, 0.5, 0.25]
+  => (list (monad-comp (/ a b) [a (list-m [1 2]) b (list-m [0 1])] (not (zero? b))))
+  [1.0, 2.0]
+
 
 Reader Macros
 -------------
