@@ -58,6 +58,11 @@
   "conditional execution of monadic expressions"
   `(if ~test ~mexpr (m-return nil)))
 
+(defmacro monad-comp [expr bindings &optional condition]
+  "different syntax for do notation"
+  (let [[guard (if (nil? condition) `() `(:when ~condition))]]
+    `(do-monad ~(+ bindings guard) ~expr)))
+
 (defmacro with-monad [monad &rest exprs]
   "provide default function m-return as the unit of the monad"
   `(let [[m-return (. ~monad unit)]] ~@exprs))
