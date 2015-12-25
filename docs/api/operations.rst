@@ -110,7 +110,7 @@ All do monad macros support :code:`:when` if the monad is of type
 
   conditional execution of monadic expressions
 
-.. function:: with-monad [test &rest exprs]
+.. function:: with-monad [monad &rest exprs]
 
   provide default function m-return as the unit of the monad
 
