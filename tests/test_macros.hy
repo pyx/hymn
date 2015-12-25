@@ -76,6 +76,22 @@
   (assert (m= (unit (inc data))
               (do-monad [a (unit data) b (m-when (= a data) #=(inc a))] b))))
 
+(defn test-monad-comp [monad-runner]
+  "monad comprehension macro should work as do monad in different syntax"
+  (def [monad run] monad-runner)
+  (def unit monad.unit)
+  (assert (m= (monad-comp (inc data) [a (unit data)])
+              (do-monad [a (unit data)] (inc a)))))
+
+(defn test-monad-comp-condition [monadplus-runner]
+  "monad comprehension macro should support :when with monadplus"
+  (def [monadplus run] monadplus-runner)
+  (def unit monadplus.unit)
+  (assert (m= (monad-comp (inc data) [a (unit data)] (= a data))
+              (do-monad [a (unit data) :when (= a data)] (inc a))))
+  (assert (m= (monad-comp (inc data) [a (unit data)] (!= a data))
+              (do-monad [a (unit data) :when (!= a data)] (inc a)))))
+
 (defn test-with-monad [monad]
   "with-monad should provide default function m-return"
   (assert (instance? monad (with-monad monad (m-return nil)))))
