@@ -65,7 +65,7 @@
   (assert (= ((apply compose fs) 0) data)))
 
 (defn test-const []
-  "const should alway return the constant value passed in when contructed"
+  "const should alway return the constant value passed in when constructed"
   (def singleton (object))
   (def that (const singleton))
   (assert (is (that data) (that 123)))

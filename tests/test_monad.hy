@@ -9,7 +9,7 @@
 (def double (fn [n] (* n 2)))
 
 (defn test-unit [monad]
-  "unit should act as a contructor"
+  "unit should act as a constructor"
   (assert (instance? monad (monad.unit data))))
 
 (defn test-monadic [monad]
