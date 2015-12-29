@@ -76,7 +76,7 @@
               (unit (complex :imag data)))))
 
 (defn test-m-map [monad-runner]
-  "m-map should work as ``sequence . map f``"
+  "m-map should work as :code:`sequence . map f`"
   (def [monad run] monad-runner)
   (def minc (monad.monadic inc))
   (assert (= (list (run (sequence (map minc (range 42)))))

@@ -33,15 +33,15 @@
 (def unit Reader.unit)
 
 (defn-alias [asks reader] [f]
-  "create a simple reader action from ``f``"
+  "create a simple reader action from :code:`f`"
   (Reader f))
 
 (def ask (reader identity))
 
 (defn local [f]
-  "executes a computation in a modified environment, ``f :: e -> e``"
+  "executes a computation in a modified environment, :code:`f :: e -> e`"
   (fn [m] (m.local f)))
 
 (defn-alias [lookup <-] [key]
-  "create a lookup reader of ``key`` in the environment"
+  "create a lookup reader of :code:`key` in the environment"
   (reader (itemgetter key)))

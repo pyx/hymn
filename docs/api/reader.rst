@@ -5,9 +5,9 @@ The Reader Monad
   :members: Reader, asks, local, lookup, reader, reader_m
   :show-inheritance:
 
-.. data:: unit
+.. function:: unit
 
-  the unit of reader monad
+  alias of :meth:`Reader.unit`
 
 .. function:: run
 
@@ -52,7 +52,7 @@ Do Notation
 Operations
 ^^^^^^^^^^
 
-:func:`asks` create a reader with a function, :func:`reader` is an alias of
+:func:`asks` creates a reader with a function, :func:`reader` is an alias of
 :func:`asks`
 
 .. code-block:: clojure
@@ -64,7 +64,7 @@ Operations
   => (.run (do-monad [h (reader second)] h) [5 4 3 2 1])
   4
 
-:func:`ask` fetch the environment
+Use :func:`ask` to fetch the environment
 
 .. code-block:: clojure
 
@@ -75,7 +75,7 @@ Operations
   => (.run (do-monad [e ask] (inc e)) 42)
   43
 
-:func:`local` run the reader with modified environment
+:func:`local` runs the reader with modified environment
 
 .. code-block:: clojure
 
@@ -85,8 +85,8 @@ Operations
   => (.run ((local inc) ask) 42)
   43
 
-:func:`lookup` get the value of key in environment, :data:`<-` is an alias of
-:func:`lookup`
+Use :func:`lookup` to get the value of key in environment, :code:`<-` is an
+alias of :func:`lookup`
 
 .. code-block:: clojure
 

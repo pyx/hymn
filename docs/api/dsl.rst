@@ -22,7 +22,7 @@ This module also provides all the macros defined in other modules,
 
   (require hymn.dsl)
 
-is all you need to use any macro defined in ``Hymn``
+is all you need to use any macro defined in :code:`Hymn`
 
 .. note::
 

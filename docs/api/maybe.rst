@@ -30,7 +30,7 @@ Reader Macro
 
 .. function:: ? [f]
 
-  turn ``f`` into monadic function with :func:`maybe`
+  turn :code:`f` into monadic function with :func:`maybe`
 
 
 Functions
@@ -109,7 +109,7 @@ Do Notation with :when
 Operations
 ^^^^^^^^^^
 
-:func:`->maybe` create a :class:`Maybe` from value
+Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
@@ -119,7 +119,7 @@ Operations
   => (->maybe nil)
   Nothing
 
-:func:`nothing?` returns ``True`` if the value is :data:`Nothing`
+:func:`nothing?` returns :code:`True` if the value is :data:`Nothing`
 
 .. code-block:: clojure
 

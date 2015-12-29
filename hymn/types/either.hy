@@ -43,7 +43,7 @@
    [plus (fn [self other] (or self other))]
    [from-value (with-decorator classmethod
                  (fn [cls value]
-                   "wrap ``value`` in an :class:`Either` monad
+                   "wrap :code:`value` in an :class:`Either` monad
 
                    return a :class:`Right` if the value is evaluated as true.
                    :class:`Left` otherwise."
@@ -70,18 +70,18 @@
 (def to-either ->either)
 
 (defn left? [m]
-  "return ``True`` if ``m`` is a :class:`Left`"
+  "return :code:`True` if :code:`m` is a :class:`Left`"
   (instance? Left m))
 
 (defn right? [m]
-  "return ``True`` if ``m`` is a :class:`Right`"
+  "return :code:`True` if :code:`m` is a :class:`Right`"
   (instance? Right m))
 
 (defn either [handle-left handle-right m]
   "case analysis for :class:`Either`
 
-  apply either ``handle-left`` or ``handle-right`` to ``m``
-  depending on the type of it,  raise ``TypeError`` if ``m`` is not an
+  apply either :code:`handle-left` or :code:`handle-right` to :code:`m`
+  depending on the type of it,  raise :code:`TypeError` if :code:`m` is not an
   :class:`Either`"
   (cond
     [(left? m) (handle-left m.value)]

@@ -5,9 +5,9 @@ The Continuation Monad
   :members:
   :show-inheritance:
 
-.. data:: unit
+.. function:: unit
 
-  the unit of continuation monad
+  alias of :meth:`Continuation.unit`
 
 .. function:: run
 
@@ -28,7 +28,7 @@ Reader Macro
 
 .. function:: < [v]
 
-  create a :class:`Continuation` of ``v``
+  create a :class:`Continuation` of :code:`v`
 
 
 Functions

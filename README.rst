@@ -236,7 +236,7 @@ Install from PyPI::
 
   pip install hymn
 
-Install from source, download source package, decompress, then ``cd`` into
+Install from source, download source package, decompress, then :code:`cd` into
 source directory, run::
 
   make install

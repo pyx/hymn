@@ -54,18 +54,18 @@
                  (if (nothing? self) default self.value))]
    [from-value (with-decorator classmethod
                  (fn [cls value]
-                   "wrap ``value`` in a :class:`Maybe` monad
+                   "wrap :code:`value` in a :class:`Maybe` monad
 
                    return a :class:`Just` if the value is evaluated as true.
                    :data:`Nothing` otherwise."
                    (if value (Just value) Nothing)))]])
 
-(defclass Just [Maybe] "``Just`` of the :class:`Maybe`")
+(defclass Just [Maybe] ":code:`Just` of the :class:`Maybe`")
 (def Maybe.unit Just)
 (def unit Maybe.unit)
 
 (defclass Nothing [Maybe]
-  "the :class:`Maybe` that represents nothing, a singleton, like ``None``"
+  "the :class:`Maybe` that represents nothing, a singleton, like :code:`None`"
   [[--bool-- (fn [self] false)]
    [--nonzero-- --bool--]  ; Pyhton II, baby
    [--repr-- (fn [self] "Nothing")]
@@ -86,7 +86,7 @@
 (def ->maybe to-maybe)
 
 (defn nothing? [m]
-  "return ``True`` if ``m`` is :data:`Nothing`"
+  "return :code:`True` if :code:`m` is :data:`Nothing`"
   (is m Nothing))
 
 (defn maybe [&optional func predicate nothing-on-exceptions]

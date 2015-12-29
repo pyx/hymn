@@ -23,7 +23,7 @@
              ((type self) (, nv (+ a na)))))]
    [unit (with-decorator classmethod
            (fn [cls value]
-             "unit of writer monad"
+             "the unit of writer monad"
              (cls (, value (cls.output-type)))))]
    [execute (fn [self]
               "extract the output of the writer"
@@ -65,15 +65,15 @@
   (writer-with-type (type message)))
 
 (defn writer [value message]
-  "embed a writer action with ``value`` and ``message``"
+  "embed a writer action with :code:`value` and :code:`message`"
   ((writer-with-type-of message) (, value message)))
 
 (defn tell [message]
-  "log the ``message``"
+  "log the :code:`message`"
   ((writer-with-type-of message) (, nil message)))
 
 (defn listen [m]
-  "execute ``m`` and adds its output to the value of computation"
+  "execute :code:`m` and adds its output to the value of computation"
   (def [v a] m.value)
   ((type m) (, m.value a)))
 
@@ -81,6 +81,6 @@
 ;;; Hy/Python is dynamically-typed, this function might change the type of the
 ;;; output without notice.
 (defn censor [f m]
-  "apply ``f`` to the output"
+  "apply :code:`f` to the output"
   (def [v a] m.value)
   ((type m) (, v (f a))))

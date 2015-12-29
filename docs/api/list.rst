@@ -23,7 +23,7 @@ Reader Macro
 
 .. function:: * [seq]
 
-  turn iterable ``seq`` into a :class:`List`
+  turn iterable :code:`seq` into a :class:`List`
 
 
 Examples

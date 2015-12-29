@@ -52,7 +52,7 @@ Reader Macro
 
 .. function:: + [w]
 
-  create a writer that logs ``w``
+  create a writer that logs :code:`w`
 
 
 Writers
@@ -156,7 +156,7 @@ appropriate type
   => (tell [1])
   ListWriter((None, [1]))
 
-:func:`listen` get the value of the writer
+Use :func:`listen` to get the value of the writer
 
 .. code-block:: clojure
 
@@ -164,7 +164,7 @@ appropriate type
   => (listen (writer "value" 42))
   IntWriter((('value', 42), 42))
 
-:func:`censor` apply function to the output
+Use :func:`censor` to apply function to the output
 
 .. code-block:: clojure
 

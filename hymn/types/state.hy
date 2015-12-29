@@ -25,7 +25,7 @@
            ((type self) (fn [s]
                           (let [[(, a ns) (.run self s)]] (.run (f a) ns)))))]
    [unit (with-decorator classmethod
-           (fn [cls a] "unit of state monad" (cls (fn [s] (, a s)))))]
+           (fn [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))]
    [evaluate (fn [self s]
                "evaluate state monad with initial state and return the result"
                (first (.run self s)))]

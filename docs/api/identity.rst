@@ -5,9 +5,9 @@ The Identity Monad
   :members:
   :show-inheritance:
 
-.. data:: unit
+.. function:: unit
 
-  the unit of identity monad
+  alias of :meth:`Identity.unit`
 
 
 Hy Specific API

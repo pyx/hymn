@@ -6,9 +6,9 @@ The State Monad
             set_values, update, update_value
   :show-inheritance:
 
-.. data:: unit
+.. function:: unit
 
-  the unit of state monad
+  alias of :meth:`State.unit`
 
 .. function:: evaluate
 
@@ -28,7 +28,7 @@ The State Monad
 
 .. function:: gets(f)
 
-  gets specific component of the state, using a projection function ``f``
+  gets specific component of the state, using a projection function :code:`f`
 
 
 Hy Specific API
@@ -87,7 +87,7 @@ Do Notation
 Operations
 ^^^^^^^^^^
 
-:func:`get-state` fetch the shared state, ``<-state`` is an alias of
+Use :func:`get-state` to fetch the shared state, :code:`<-state` is an alias of
 :func:`get-state`
 
 .. code-block:: clojure
@@ -98,8 +98,8 @@ Operations
   => (.run <-state [1 2 3])
   ([1, 2, 3], [1, 2, 3])
 
-:func:`lookup` get the value of key in the shared state, ``<-`` is an alias
-of :func:`lookup`
+Use :func:`lookup` to get the value of key in the shared state, :code:`<-` is
+an alias of :func:`lookup`
 
 .. code-block:: clojure
 
@@ -129,7 +129,7 @@ of :func:`lookup`
   => (.run (gets len) [1 2 3])
   (3, [1, 2, 3])
 
-:func:`modify` change the current state with a function
+:func:`modify` changes the current state with a function
 
 .. code-block:: clojure
 

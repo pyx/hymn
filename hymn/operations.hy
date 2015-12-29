@@ -101,8 +101,8 @@
              (apply f [] (dict (zip keys unwrapped-kwargs))))))])))
 
 (defn m-map [mf seq]
-  "map monadic function ``mf`` to a sequence, then execute that sequence of
-  monadic values"
+  "map monadic function :code:`mf` to a sequence, then execute that sequence
+  of monadic values"
   (sequence (map mf seq)))
 
 (defn replicate [n m]

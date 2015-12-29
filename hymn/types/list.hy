@@ -25,7 +25,8 @@
    [--iter-- (fn [self] (iter self.value))]
    [--len-- (fn [self] (len self.value))]
    [fmap (fn [self f]
-           "return list obtained by applying ``f`` to each element of the list"
+           "return list obtained by applying :code:`f` to each element of the
+           list"
            (List (map f self.value)))]
    [join (fn [self]
            "join of list monad, concatenate list of list"
@@ -43,7 +44,7 @@
            (.append self other))]
    [unit (with-decorator classmethod
            (fn [cls &rest values]
-             "create a :class:`List` from `values`"
+             "the unit, create a :class:`List` from :code:`values`"
              (cls values)))]
    [zero (-Zero)]
    [empty zero]])
@@ -54,6 +55,6 @@
 (def zero List.zero)
 
 (defn fmap [f iterable]
-  "``fmap`` works like the builtin ``map``, but return a :class:`List` instead
-  of ``list``"
+  ":code:`fmap` works like the builtin :code:`map`, but return a :class:`List`
+  instead of :code:`list`"
   (list-m (map f iterable)))

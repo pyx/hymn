@@ -9,7 +9,7 @@
   types with an associative binary operation that has an identity"
   [[empty (with-decorator property
             (fn [self]
-              "the identity of ``append``"
+              "the identity of :meth:`append`"
               (raise NotImplementedError)))]
    [append (fn [self other]
              "an associative operation for monoid"

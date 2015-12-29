@@ -25,7 +25,7 @@ Reader Macro
 
 .. function:: | [f]
 
-  turn ``f`` into monadic function with :func:`failsafe`
+  turn :code:`f` into monadic function with :func:`failsafe`
 
 
 Functions
@@ -97,7 +97,7 @@ Do Notation with :when
 Operations
 ^^^^^^^^^^
 
-:func:`->either` create an :class:`Either` from a value
+Use :code:`->either` to create an :class:`Either` from a value
 
 .. code-block:: clojure
 
@@ -107,7 +107,7 @@ Operations
   => (->either nil)
   Left(None)
 
-use :func:`left?` and :func:`right?` to test the type
+Use :func:`left?` and :func:`right?` to test the type
 
 .. code-block:: clojure
 

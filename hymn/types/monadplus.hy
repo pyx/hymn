@@ -16,10 +16,10 @@
            (raise NotImplementedError))]
    [zero (with-decorator property
            (fn [self]
-             "the identity of ``plus``.
+             "the identity of :meth:`plus`.
 
              It should satisfy the following law, left zero
-             (notice the bind operator is haskell's ``>>=`` here)::
+             (notice the bind operator is haskell's :code:`>>=` here)::
 
                  zero >>= f = zero"
            (raise NotImplementedError)))]])
