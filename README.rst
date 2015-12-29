@@ -33,7 +33,6 @@ The continuation monad
   => (.run (do-monad [sqr (square 42)] (.format "answer^2 = {}" sqr)))
   'answer^2 = 1764'
 
-
 The either monad
 
 .. code-block:: clojure
@@ -68,7 +67,6 @@ The identity monad
   => ;; do notation with identity monad is like let binding
   => (do-monad [a (identity-m 1) b (identity-m 2)] (+ a b))
   Identity(3)
-
 
 The list monad
 
