@@ -14,6 +14,7 @@
   [hymn.types.either
     [Either either-m
      Left Right left? right? either failsafe]]
+  [hymn.types.lazy [Lazy lazy-m evaluate :as evaluate-lazy force lazy?]]
   [hymn.types.list [List fmap list-m]]
   [hymn.types.maybe
     [Maybe maybe-m
@@ -64,6 +65,9 @@
 
 ;;; reader macro for the either monad
 (require hymn.types.either)
+
+;;; macros for the lazy monad
+(require hymn.types.lazy)
 
 ;;; reader macro for the list monad
 (require hymn.types.list)
