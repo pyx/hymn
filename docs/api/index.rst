@@ -10,6 +10,7 @@ API Reference
   continuation
   either
   identity
+  lazy
   list
   maybe
   reader

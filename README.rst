@@ -68,6 +68,52 @@ The identity monad
   => (do-monad [a (identity-m 1) b (identity-m 2)] (+ a b))
   Identity(3)
 
+The lazy monad
+
+.. code-block:: clojure
+
+  => (require hymn.dsl)
+  => (import [hymn.types.lazy [force]])
+  => ;; lazy computation implemented as monad
+  => ;; macro lazy create deferred computation
+  => (def a (lazy (print "evaluate a") 42))
+  => ;; the computation is deferred, notice the value is shown as '_'
+  => a
+  Lazy(_)
+  => ;; evaluate it
+  => (.evaluate a)
+  evaluate a
+  42
+  => ;; now the value is cached
+  => a
+  Lazy(42)
+  => ;; evaluate again will not trigger the computation
+  => (.evaluate a)
+  42
+  => (def b (lazy (print "evaluate b") 21))
+  => b
+  Lazy(_)
+  => ;; force evaluate the computation, same as calling .evaluate on the monad
+  => (force b)
+  evaluate b
+  21
+  => ;; force on values other than lazy return the value unchanged
+  => (force 42)
+  42
+  => ;; do notation with lazy monad
+  => (def c (do-monad [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
+  => ;; the computation is deferred
+  => c
+  Lazy(_)
+  => ;; do it!
+  => (force c)
+  get x
+  get y
+  3
+  => ;; again
+  => (force c)
+  3
+
 The list monad
 
 .. code-block:: clojure
