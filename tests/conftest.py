@@ -8,6 +8,7 @@ from hymn.types.monoid import Monoid
 from hymn.types.continuation import Continuation
 from hymn.types.either import Either
 from hymn.types.identity import Identity
+from hymn.types.lazy import Lazy
 from hymn.types.list import List
 from hymn.types.maybe import Maybe
 from hymn.types.reader import Reader
@@ -32,6 +33,10 @@ def run_cont(c):
     return c.run()
 
 
+def run_lazy(l):
+    return l.evaluate()
+
+
 def run_list(l):
     return list(l)
 
@@ -51,6 +56,7 @@ monad_runners = [
     (Continuation, run_cont),
     (Either, extract),
     (Identity, extract),
+    (Lazy, run_lazy),
     (List, run_list),
     (Maybe, extract),
     (Reader, run_reader),
