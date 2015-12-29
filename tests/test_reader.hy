@@ -7,7 +7,6 @@
   [hymn.types [reader :as reader-module]]
   [hymn.types.reader [reader-m asks reader ask local lookup <-]])
 
-(require hymn.types.list)
 (require hymn.operations)
 
 (def env {'a 42 'b nil 'c "hello"})

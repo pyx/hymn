@@ -17,7 +17,6 @@
      update
      update-value]])
 
-(require hymn.types.list)
 (require hymn.operations)
 
 (def env {'a 42 'b nil 'c "hello"})
