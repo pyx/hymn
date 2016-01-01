@@ -19,7 +19,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 project = u'Hymn'
-copyright = u'2014-2015, Philip Xu'
+copyright = u'2014-2016, Philip Xu'
 author = u'Philip Xu'
 
 version = '%d.%d' % hymn.__version__
