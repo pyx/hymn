@@ -3,8 +3,8 @@
 # License: BSD New, see LICENSE for details.
 """Hy Monad Notation - a monad library for Hy"""
 
-__version__ = (0, 3)
-__release__ = ''
+__version__ = (0, 4)
+__release__ = '.dev'
 
 VERSION = '%d.%d' % __version__ + __release__
 
