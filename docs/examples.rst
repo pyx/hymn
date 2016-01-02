@@ -36,6 +36,39 @@ Example output:
   sum: 1368
 
 
+Dependency Handling with Lazy Monad
+-----------------------------------
+
+Actions with the :py:class:`~hymn.types.lazy.Lazy` monad can be used to handle
+dependencies:
+
+.. literalinclude:: ../examples/deps.hy
+  :language: clojure
+  :lines: 7-
+
+Example output:
+
+.. code-block:: sh
+
+  $ ./deps.hy
+  (started h
+  (started g
+  (started b
+   finished b)
+  (started d
+   finished d)
+   finished g)
+  (started e
+   finished e)
+  (started f
+  (started c
+   finished c)
+  (started a
+   finished a)
+   finished f)
+   finished h)
+
+
 The FizzBuzz Test
 -----------------
 
