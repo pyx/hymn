@@ -14,7 +14,7 @@ from hymn import __doc__ as DESCRIPTION
 LONG_DESCRIPTION = open(path.join(ROOT_DIR, 'README.rst')).read()
 
 DEP = [
-    'hy>=0.11.0',
+    'hy>=0.11.1',
 ]
 
 EXTRA_DEP = {
@@ -44,6 +44,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     author='Philip Xu',
