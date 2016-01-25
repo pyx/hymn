@@ -39,7 +39,7 @@
       (SuppressContextManager exceptions))))
 
 ;;; These should be in standard library, I re-implemented them everytime.
-(defn-alias [compose <|] [&rest fs]
+(defn compose [&rest fs]
   "function composition"
   (defn compose-2 [f g]
     "compose 2 functions"
@@ -53,6 +53,6 @@
   (setv constant.--doc-- (+ "constant fucntion of " (str value)))
   constant)
 
-(defn-alias [pipe |>] (&rest fs)
+(defn pipe (&rest fs)
   "reversed function composition"
   (apply compose (reversed fs)))

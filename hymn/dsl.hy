@@ -58,7 +58,7 @@
      execute :as execute-writer]]
   [hymn.operations
     [k-compose <=< k-pipe >=> lift m-map replicate sequence]]
-  [hymn.utils [compose <| const pipe |>]])
+  [hymn.utils [compose const pipe]])
 
 ;;; reader macro for the continuation monad
 (require hymn.types.continuation)
