@@ -75,6 +75,40 @@ All do monad macros support :code:`:when` if the monad is of type
   => (div 1 0)
   Nothing
 
+.. function:: monad-> [init-value &rest actions]
+
+  threading macro for monadic actions
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [maybe-m]])
+  => (def m-inc (maybe-m.monadic inc))
+  => (def m-div (maybe-m.monadic /))
+  => ;; threading macro for monadic actions
+  => (monad-> (maybe-m.unit 99) m-inc (m-div 5) (m-div 2))
+  Just(10.0)
+  => ;; is equivalent to
+  => (do-monad-m [a (maybe-m.unit 99) b (m-inc a) c (m-div b 5)] (m-div c 2))
+  Just(10.0)
+
+.. function:: monad->> [init-value &rest actions]
+
+  threading tail macro for monadic actions
+
+.. code-block:: clojure
+
+  => (require hymn.operations)
+  => (import [hymn.types.maybe [maybe-m]])
+  => (def m-inc (maybe-m.monadic inc))
+  => (def m-div (maybe-m.monadic /))
+  => ;; threading tail macro for monadic actions
+  => (monad->> (maybe-m.unit 4) m-inc (m-div 25) (m-div 100))
+  Just(20.0)
+  => ;; is equivalent to
+  => (do-monad-m [a (maybe-m.unit 4) b (m-inc a) c (m-div 25 b)] (m-div 100 c))
+  Just(20.0)
+
 .. function:: m-for [[n seq] &rest expr]
 
   macro for sequencing monadic actions

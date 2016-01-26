@@ -4,7 +4,8 @@
 "hymn.operations - operations on monads"
 
 (import
-  [hymn.types.identity [identity-m]])
+  [hymn.types.identity [identity-m]]
+  [hymn.utils [thread-first thread-last thread-bindings]])
 
 (require hy.contrib.anaphoric)
 
@@ -47,6 +48,20 @@
 (defmacro do-monad-with [monad binding-forms expr]
   "macro for sequencing monadic composition, with said monad as default"
   `(with-monad ~monad (do-monad ~binding-forms ~expr)))
+
+(defmacro monad-> [init-value &rest actions]
+  "threading macro for monad"
+  (def bindings (list (thread-bindings thread-first init-value actions)))
+  `(do-monad-m
+     [~@(butlast bindings)]
+     ~(last bindings)))
+
+(defmacro monad->> [init-value &rest actions]
+  "threading tail macro for monad"
+  (def bindings (list (thread-bindings thread-last init-value actions)))
+  `(do-monad-m
+     [~@(butlast bindings)]
+     ~(last bindings)))
 
 (defmacro m-for [[n seq] &rest mexpr]
   "macro for sequencing monadic actions"

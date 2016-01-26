@@ -77,6 +77,50 @@
   (assert (m= (unit (inc data))
               (do-monad-with monad [a (m-return data)] (inc a)))))
 
+(defn test-monad-threading-macro [monad-runner]
+  "monad-> macro should transform the form into do-monad-m macro"
+  (def [monad run] monad-runner)
+  (def m+ (monad.monadic +))
+  (def m/ (monad.monadic /))
+  (def m (monad.unit data))
+  (assert (m= (do-monad-m [a m] (m/ a 2))
+              (monad-> m (m/ 2))))
+  (assert (m= (do-monad-m [a m b (m+ a 4) c (m+ b 8)] (m/ c 2))
+              (monad-> m (m+ 4) (m+ 8) (m/ 2)))))
+
+(defn test-monad-threading-macro-single-symbol [monad-runner]
+  "monad-> macro should work with single symbol"
+  (def [monad run] monad-runner)
+  (def m-inc (monad.monadic inc))
+  (def m-half (monad.monadic (fn [n] (/ n 2))))
+  (def m (monad.unit data))
+  (assert (m= (do-monad-m [a m] (m-half a))
+              (monad-> m m-half)))
+  (assert (m= (do-monad-m [a m b (m-inc a) c (m-inc b)] (m-half c))
+              (monad-> m m-inc m-inc m-half))))
+
+(defn test-monad-threading-tail-macro [monad-runner]
+  "monad->> macro should transform the form into do-monad-m macro"
+  (def [monad run] monad-runner)
+  (def m+ (monad.monadic +))
+  (def m/ (monad.monadic /))
+  (def m (monad.unit data))
+  (assert (m= (do-monad-m [a m] (m/ 2 a))
+              (monad->> m (m/ 2))))
+  (assert (m= (do-monad-m [a m b (m+ 4 a) c (m+ 8 b)] (m/ 2 c))
+              (monad->> m (m+ 4) (m+ 8) (m/ 2)))))
+
+(defn test-monad-threading-tail-macro-single-symbol [monad-runner]
+  "monad->> macro should work with single symbol"
+  (def [monad run] monad-runner)
+  (def m-inc (monad.monadic inc))
+  (def m-invert (monad.monadic (fn [n] (/ 1 n))))
+  (def m (monad.unit data))
+  (assert (m= (do-monad-m [a m] (m-invert a))
+              (monad->> m m-invert)))
+  (assert (m= (do-monad-m [a m b (m-inc a) c (m-inc b)] (m-invert c))
+              (monad->> m m-inc m-inc m-invert))))
+
 (defn test-m-for [monad-runner]
   "monadic for macro should work"
   (def [monad run] monad-runner)

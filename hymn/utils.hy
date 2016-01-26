@@ -38,6 +38,29 @@
         (raise (RuntimeError "no exception specified")))
       (SuppressContextManager exceptions))))
 
+(defn thread-first [sym expr]
+  "insert symbol into expression as second item"
+  (if (symbol? expr)
+    `(~expr ~sym)
+    `(~(first expr) ~sym ~@(rest expr))))
+
+(defn thread-last [sym expr]
+  "insert symbol into expression as last item"
+  (if (symbol? expr)
+    `(~expr ~sym)
+    `(~@expr ~sym)))
+
+(defn thread-bindings [thread-fn init-value exprs]
+  "create a stream of symbol and expressions to be used in threading macros"
+  (def [l-val r-val] (tee (repeatedly gensym)))
+  (def next-sym (next l-val))
+  (yield next-sym)
+  (yield init-value)
+  (for [[next-sym last-sym expr] (zip l-val r-val (butlast exprs))]
+    (yield next-sym)
+    (yield (thread-fn last-sym expr)))
+  (yield (thread-fn next-sym (last exprs))))
+
 ;;; These should be in standard library, I re-implemented them everytime.
 (defn compose [&rest fs]
   "function composition"
