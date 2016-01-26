@@ -1,6 +1,12 @@
 Changelog
 =========
 
+- 0.4
+
+  - Support python 3.5
+  - Remove alias of compose and pipe <| and |> to avoid confusion
+  - New macros: monad-> and monad->>, threading macros for monad
+
 - 0.3
 
   - New operation: m-map
