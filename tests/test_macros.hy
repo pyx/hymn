@@ -13,7 +13,7 @@
 (def data 42)
 
 (defn test-reader-macro-^ [monad-runner]
-  "life reader macro ^ should expand to lift call"
+  "lift reader macro ^ should expand to lift call"
   (def [monad run] monad-runner)
   (def unit monad.unit)
   (assert (m= ((lift inc) (unit data)) (#^inc (unit data)))))
