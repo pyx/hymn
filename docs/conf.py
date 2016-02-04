@@ -33,9 +33,10 @@ pygments_style = 'colorful'
 
 todo_include_todos = False
 
-html_theme = 'bizstyle'
-# use RTD new theme
-RTD_NEW_THEME = True
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:
+    html_theme = 'bizstyle'
 
 htmlhelp_basename = 'Hymndoc'
 
