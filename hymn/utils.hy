@@ -76,6 +76,6 @@
   (setv constant.--doc-- (+ "constant fucntion of " (str value)))
   constant)
 
-(defn pipe (&rest fs)
+(defn pipe [&rest fs]
   "reversed function composition"
   (apply compose (reversed fs)))
