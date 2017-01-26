@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.writer - the writer monad"
 
@@ -16,21 +16,20 @@
   "the writer monad
 
   computation which accumulate output along with result"
-  [[bind (fn [self f]
-           "the bind operation of :class:`Writer`"
-           (let [[[v a] self.value]
-                 [[nv na] (. (f v) value)]]
-             ((type self) (, nv (+ a na)))))]
-   [unit (with-decorator classmethod
-           (fn [cls value]
-             "the unit of writer monad"
-             (cls (, value (cls.output-type)))))]
-   [execute (fn [self]
-              "extract the output of the writer"
-              (second (.run self)))]
-   [run (fn [self]
-          "unwrap the writer computation"
-          self.value)]])
+  (defn bind [self f]
+    "the bind operation of :class:`Writer`"
+    (let [[v a] self.value
+          [nv na] (. (f v) value)]
+      ((type self) (, nv (+ a na)))))
+
+  (with-decorator classmethod
+    (defn unit [cls value]
+      "the unit of writer monad"
+      (cls (, value (cls.output-type)))))
+
+  (defn execute [self] "extract the output of writer" (second (.run self)))
+
+  (defn run [self] "unwrap the writer computation" self.value))
 
 (defn writer-with-type [t]
   "create a writer for type t"
@@ -70,7 +69,7 @@
 
 (defn tell [message]
   "log the :code:`message`"
-  ((writer-with-type-of message) (, nil message)))
+  ((writer-with-type-of message) (, None message)))
 
 (defn listen [m]
   "execute :code:`m` and adds its output to the value of computation"

@@ -1,15 +1,15 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; lazy monad example
 
-(import [hymn.dsl [const force lift]])
+(import [hymn.dsl [force lift]])
 
-(require hymn.dsl)
+(require [hymn.dsl [lazy]])
 
-(def depends (lift (const nil)))
+(def depends (lift (constantly None)))
 
 (defmacro deftask [n &rest actions]
   `(def ~n

@@ -1,40 +1,42 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.state - the state monad"
 
-(require hymn.operations)
-
 (import
   [operator [itemgetter]]
-  [hymn.types.monad [Monad]]
-  [hymn.utils [const]])
+  [hymn.types.monad [Monad]])
+
+(require [hymn.macros [do-monad]])
 
 (defclass State [Monad]
   "the state monad
 
   computation with a shared state"
-  [[--repr-- (fn [self]
-               (.format "{}({})"
-                        (. (type self) --name--) self.value.--name--))]
-   [bind (fn [self f]
-           "the bind operation of :class:`State`
+  (defn --repr-- [self]
+    (.format "{}({})" (. (type self) --name--) self.value.--name--))
 
-           use the final state of this computation as the initial state of the
-           second"
-           ((type self) (fn [s]
-                          (let [[(, a ns) (.run self s)]] (.run (f a) ns)))))]
-   [unit (with-decorator classmethod
-           (fn [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))]
-   [evaluate (fn [self s]
-               "evaluate state monad with initial state and return the result"
-               (first (.run self s)))]
-   [execute (fn [self s]
-              "execute state monad with initial state, return the final state"
-              (second (.run self s)))]
-   [run (fn [self s]
-          "evaluate state monad with initial state, return result and state"
-          (self.value s))]])
+  (defn bind [self f]
+    "the bind operation of :class:`State`
+
+    use the final state of this computation as the initial state of the
+    second"
+    ((type self) (fn [s] (let [(, a ns) (.run self s)] (.run (f a) ns)))))
+
+  (with-decorator classmethod
+    (defn unit [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))
+
+  (defn evaluate [self s]
+    "evaluate state monad with initial state and return the result"
+    (first (.run self s)))
+
+  (defn execute [self s]
+    "execute state monad with initial state, return the final state"
+    (second (.run self s)))
+
+  (defn run [self s]
+    "evaluate state monad with initial state, return result and state"
+    (self.value s)))
 
 ;;; alias
 (def state-m State)
@@ -47,9 +49,10 @@
   (defn get-state [s] "return the current state" (, s s)))
 (def <-state get-state)
 
-(defn-alias [lookup <-] [key]
+(defn lookup [key]
   "return a monadic function that lookup the vaule with key in the state"
   (gets (itemgetter key)))
+(def <- lookup)
 
 ;;; gets specific component of the state, using a projection function f
 (def gets get-state.fmap)
@@ -58,9 +61,10 @@
   "maps the current state with `f` to a new state inside a state monad"
   (do-monad [s get-state _ (set-state (f s))] s))
 
-(defn-alias [set-state state<-] [s]
+(defn set-state [s]
   "replace the current state and return the previous one"
   (State (fn [ps] (, ps s))))
+(def state<- set-state)
 
 (defn set-value [key value]
   "return a monadic function that set the vaule of key in the state"
@@ -80,4 +84,4 @@
 
 (defn update-value [key value]
   "return a monadic function that update the vaule with key in the state"
-  (update key (const value)))
+  (update key (constantly value)))

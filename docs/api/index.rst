@@ -17,6 +17,7 @@ API Reference
   state
   writer
   mixins
+  macros
   operations
   utils
   dsl

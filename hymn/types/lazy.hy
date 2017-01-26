@@ -1,11 +1,10 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.lazy - the lazy monad"
 
 (import
-  [hymn.types.monad [Monad]]
-  [hymn.utils [const]])
+  [hymn.types.monad [Monad]])
 
 (defmacro lazy [&rest exprs]
   "create a :class:`Lazy` from expressions"
@@ -18,30 +17,32 @@
   "the lazy monad
 
   lazy computation as monad"
-  [[--init-- (fn [self value]
-               (unless (callable value)
-                 (raise
-                   (TypeError (.format "{} object is not callable" value))))
-               (def self.value (, false value))
-               nil)]
-   [--repr-- (fn [self]
-               (.format "{}({})"
-                        (. (type self) --name--)
-                        (if self.evaluated (repr (second self.value)) '_)))]
-   [bind (fn [self f]
-           "the bind operator of :class:`Lazy`"
-           ((type self) (fn [] (.evaluate (f (.evaluate self))))))]
-   [unit (with-decorator classmethod
-           (fn [cls value] "the unit of lazy monad" (cls (const value))))]
-   [evaluate (fn [self]
-               "evaluate the lazy monad"
-               (unless self.evaluated
-                 (setv self.value (, true ((second self.value)))))
-               (second self.value))]
-   [evaluated (with-decorator property
-                (fn [self]
-                  "return :code:`True` if this computation is evaluated"
-                  (first self.value)))]])
+  (defn --init-- [self value]
+    (unless (callable value)
+      (raise (TypeError (.format "{} object is not callable" value))))
+    (def self.value (, False value)))
+
+  (defn --repr-- [self]
+    (.format "{}({})"
+             (. (type self) --name--)
+             (if self.evaluated (repr (second self.value)) '_)))
+  (defn bind [self f]
+    "the bind operator of :class:`Lazy`"
+    ((type self) (fn [] (.evaluate (f (.evaluate self))))))
+
+  (with-decorator classmethod
+    (defn unit [cls value] "the unit of lazy monad" (cls (constantly value))))
+
+  (defn evaluate [self]
+    "evaluate the lazy monad"
+    (unless self.evaluated
+     (setv self.value (, True ((second self.value)))))
+    (second self.value))
+
+  (with-decorator property
+    (defn evaluated [self]
+      "return :code:`True` if this computation is evaluated"
+      (first self.value))))
 
 ;;; alias
 (def lazy-m Lazy)

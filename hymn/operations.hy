@@ -1,119 +1,49 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.operations - operations on monads"
 
 (import
-  [hymn.types.identity [identity-m]]
-  [hymn.utils [thread-first thread-last thread-bindings]])
+  [hymn.types.identity [identity-m]])
 
-(require hy.contrib.anaphoric)
+(require
+  [hy.extra.anaphoric [*]]
+  [hymn.macros [do-monad]])
 
-;;; lift reader macro, e.g. #^+ => (lift +)
-(defreader ^ [f]
-  (with-gensyms [lift]
-    `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
-
-;;; monad return reader macro, replaced by 'm-return, used in do-monad, e.g.
-;;; (do-monad-m [a (Just 1) b #=(inc a)] #=[a b])
-;;; is equivalent to
-;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])
-(defreader = [expr] `(m-return ~expr))
-
-(defmacro do-monad-m [binding-forms expr]
-  "macro for sequencing monadic computations, a.k.a do notation in haskell"
-  (when (odd? (len binding-forms))
-    (macro-error nil "do-monad-m binding forms must come in pairs"))
-  (def iterator (iter binding-forms))
-  (def bindings (-> (zip iterator iterator) list reversed list))
-  (unless (len bindings)
-    (macro-error nil "do-monad-m must have at least one binding form"))
-  (defn bind-action [mexpr [binding expr]]
-    (cond
-      [(= binding :when)
-        `(if ~expr ~mexpr (. (m-return nil) zero))]
-      [(= binding :let)
-        `(let ~expr ~mexpr)]
-      [true
-        (with-gensyms [monad]
-          `(let [[~monad ~expr]]
-             (>> ~monad (fn [~binding &optional [m-return (. ~monad unit)]]
-                          ~mexpr))))]))
-  (reduce bind-action bindings expr))
-
-(defmacro do-monad [binding-forms expr]
-  "macro for sequencing monadic computations, with automatic return"
-  `(do-monad-m ~binding-forms (m-return ~expr)))
-
-(defmacro do-monad-with [monad binding-forms expr]
-  "macro for sequencing monadic composition, with said monad as default"
-  `(with-monad ~monad (do-monad ~binding-forms ~expr)))
-
-(defmacro monad-> [init-value &rest actions]
-  "threading macro for monad"
-  (def bindings (list (thread-bindings thread-first init-value actions)))
-  `(do-monad-m
-     [~@(butlast bindings)]
-     ~(last bindings)))
-
-(defmacro monad->> [init-value &rest actions]
-  "threading tail macro for monad"
-  (def bindings (list (thread-bindings thread-last init-value actions)))
-  `(do-monad-m
-     [~@(butlast bindings)]
-     ~(last bindings)))
-
-(defmacro m-for [[n seq] &rest mexpr]
-  "macro for sequencing monadic actions"
-  (with-gensyms [m-map]
-    `(do (import [hymn.operations [m-map :as ~m-map]])
-       (~m-map (fn [~n] ~@mexpr) ~seq))))
-
-(defmacro m-when [test mexpr]
-  "conditional execution of monadic expressions"
-  `(if ~test ~mexpr (m-return nil)))
-
-(defmacro monad-comp [expr bindings &optional condition]
-  "different syntax for do notation"
-  (let [[guard (if (nil? condition) `() `(:when ~condition))]]
-    `(do-monad ~(+ bindings guard) ~expr)))
-
-(defmacro with-monad [monad &rest exprs]
-  "provide default function m-return as the unit of the monad"
-  `(let [[m-return (. ~monad unit)]] ~@exprs))
-
-(defn-alias [k-compose <=<] [&rest monadic-funcs]
+(defn k-compose [&rest monadic-funcs]
   "right-to-left Kleisli composition of monads."
   (apply >=> (reversed monadic-funcs)))
+(def <=< k-compose)
 
-(defn-alias [k-pipe >=>] [&rest monadic-funcs]
+(defn k-pipe [&rest monadic-funcs]
   "left-to-right Kleisli composition of monads."
   (fn [&rest args &kwargs kwargs]
     (reduce (fn [m f] (>> m f))
             (rest monadic-funcs)
             (apply (first monadic-funcs) args kwargs))))
+(def >=> k-pipe)
 
 (defn lift [f]
   "promote a function to a monad"
   (fn [&rest args &kwargs kwargs]
-    (cond
-      [(and (empty? args) (empty? kwargs))
-       (identity-m.unit (f))]
-      [(empty? kwargs)
-       (do-monad [unwrapped-args (sequence args)] (apply f unwrapped-args))]
-      [true
-       (do
-         (def keys/values (list (.items kwargs)))
-         (def keys (list (map first keys/values)))
-         (def values (sequence (map second keys/values)))
-         (if-not (empty? args)
-           (do-monad
-             [unwrapped-kwargs values
-              unwrapped-args (sequence args)]
-             (apply f unwrapped-args (dict (zip keys unwrapped-kwargs))))
-           (do-monad
-             [unwrapped-kwargs values]
-             (apply f [] (dict (zip keys unwrapped-kwargs))))))])))
+    (if
+      (and (empty? args) (empty? kwargs))
+        (identity-m.unit (f))
+      (empty? kwargs)
+        (do-monad [unwrapped-args (sequence args)] (apply f unwrapped-args))
+      (do
+        (def
+          keys/values (list (.items kwargs))
+          keys (list (map first keys/values))
+          values (sequence (map second keys/values)))
+        (if-not (empty? args)
+          (do-monad
+            [unwrapped-kwargs values
+             unwrapped-args (sequence args)]
+            (apply f unwrapped-args (dict (zip keys unwrapped-kwargs))))
+          (do-monad
+            [unwrapped-kwargs values]
+            (apply f [] (dict (zip keys unwrapped-kwargs)))))))))
 
 (defn m-map [mf seq]
   "map monadic function :code:`mf` to a sequence, then execute that sequence
@@ -131,7 +61,7 @@
     (do-monad
       [value m
        value-list mlist]
-      ;; NOTE: cannot use cons as cons will turn nil/None into "None"
+      ;; NOTE: cannot use cons as cons will turn None into "None"
       (doto [value] (.extend value-list))))
   (ap-if (list m-values)
     (reduce collect (reversed it) (.unit (first it) []))

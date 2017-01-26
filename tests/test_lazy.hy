@@ -1,12 +1,12 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
   [hymn.types [lazy :as lazy-module]]
   [hymn.types.lazy [lazy-m force lazy?]])
 
-(require hymn.types.lazy)
+(require [hymn.types.lazy [lazy]])
 
 (defn test-macro-lazy []
   "macro lazy should create deferred computation"

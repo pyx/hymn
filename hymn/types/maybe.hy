@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.maybe - the maybe monad"
 
@@ -18,47 +18,49 @@
   "the maybe monad
 
   computation that may fail"
-  [[--init-- (fn [self value]
-               (when (is (type self) Maybe)
-                 (raise
-                   (NotImplementedError "please use Just instead")))
-               (MonadPlus.--init-- self value)
-               nil)]
-   [--lt-- (fn [self other]
-             (cond
-               [(and (nothing? self) (nothing? other)) false]
-               [(nothing? self) true]
-               [(nothing? other) false]
-               [true (Ord.--lt-- self other)]))]
-   [append (fn [self other]
-             "the append operation of :class:`Maybe`"
-             (cond
-               [(nothing? self) other]
-               [(nothing? other) self]
-               ;; NOTE:
-               ;; assuming both are of type Maybe here, also assuming the
-               ;; underlying values are monoids with + as append.
-               [true (Just (+ self.value other.value))]))]
-   [bind (fn [self f]
-           "the bind operation of :class:`Maybe`
+  (defn --init-- [self value]
+    (when (is (type self) Maybe)
+      (raise (NotImplementedError "please use Just instead")))
+    (.--init-- (super Maybe self) value))
 
-           apply function to the value if and only if this is a
-           :class:`Just`."
-           (if self (f self.value) Nothing))]
-   [plus (fn [self other] (or self other))]
-   [from-maybe (fn [self default]
-                 "return the value contained in the :class:`Maybe`
+  (defn --lt-- [self other]
+    (if
+      (and (nothing? self) (nothing? other)) False
+      (nothing? self) True
+      (nothing? other) False
+      (.--lt-- (super Maybe self) other)))
 
-                 if the :class:`Maybe` is :data:`Nothing`, it returns the
-                 default values."
-                 (if (nothing? self) default self.value))]
-   [from-value (with-decorator classmethod
-                 (fn [cls value]
-                   "wrap :code:`value` in a :class:`Maybe` monad
+  (defn append [self other]
+    "the append operation of :class:`Maybe`"
+    (if
+      (nothing? self) other
+      (nothing? other) self
+      ;; NOTE:
+      ;; assuming both are of type Maybe here, also assuming the
+      ;; underlying values are monoids with + as append.
+      (Just (+ self.value other.value))))
 
-                   return a :class:`Just` if the value is evaluated as true.
-                   :data:`Nothing` otherwise."
-                   (if value (Just value) Nothing)))]])
+  (defn bind [self f]
+    "the bind operation of :class:`Maybe`
+
+    apply function to the value if and only if this is a :class:`Just`."
+    (if self (f self.value) Nothing))
+
+  (defn plus [self other] (or self other))
+
+  (defn from-maybe [self default]
+    "return the value contained in the :class:`Maybe`
+
+    if the :class:`Maybe` is :data:`Nothing`, it returns the default values."
+    (if (nothing? self) default self.value))
+
+  (with-decorator classmethod
+    (defn from-value [cls value]
+      "wrap :code:`value` in a :class:`Maybe` monad
+
+      return a :class:`Just` if the value is evaluated as True.
+      :data:`Nothing` otherwise."
+      (if value (Just value) Nothing))))
 
 (defclass Just [Maybe] ":code:`Just` of the :class:`Maybe`")
 (def Maybe.unit Just)
@@ -66,11 +68,11 @@
 
 (defclass Nothing [Maybe]
   "the :class:`Maybe` that represents nothing, a singleton, like :code:`None`"
-  [[--bool-- (fn [self] false)]
-   [--nonzero-- --bool--]  ; Pyhton II, baby
-   [--repr-- (fn [self] "Nothing")]
-   [bind (fn [self f] Nothing)]
-   [plus (fn [self other] other)]])
+  (defn --bool-- [self] False)
+  (def --nonzero-- --bool--)
+  (defn --repr-- [self] "Nothing")
+  (defn bind [self f] Nothing)
+  (defn plus [self other] other))
 
 ;;; shadow the class intensionally
 (def Nothing (Nothing (object)))
@@ -100,7 +102,7 @@
       (with-decorator (wraps func)
         (fn [&rest args &kwargs kwargs]
           (def result Nothing)
-          (with [[(apply suppress exceptions)]]
+          (with [(apply suppress exceptions)]
             (setv result (Just (apply func args kwargs))))
           (when (and predicate (not (>> result predicate)))
             (setv result Nothing))

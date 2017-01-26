@@ -48,8 +48,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.continuation [cont-m]])
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [a (cont-m.unit 1)] (inc a)))
   2
 
@@ -61,8 +61,8 @@ Operations
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.continuation [call-cc cont-m]])
+  => (require [hymn.macros [m-when do-monad-with]])
   => (defn search [n seq]
   ...   (call-cc
   ...     (fn [exit]
@@ -80,9 +80,9 @@ Reader Macro
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
-  => (require hymn.types.continuation)
+  => (require [hymn.types.continuation [<]])
   => (#<42)
   42
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [a #<25 b #<17] (+ a b)))
   42

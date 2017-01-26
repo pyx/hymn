@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.either - the either monad"
 
@@ -19,41 +19,42 @@
   "the either monad
 
   computation with two possibilities"
-  [[--init-- (fn [self value]
-               (when (is (type self) Either)
-                 (raise
-                   (NotImplementedError "please use Left or Right instead")))
-               (.--init-- MonadPlus self value)
-               nil)]
-   [--lt-- (fn [self other]
-             "left should always be less than right"
-             (cond
-               [(not (instance? (, Left Right) self))
-                  (raise (TypeError "unorderable types:"
-                                    (type self) (type other)))]
-               ;; same monad type, compare against the value insiide
-               [(is (type self) (type other)) (< self.value other.value)]
-               [true (if self false true)]))]
-   [bind (fn [self f]
-           "the bind operation of :class:`Either`
+  (defn --init-- [self value]
+    (when (is (type self) Either)
+      (raise (NotImplementedError "please use Left or Right instead")))
+      (.--init-- MonadPlus self value))
 
-           apply function to the value if and only if this is a
-           :class:`Right`."
-           (if self (f self.value) self))]
-   [plus (fn [self other] (or self other))]
-   [from-value (with-decorator classmethod
-                 (fn [cls value]
-                   "wrap :code:`value` in an :class:`Either` monad
+  (defn --lt-- [self other]
+    "left should always be less than right"
+    (if
+      (not (instance? (, Left Right) self))
+        (raise (TypeError "unorderable types:" (type self) (type other)))
+      ;; same monad type, compare against the value inside
+      (is (type self) (type other))
+        (< self.value other.value)
+      (if self False True)))
 
-                   return a :class:`Right` if the value is evaluated as true.
-                   :class:`Left` otherwise."
-                   ((if value Right Left) value)))]])
+  (defn bind [self f]
+    "the bind operation of :class:`Either`
+
+    apply function to the value if and only if this is a :class:`Right`."
+    (if self (f self.value) self))
+
+  (defn plus [self other] (or self other))
+
+  (with-decorator classmethod
+    (defn from-value [cls value]
+      "wrap :code:`value` in an :class:`Either` monad
+
+      return a :class:`Right` if the value is evaluated as true.
+      :class:`Left` otherwise."
+      ((if value Right Left) value))))
 
 (defclass Left [Either]
   "left of :class:`Either`"
-  [[--bool-- (fn [self] false)]
-   [--nonzero-- --bool--]
-   [plus (fn [self other] other)]])
+  (defn --bool-- [self] False)
+  (def --nonzero-- --bool--)
+  (defn plus [self other] other))
 
 (defclass Right [Either]
   "right of :class:`Either`")

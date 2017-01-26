@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -7,8 +7,9 @@
   [hymn.types [maybe :as maybe-module]]
   [hymn.types.maybe [maybe-m Just Nothing nothing? maybe]])
 
-(require hymn.types.maybe)
-(require hymn.operations)
+(require
+  [hymn.types.maybe [?]]
+  [hymn.macros [do-monad]])
 
 (defn test-reader-macro-maybe []
   "maybe reader macro ? should wrap a function with decorator maybe"
@@ -18,7 +19,7 @@
 
 (defn test-module-level-unit []
   "maybe module should have a working module level unit function"
-  (assert (instance? maybe-m (maybe-module.unit nil))))
+  (assert (instance? maybe-m (maybe-module.unit None))))
 
 (defn test-module-level-zero []
   "maybe module should have a module level zero"
@@ -35,8 +36,8 @@
   "maybe module should have a module level to-maybe"
   (assert (= (Just 1) (maybe-module.to-maybe 1)))
   (assert (= (Just 1) (maybe-module.->maybe 1)))
-  (assert (is Nothing (maybe-module.to-maybe nil)))
-  (assert (is Nothing (maybe-module.->maybe nil))))
+  (assert (is Nothing (maybe-module.to-maybe None)))
+  (assert (is Nothing (maybe-module.->maybe None))))
 
 (defn test-zero-is-nothing []
   "zero of maybe monad should be Nothing"
@@ -46,36 +47,36 @@
 (defn test-type []
   "Nothing and Just are of maybe monad"
   (assert (instance? maybe-m Nothing))
-  (assert (instance? maybe-m (Just nil)))
+  (assert (instance? maybe-m (Just None)))
   (assert (not (instance? Just Nothing))))
 
 (defn test-compare []
   "compare between maybe"
   (assert (= Nothing Nothing))
   (assert (= (Just 42) (Just 42)))
-  (assert (!= (Just nil) Nothing))
-  (assert (!= Nothing (Just nil)))
+  (assert (!= (Just None) Nothing))
+  (assert (!= Nothing (Just None)))
   (assert (is Nothing Nothing)))
 
 (defn test-ordering []
   "ordering logic of maybe monad"
-  (assert (is false (> Nothing Nothing)))
-  (assert (is false (< Nothing Nothing)))
-  (assert (is false (> Nothing (Just nil))))
-  (assert (< Nothing (Just nil)))
-  (assert (> (Just nil) Nothing))
+  (assert (is False (> Nothing Nothing)))
+  (assert (is False (< Nothing Nothing)))
+  (assert (is False (> Nothing (Just None))))
+  (assert (< Nothing (Just None)))
+  (assert (> (Just None) Nothing))
   (assert (> (Just 1) (Just 0)))
   (assert (>= (Just 1) (Just 1)))
   (assert (= (Just 1) (Just 1))))
 
 (defn test-boolean []
   "Nothing is falsy and Just is truthy"
-  (assert (is false (bool Nothing)))
-  (assert (is true (bool (Just nil)))))
+  (assert (is False (bool Nothing)))
+  (assert (is True (bool (Just None)))))
 
 (defn test-from-value []
-  "from-value will return Nothing for anything false, Just otherwise"
-  (assert (is Nothing (maybe-m.from-value nil)))
+  "from-value will return Nothing for anything False, Just otherwise"
+  (assert (is Nothing (maybe-m.from-value None)))
   (assert (is Nothing (maybe-m.from-value 0)))
   (assert (is Nothing (maybe-m.from-value "")))
   (assert (is Nothing (maybe-m.from-value [])))
@@ -86,15 +87,15 @@
 
 (defn test-from-maybe []
   "from-maybe should get the value from Just and return default otherwise"
-  (assert (= 1 (.from-maybe (Just 1) nil)))
-  (assert (= nil (.from-maybe (Just nil) 1)))
+  (assert (= 1 (.from-maybe (Just 1) None)))
+  (assert (none? (.from-maybe (Just None) 1)))
   (assert (= 1 (.from-maybe Nothing 1)))
-  (assert (= nil (.from-maybe Nothing nil))))
+  (assert (none? (.from-maybe Nothing None))))
 
 (defn test-is-nothing []
   "nothing? testing for Nothing"
   (assert (nothing? Nothing))
-  (assert (not (nothing? (Just nil)))))
+  (assert (not (nothing? (Just None)))))
 
 (defn test-maybe-decorator []
   "maybe decorator make function return Nothing when exception is raised"

@@ -100,11 +100,11 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.writer [tell]])
-  => (do-monad [_ (tell 1) _ (tell 2)] nil)
+  => (require [hymn.macros [do-monad]])
+  => (do-monad [_ (tell 1) _ (tell 2)] None)
   IntWriter((None, 3))
-  => (do-monad [_ (tell "hello ") _ (tell "world!")] nil)
+  => (do-monad [_ (tell "hello ") _ (tell "world!")] None)
   StrWriter((None, 'hello world!'))
 
 
@@ -116,7 +116,7 @@ Operations
 .. code-block:: clojure
 
   => (import [hymn.types.writer [writer]])
-  => (writer nil 1)
+  => (writer None 1)
   IntWriter((None, 1))
 
 :func:`tell` adds message into accumulated values of writer
@@ -135,15 +135,15 @@ appropriate type
 .. code-block:: clojure
 
   => (import [hymn.types.writer [tell writer]])
-  => (writer nil "a")
+  => (writer None "a")
   StrWriter((None, 'a'))
-  => (writer nil 1)
+  => (writer None 1)
   IntWriter((None, 1))
-  => (writer nil 1.0)
+  => (writer None 1.0)
   FloatWriter((None, 1.0))
-  => (writer nil (, 1))
+  => (writer None (, 1))
   TupleWriter((None, (1,)))
-  => (writer nil [1])
+  => (writer None [1])
   ListWriter((None, [1]))
   => (tell "a")
   StrWriter((None, 'a'))
@@ -169,8 +169,8 @@ Use :func:`censor` to apply function to the output
 .. code-block:: clojure
 
   => (import [hymn.types.writer [censor tell]])
-  => (require hymn.dsl)
-  => (def logs (do-monad [_ (tell [1]) _ (tell [2]) _ (tell [3])] nil))
+  => (require [hymn.macros [do-monad]])
+  => (def logs (do-monad [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
   => (.execute logs)
   [1, 2, 3]
   => (.execute (censor sum logs))
@@ -182,12 +182,12 @@ Reader Macro
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
-  => (require hymn.types.writer)
+  => (require [hymn.types.writer [+]])
   => ;; reader macro + works like tell
   => #+1
   IntWriter((None, 1))
   => (.execute #+1)
   1
+  => (require [hymn.macros [do-monad]])
   => (do-monad [_ #+1 _ #+2 _ #+4] 42)
   IntWriter((42, 7))

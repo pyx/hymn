@@ -1,6 +1,6 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; list and maybe monad example
@@ -9,7 +9,7 @@
   [functools [partial]]
   [itertools [permutations]])
 
-(require hymn.dsl)
+(require [hymn.dsl [*]])
 
 (def ops [+ - * /])
 
@@ -35,7 +35,7 @@
 
 (defn combinations [numbers]
   (do-monad
-    [:let [[seemed (set)]]
+    [:let [seemed (set)]
      [a b c d] #*(permutations numbers 4)
      :when (not-in (, a b c d) seemed)]
     (do

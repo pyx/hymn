@@ -35,8 +35,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.list [list-m]])
+  => (require [hymn.macros [do-monad]])
   => (list (do-monad [a (list-m [1 2 3])] (inc a)))
   [2, 3, 4]
   => (list (do-monad [a (list-m [1 2 3]) b (list-m [4 5 6])] (+ a b)))
@@ -50,8 +50,8 @@ Do Notation with :when
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.list [list-m]])
+  => (require [hymn.macros [do-monad]])
   => (list (do-monad
   ...         [a (list-m [1 2 4])
   ...          b (list-m [1 2 4])
@@ -67,6 +67,7 @@ Operations
 
 .. code-block:: clojure
 
+  => (import [hymn.types.list [list-m]])
   => (list (list-m.unit))
   []
   => (list (list-m.unit 1))
@@ -81,7 +82,6 @@ instead of the builtin `list`
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.list [fmap list-m]])
   => (instance? list-m (fmap inc [0 1 2]))
   True
@@ -96,9 +96,11 @@ Reader Macro
 
 .. code-block:: clojure
 
-  => (require hymn.types.list)
+  => ;; this in fact pulls in all macros in the module, not just reader macro *
   => (import [hymn.types.list [list-m]])
+  => (require [hymn.types.list [*]])
   => (instance? list-m #*[0 1 2])
   True
+  => (require [hymn.macros [do-monad]])
   => (list (do-monad [a #*(range 10) :when (odd? a)] (* a 2)))
   [2, 6, 10, 14, 18]

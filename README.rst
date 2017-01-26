@@ -15,7 +15,6 @@ The continuation monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.continuation [cont-m call-cc]])
   => ;; computations in continuation passing style
   => (defn double [x] (cont-m.unit (* x 2)))
@@ -30,6 +29,7 @@ The continuation monad
   145
   => (.run (square 12) str)
   '144'
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [sqr (square 42)] (.format "answer^2 = {}" sqr)))
   'answer^2 = 1764'
 
@@ -37,8 +37,8 @@ The either monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.either [Left Right either failsafe]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with either monad
   => (do-monad [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
@@ -62,8 +62,8 @@ The identity monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.identity [identity-m]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with identity monad is like let binding
   => (do-monad [a (identity-m 1) b (identity-m 2)] (+ a b))
   Identity(3)
@@ -72,10 +72,10 @@ The lazy monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.lazy [force]])
+  => (require [hymn.types.lazy [lazy]])
   => ;; lazy computation implemented as monad
-  => ;; macro lazy create deferred computation
+  => ;; macro lazy creates deferred computation
   => (def a (lazy (print "evaluate a") 42))
   => ;; the computation is deferred, notice the value is shown as '_'
   => a
@@ -87,7 +87,7 @@ The lazy monad
   => ;; now the value is cached
   => a
   Lazy(42)
-  => ;; evaluate again will not trigger the computation
+  => ;; calling evaluate again will not trigger the computation
   => (.evaluate a)
   42
   => (def b (lazy (print "evaluate b") 21))
@@ -100,6 +100,7 @@ The lazy monad
   => ;; force on values other than lazy return the value unchanged
   => (force 42)
   42
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with lazy monad
   => (def c (do-monad [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
   => ;; the computation is deferred
@@ -118,14 +119,15 @@ The list monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.list [list-m]])
+  => (require [hymn.macros [do-monad]])
   => ;; use list-m contructor to turn sequence into list monad
   => (def xs (list-m (range 2)))
   => (def ys (list-m (range 3)))
   => ;; do notation with list monad is list comprehension
   => (list (do-monad [x xs y ys :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
+  => (require [hymn.types.list [*]])
   => ;; * is the reader macro for list-m
   => (list (do-monad [x #*(range 2) y #*(range 3) :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
@@ -134,8 +136,8 @@ The maybe monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.maybe [Just Nothing maybe]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with maybe monad
   => (do-monad [a (Just 1) b (Just 1)] (/ a b))
   Just(1.0)
@@ -156,8 +158,8 @@ The reader monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.reader [lookup]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with reader monad, lookup assumes the environment is subscriptable
   => (def r (do-monad [a (lookup 'a) b (lookup 'b)] (+ a b)))
   => ;; run reader monad r with environment
@@ -168,32 +170,31 @@ The state monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.state [lookup set-value]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with state monad, set-value sets the value with key in the state
   => (def s (do-monad [a (lookup 'a) _ (set-value 'b (inc a))] a))
   => ;; run state monad s with initial state
   => (.run s {'a 1})
-  (, 1 {'a 1 'b 2})
+  (1, {'b': 2, 'a': 1})
 
 The writer monad
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.writer [tell]])
+  => (require [hymn.macros [do-monad]])
   => ;; do notation with writer monad
-  => (do-monad [_ (tell "hello") _ (tell " world")] nil)
+  => (do-monad [_ (tell "hello") _ (tell " world")] None)
   StrWriter((None, 'hello world'))
   => ;; int is monoid, too
-  => (.execute (do-monad [_ (tell 1) _ (tell 2) _ (tell 3)] nil))
+  => (.execute (do-monad [_ (tell 1) _ (tell 2) _ (tell 3)] None))
   6
 
 Operations on monads
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.operations [lift]])
   => ;; lift promotes function into monad
   => (def m+ (lift +))
@@ -223,6 +224,7 @@ Operations on monads
   Nothing
   => ;; <- is an alias of lookup
   => (import [hymn.types.reader [<-]])
+  => (require [hymn.macros [^]])
   => ;; ^ is the reader macro for lift
   => (def p (#^print (<- 'message) :end (<- 'end)))
   => (.run p {'message "Hello world" 'end "!\n"})
@@ -272,7 +274,11 @@ Using Hymn in Python
 Requirements
 ============
 
-- hy >= 0.11.0
+- hy >= 0.12.1
+
+For hy version 0.11 and earlier, please install hymn 0.5.
+
+See Changelog section in documentation for details.
 
 
 Installation
@@ -298,7 +304,7 @@ Links
 =====
 
 Documentation:
-  http://hymn.readthedocs.org/
+  https://hymn.readthedocs.io/
 
 Issue Tracker:
   https://github.com/pyx/hymn/issues/

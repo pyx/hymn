@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -9,7 +9,7 @@
 
 (require hymn.operations)
 
-(def env {'a 42 'b nil 'c "hello"})
+(def env {'a 42 'b None 'c "hello"})
 
 (defn test-module-level-unit []
   "reader module should have a working module level unit function"
@@ -17,7 +17,7 @@
 
 (defn test-module-level-run []
   "reader module should have a module level run"
-  (assert (reader-module.run (reader-m.unit true) nil)))
+  (assert (reader-module.run (reader-m.unit True) None)))
 
 (defn test-asks-and-reader-create-reader []
   "asks and reader should create a reader from function"

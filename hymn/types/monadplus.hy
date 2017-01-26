@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.monadplus - base monadplus class"
 
@@ -10,16 +10,18 @@
   "the monadplus class
 
   Monads that also support choice and failure."
-  [[--add-- (fn [self other] (self.plus other))]
-   [plus (fn [self other]
-           "the associative operation"
-           (raise NotImplementedError))]
-   [zero (with-decorator property
-           (fn [self]
-             "the identity of :meth:`plus`.
+  (defn --add-- [self other] (self.plus other))
 
-             It should satisfy the following law, left zero
-             (notice the bind operator is haskell's :code:`>>=` here)::
+  (defn plus [self other]
+    "the associative operation"
+    (raise NotImplementedError))
 
-                 zero >>= f = zero"
-           (raise NotImplementedError)))]])
+  (with-decorator property
+    (defn zero [self]
+      "the identity of :meth:`plus`.
+
+      It should satisfy the following law, left zero
+      (notice the bind operator is haskell's :code:`>>=` here)::
+
+       zero >>= f = zero"
+      (raise NotImplementedError))))

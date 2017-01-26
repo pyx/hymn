@@ -1,6 +1,10 @@
 Changelog
 =========
 
+- 0.5
+
+  - Version bump to indicate at least halfway done with planned features
+
 - 0.4
 
   - Support python 3.5

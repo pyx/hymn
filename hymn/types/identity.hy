@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.identity - the identity monad"
 
@@ -9,7 +9,7 @@
 
 (defclass Identity [Monad Ord]
   "the identity monad"
-  [[bind (fn [self f] (f self.value))]])
+  (defn bind [self f] (f self.value)))
 
 ;;; alias
 (def identity-m Identity)

@@ -83,8 +83,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.maybe [Just Nothing]])
+  => (require [hymn.macros [do-monad]])
   => (do-monad [a (Just 1) b (Just 2)] (+ a b))
   Just(3)
   => (do-monad [a (Just 1) b Nothing] (+ a b))
@@ -96,8 +96,8 @@ Do Notation with :when
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.maybe [maybe-m]])
+  => (require [hymn.macros [do-monad-with]])
   => (defn safe-div [a b]
   ...   (do-monad-with maybe-m [:when (not (zero? b))] (/ a b)))
   => (safe-div 1 2)
@@ -116,7 +116,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   => (import [hymn.types.maybe [->maybe]])
   => (->maybe 42)
   Just(42)
-  => (->maybe nil)
+  => (->maybe None)
   Nothing
 
 :func:`nothing?` returns :code:`True` if the value is :data:`Nothing`
@@ -134,11 +134,11 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [<-maybe ->maybe]])
-  => (nothing? (->maybe nil))
+  => (import [hymn.types.maybe [<-maybe ->maybe nothing?]])
+  => (nothing? (->maybe None))
   True
   => (def answer (->maybe 42))
-  => (def nothing (->maybe nil))
+  => (def nothing (->maybe None))
   => (<-maybe answer "not this one")
   42
   => (<-maybe nothing "I got nothing")
@@ -178,7 +178,7 @@ Reader Macro
 
 .. code-block:: clojure
 
-  => (require hymn.types.maybe)
+  => (require [hymn.types.maybe [?]])
   => (#?int "42")
   Just(42)
   => (#?int "not a number")

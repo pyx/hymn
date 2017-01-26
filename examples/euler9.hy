@@ -1,11 +1,11 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; list monad example
 
-(require hymn.dsl)
+(require [hymn.dsl [*]])
 
 (def total 1000)
 (def limit (-> total (** 0.5) int inc))
@@ -14,9 +14,9 @@
   (do-monad
     [m #*(range 2 limit)
      n #*(range 1 m)
-     :let [[a (- (** m 2) (** n 2))]
-           [b (* 2 m n)]
-           [c (+ (** m 2) (** n 2))]]
+     :let [a (- (** m 2) (** n 2))
+           b (* 2 m n)
+           c (+ (** m 2) (** n 2))]
      :when (-> (+ a b c) (= total))]
     [a b c]))
 

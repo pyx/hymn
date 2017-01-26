@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -7,4 +7,4 @@
 
 (defn test-module-level-unit []
   "identity module should have a working module level unit function"
-  (assert (instance? identity-module.Identity (identity-module.unit nil))))
+  (assert (instance? identity-module.Identity (identity-module.unit None))))

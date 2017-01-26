@@ -43,8 +43,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.reader [ask]])
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [e ask] (inc e)) 41)
   42
 
@@ -57,8 +57,8 @@ Operations
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.reader [asks reader]])
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [h (asks first)] h) [5 4 3 2 1])
   5
   => (.run (do-monad [h (reader second)] h) [5 4 3 2 1])
@@ -68,10 +68,10 @@ Use :func:`ask` to fetch the environment
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.reader [ask]])
   => (.run ask 42)
   42
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [e ask] (inc e)) 42)
   43
 
@@ -90,7 +90,6 @@ alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.reader [lookup <-]])
   => (.run (lookup 1) [1 2 3])
   2
@@ -100,5 +99,6 @@ alias of :func:`lookup`
   2
   => (.run (<- 'b) {'a 1 'b 2})
   2
+  => (require [hymn.macros [do-monad]])
   => (.run (do-monad [a (<- 'a) b (<- 'b)] (+ a b)) {'a 25 'b 17})
   42

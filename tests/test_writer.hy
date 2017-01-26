@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -20,12 +20,13 @@
      writer-with-type-of
      writer tell listen censor]])
 
-(require hymn.types.writer)
-(require hymn.operations)
+(require
+  [hymn.types.writer [+]]
+  [hymn.macros [do-monad]])
 
 (defn test-reader-macro-tell []
   "writer reader macro + should work as tell"
-  (assert (= 3 (.execute (do-monad [_ #+1 _ #+2] nil)))))
+  (assert (= 3 (.execute (do-monad [_ #+1 _ #+2] None)))))
 
 (defn test-module-level-execute []
   "writer module should have a module level execute"
@@ -64,5 +65,5 @@
 
 (defn test-writer []
   "writer create a writer with value and message"
-  (assert (instance? writer-m (writer nil 1)))
-  (assert (= (, nil 1) (.run (writer nil 1)))))
+  (assert (instance? writer-m (writer None 1)))
+  (assert (= (, None 1) (.run (writer None 1)))))

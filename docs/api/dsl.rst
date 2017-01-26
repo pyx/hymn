@@ -20,7 +20,7 @@ This module also provides all the macros defined in other modules,
 
 .. code-block:: clojure
 
-  (require hymn.dsl)
+  (require [hymn.dsl [*]])
 
 is all you need to use any macro defined in :code:`Hymn`
 

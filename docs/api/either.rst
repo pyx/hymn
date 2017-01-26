@@ -71,8 +71,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.either [Left Right]])
+  => (require [hymn.macros [do-monad]])
   => (do-monad [a (Right 1) b (Right 2)] (+ a b))
   Right(3)
   => (do-monad [a (Left 1) b (Right 2)] (+ a b))
@@ -84,8 +84,8 @@ Do Notation with :when
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
   => (import [hymn.types.either [either-m]])
+  => (require [hymn.macros [do-monad-with]])
   => (defn safe-div [a b]
   ...   (do-monad-with either-m [:when (not (zero? b))] (/ a b)))
   => (safe-div 1 2)
@@ -104,7 +104,7 @@ Use :code:`->either` to create an :class:`Either` from a value
   => (import [hymn.types.either [->either]])
   => (->either 42)
   Right(42)
-  => (->either nil)
+  => (->either None)
   Left(None)
 
 Use :func:`left?` and :func:`right?` to test the type
@@ -114,7 +114,7 @@ Use :func:`left?` and :func:`right?` to test the type
   => (import [hymn.types.either [Left Right left? right?]])
   => (right? (Right 42))
   True
-  => (left? (Left nil))
+  => (left? (Left None))
   True
 
 :func:`either` applies function to value in the monad depending on the type
@@ -149,7 +149,7 @@ Reader Macro
 
 .. code-block:: clojure
 
-  => (require hymn.types.either)
+  => (require [hymn.types.either [|]])
   => (#|int "42")
   Right(42)
   => (#|int "nan")

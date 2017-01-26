@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.list - the list monad"
 
@@ -15,39 +15,44 @@
 
 (defclass -Zero [object]
   "descriptor that returns an empty List"
-  [[--get-- (fn [self instance cls] (cls []))]])
+  (defn --get-- [self instance cls] (cls [])))
 
 (defclass List [MonadPlus Monoid]
   "the list monad
 
   nondeterministic computation"
-  [[--init-- (fn [self value] (setv self.value (CachedSequence value)) nil)]
-   [--iter-- (fn [self] (iter self.value))]
-   [--len-- (fn [self] (len self.value))]
-   [fmap (fn [self f]
-           "return list obtained by applying :code:`f` to each element of the
-           list"
-           (List (map f self.value)))]
-   [join (fn [self]
-           "join of list monad, concatenate list of list"
-           (List (chain.from-iterable self)))]
-   [append (fn [self other]
-             "the append operation of :class:`List`"
-             (List (chain self other)))]
-   [concat (with-decorator classmethod
-             ;; overloaded for better performance
-             (fn [cls list-of-list]
-               "the concat operation of :class:`List`"
-               (List (chain.from-iterable list-of-list))))]
-   [plus (fn [self other]
-           "concatenate two list"
-           (.append self other))]
-   [unit (with-decorator classmethod
-           (fn [cls &rest values]
-             "the unit, create a :class:`List` from :code:`values`"
-             (cls values)))]
-   [zero (-Zero)]
-   [empty zero]])
+  (defn --init-- [self value] (setv self.value (CachedSequence value)))
+
+  (defn --iter-- [self] (iter self.value))
+
+  (defn --len-- [self] (len self.value))
+
+  (defn fmap [self f]
+    "return list obtained by applying :code:`f` to each element of the list"
+    ((type self) (map f self.value)))
+
+  (defn join [self]
+    "join of list monad, concatenate list of list"
+    ((type self) (chain.from-iterable self)))
+
+  (defn append [self other]
+    "the append operation of :class:`List`"
+    ((type self) (chain self other)))
+
+  (with-decorator classmethod
+    (defn concat [cls list-of-lists]
+      "the concat operation of :class:`List`"
+      (cls (chain.from-iterable list-of-lists))))
+
+  (defn plus [self other] "concatenate two lists" (.append self other))
+
+  (with-decorator classmethod
+    (defn unit [cls &rest values]
+      "the unit, create a :class:`List` from :code:`values`"
+      (cls values)))
+
+  (def zero (-Zero))
+  (def empty zero))
 
 ;;; alias
 (def list-m List)

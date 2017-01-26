@@ -14,11 +14,3 @@ Helper Classes
 .. autoclass:: SuppressContextManager
   :members:
   :show-inheritance:
-
-
-Helper Functions
-----------------
-
-.. autofunction:: const
-.. autofunction:: suppress
-.. autofunction:: pipe

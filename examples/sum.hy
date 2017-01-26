@@ -1,12 +1,11 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; writer monad example
 
 (import [hymn.dsl [sequence tell]])
-(require hymn.dsl)
 
 (defn wicked-sum [numbers]
   (.execute (sequence (map tell numbers))))

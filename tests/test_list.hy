@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -7,8 +7,9 @@
   [hymn.types [list :as list-module]]
   [hymn.types.list [list-m]])
 
-(require hymn.types.list)
-(require hymn.operations)
+(require
+  [hymn.types.list [*]]
+  [hymn.macros [do-monad]])
 
 (defn test-reader-macro-list []
   "list reader macro * should turn a sequence into List monad"
@@ -17,7 +18,7 @@
 
 (defn test-module-level-unit []
   "list module should have a working module level unit function"
-  (assert (instance? list-m (list-module.unit nil))))
+  (assert (instance? list-m (list-module.unit None))))
 
 (defn test-module-level-zero []
   "list module should have a module level zero"

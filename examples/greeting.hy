@@ -1,12 +1,13 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; continuation monad example
 
 (import [hymn.dsl [cont-m call-cc]])
-(require hymn.dsl)
+
+(require [hymn.dsl [do-monad m-when with-monad]])
 
 (defn validate [name exit]
   (with-monad cont-m

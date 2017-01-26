@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
@@ -19,11 +19,11 @@
 
 (require hymn.operations)
 
-(def env {'a 42 'b nil 'c "hello"})
+(def env {'a 42 'b None 'c "hello"})
 
 (defn test-module-level-unit []
   "state module should have a working module level unit function"
-  (assert (instance? state-m (state-module.unit true))))
+  (assert (instance? state-m (state-module.unit True))))
 
 (defn test-module-level-run []
   "state module should have a module level run"
@@ -68,7 +68,7 @@
 (defn test-get-state []
   "get-state should return the current state as the result"
   (def s (object))
-  (def m (state-m.unit true))
+  (def m (state-m.unit True))
   (assert (instance? state-m get-state))
   (assert (is s (.evaluate get-state s) (.evaluate <-state s))))
 

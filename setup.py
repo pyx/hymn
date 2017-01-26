@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from os import path
-from distutils.core import setup
+from setuptools import setup
 
 if sys.version_info < (2, 7):
     sys.exit('hymn requires Python 2.7 or higher')
@@ -14,7 +14,7 @@ from hymn import __doc__ as DESCRIPTION
 LONG_DESCRIPTION = open(path.join(ROOT_DIR, 'README.rst')).read()
 
 DEP = [
-    'hy>=0.11.1',
+    'hy>=0.12.1',
 ]
 
 EXTRA_DEP = {
@@ -47,6 +47,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    keywords='monad functional programming',
     author='Philip Xu',
     author_email='pyx@xrefactor.com',
     url='https://github.com/pyx/hymn/',

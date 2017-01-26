@@ -1,13 +1,14 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
   [hymn.types [continuation :as continuation-module]]
   [hymn.types.continuation [cont-m call-cc]])
 
-(require hymn.types.continuation)
-(require hymn.operations)
+(require
+  [hymn.types.continuation [<]]
+  [hymn.macros [do-monad]])
 
 (defn test-reader-macro-continuation-unit []
   "unit reader macro < should work as cont-m.unit"
@@ -19,7 +20,7 @@
 
 (defn test-module-level-run []
   "continuation module should have a module level run"
-  (def c (cont-m.unit nil))
+  (def c (cont-m.unit None))
   (assert (= (continuation-module.run c) (.run c))))
 
 (defn test-continuation-run []

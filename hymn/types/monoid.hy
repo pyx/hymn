@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.types.monoid - base monoid class"
 
@@ -7,18 +7,21 @@
   "the monoid class
 
   types with an associative binary operation that has an identity"
-  [[empty (with-decorator property
-            (fn [self]
-              "the identity of :meth:`append`"
-              (raise NotImplementedError)))]
-   [append (fn [self other]
-             "an associative operation for monoid"
-             (raise NotImplementedError))]
-   [concat (with-decorator classmethod
-             (fn [cls seq]
-               "fold a list using the monoid"
-               (reduce cls.append seq cls.empty)))]])
+  (with-decorator property
+    (defn empty [self]
+      "the identity of :meth:`append`"
+      (raise NotImplementedError)))
 
-(defn-alias [append <>] [&rest monoids]
+  (defn append [self other]
+    "an associative operation for monoid"
+    (raise NotImplementedError))
+
+  (with-decorator classmethod
+    (defn concat [cls seq]
+      "fold a list using the monoid"
+      (reduce cls.append seq cls.empty))))
+
+(defn append [&rest monoids]
   "the associative operation of monoid"
   (reduce (fn [m1 m2] (m1.append m2)) monoids))
+(def <> append)

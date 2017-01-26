@@ -1,13 +1,13 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; writer monad example
 
 (import [hymn.dsl [tell]])
 
-(require hymn.dsl)
+(require [hymn.dsl [do-monad do-monad-m]])
 
 (defn gcd [a b]
   (if (zero? b)
@@ -21,7 +21,7 @@
 (defmain [&rest args]
   (if (-> args len (!= 3))
     (print "usage:" (first args) "number1 number2")
-    (let [[a (int (get args 1))]
-          [b (int (get args 2))]]
+    (let [a (int (get args 1))
+          b (int (get args 2))]
       (print "calculating the greatest common divisor of" a "and" b)
       (print (.execute (gcd a b))))))

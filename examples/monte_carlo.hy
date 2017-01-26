@@ -1,6 +1,6 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; state monad example
@@ -10,7 +10,7 @@
   [time [time]]
   [hymn.dsl [get-state replicate set-state]])
 
-(require hymn.dsl)
+(require [hymn.dsl [do-monad]])
 
 ;;; Knuth!
 (def a 6364136223846793005)
@@ -29,7 +29,7 @@
 
 (defn points [seed]
   "stream of random points"
-  (while true
+  (while True
     ;; NOTE:
     ;; limited by the maximum recursion depth, we take 150 points each time
     (setv [random-points seed] (.run (replicate 150 random-point) seed))
@@ -41,7 +41,7 @@
   (def samples (take number-of-points (points (int (time)))))
   (def result
     (Counter (genexpr (>= 1.0 (+ (** x 2) (** y 2))) [[x y] samples])))
-  (-> result (get true) (/ number-of-points) (* 4)))
+  (-> result (get True) (/ number-of-points) (* 4)))
 
 (defmain [&rest args]
   (if (-> args len (!= 2))

@@ -1,11 +1,11 @@
 #!/usr/bin/env hy
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; lift and list monad reader macros example
 
-(require hymn.dsl)
+(require [hymn.dsl [*]])
 
 (defmain [&rest args]
   (print "Project Euler Problem 29 - lift and list monad example"

@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 "hymn.dsl - dsl for computation with monads"
 
@@ -14,6 +14,7 @@
   [hymn.types.either
     [Either either-m
      Left Right left? right? either failsafe]]
+  [hymn.types.identity [Identity identity-m]]
   [hymn.types.lazy [Lazy lazy-m evaluate :as evaluate-lazy force lazy?]]
   [hymn.types.list [List fmap list-m]]
   [hymn.types.maybe
@@ -57,26 +58,37 @@
      run :as run-writer
      execute :as execute-writer]]
   [hymn.operations
-    [k-compose <=< k-pipe >=> lift m-map replicate sequence]]
-  [hymn.utils [compose const pipe]])
+    [k-compose <=< k-pipe >=> lift m-map replicate sequence]])
 
 ;;; reader macro for the continuation monad
-(require hymn.types.continuation)
+(require [hymn.types.continuation [<]])
 
 ;;; reader macro for the either monad
-(require hymn.types.either)
+(require [hymn.types.either [|]])
 
 ;;; macros for the lazy monad
-(require hymn.types.lazy)
+(require [hymn.types.lazy [lazy]])
 
 ;;; reader macro for the list monad
-(require hymn.types.list)
+;;; NOTE: this in fact pulls in all macros instead of the one named '*'
+(require [hymn.types.list [*]])
 
 ;;; reader macro for the maybe monad
-(require hymn.types.maybe)
+(require [hymn.types.maybe [?]])
 
 ;;; reader macro for the writer monad
-(require hymn.types.writer)
+(require [hymn.types.writer [+]])
 
 ;;; macros for monad operations
-(require hymn.operations)
+(require
+  [hymn.macros
+    [^ =
+     do-monad
+     do-monad-m
+     do-monad-with
+     m-for
+     m-when
+     monad->
+     monad->>
+     monad-comp
+     with-monad]])

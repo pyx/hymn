@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 ;;; NOTE:
@@ -10,7 +10,7 @@
 ;;; This is my own interpretation, especially the implementation of Maybe
 ;;; Monad has unbiased plus, which satisfy Monoid and *Left Distribution*.
 
-(require hymn.operations)
+(require [hymn.macros [do-monad]])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))

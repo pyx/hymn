@@ -48,8 +48,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
-  => (require hymn.types.lazy)
+  => (require [hymn.macros [do-monad]])
+  => (require [hymn.types.lazy [lazy]])
   => (def two (do-monad [x (lazy (print "evaluate two") 2)] x))
   => two
   Lazy(_)
@@ -66,8 +66,7 @@ computation will not be evaluated until asked explicitly
 
 .. code-block:: clojure
 
-  => (require hymn.dsl)
-  => (require hymn.types.lazy)
+  => (require [hymn.types.lazy [lazy]])
   => (def answer (lazy (print "the answer is ...") 42))
   => answer
   Lazy(_)
@@ -92,7 +91,7 @@ cached
 
 .. code-block:: clojure
 
-  => (require hymn.types.lazy)
+  => (require [hymn.types.lazy [lazy]])
   => (def who (lazy (input "enter your name? ")))
   => who
   Lazy(_)
@@ -121,8 +120,8 @@ Use :func:`force` to evaluate :class:`Lazy` as well as other values
 
 .. code-block:: clojure
 
-  => (require hymn.types.lazy)
   => (import [hymn.types.lazy [force]])
+  => (require [hymn.types.lazy [lazy]])
   => (force (lazy (print "yes") 1))
   yes
   1
@@ -141,8 +140,9 @@ Use :func:`force` to evaluate :class:`Lazy` as well as other values
 
 .. code-block:: clojure
 
-  => (import [hymn.types.lazy [lazy-m lazy?]])
+  => (import [hymn.types.lazy [lazy?]])
+  => (require [hymn.types.lazy [lazy]])
   => (lazy? 1)
   False
-  => (lazy? (lazy-m.unit 1))
+  => (lazy? (lazy 1))
   True

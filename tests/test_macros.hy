@@ -1,11 +1,22 @@
 ;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+;;; Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 ;;; License: BSD New, see LICENSE for details.
 
 (import
   [hymn.operations [lift]])
 
-(require hymn.operations)
+(require
+  [hymn.macros
+    [^ =
+     do-monad
+     do-monad-m
+     do-monad-with
+     m-for
+     m-when
+     monad->
+     monad->>
+     monad-comp
+     with-monad]])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
@@ -43,7 +54,7 @@
   (def [monad run] monad-runner)
   (def unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) :let [[b (inc a)]]] b))))
+              (do-monad [a (unit data) :let [b (inc a)]] b))))
 
 (defn test-do-monad-multiple-bindings [monad-runner]
   "do-monad macro should allow multiple bindings"
@@ -154,4 +165,4 @@
 
 (defn test-with-monad [monad]
   "with-monad should provide default function m-return"
-  (assert (instance? monad (with-monad monad (m-return nil)))))
+  (assert (instance? monad (with-monad monad (m-return None)))))

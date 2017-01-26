@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-2016, Philip Xu <pyx@xrefactor.com>
+# Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 # License: BSD New, see LICENSE for details.
 
 from hymn.types.monadplus import MonadPlus
@@ -51,6 +51,7 @@ def run_state(s):
 
 def run_writer(w):
     return w.run()[0]
+
 
 monad_runners = [
     (Continuation, run_cont),
