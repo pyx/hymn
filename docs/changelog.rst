@@ -1,6 +1,11 @@
 Changelog
 =========
 
+- 0.6
+
+  - Backward incompatible change supporting hy 0.12, using new syntax
+  - Moved monad operation macros into separate module: hymn.macros
+
 - 0.5
 
   - Version bump to indicate at least halfway done with planned features
