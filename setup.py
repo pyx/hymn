@@ -14,7 +14,7 @@ from hymn import __doc__ as DESCRIPTION
 LONG_DESCRIPTION = open(path.join(ROOT_DIR, 'README.rst')).read()
 
 DEP = [
-    'hy>=0.12.1',
+    'hy>=0.13.0',
 ]
 
 EXTRA_DEP = {
