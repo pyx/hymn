@@ -10,7 +10,7 @@
   [hymn.types.monoid [Monoid]]
   [hymn.utils [suppress]])
 
-(defreader ? [f]
+(defsharp ? [f]
   (with-gensyms [maybe]
     `(do (import [hymn.types.maybe [maybe :as ~maybe]]) (~maybe ~f))))
 

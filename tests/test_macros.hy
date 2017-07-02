@@ -23,14 +23,14 @@
 
 (def data 42)
 
-(defn test-reader-macro-^ [monad-runner]
-  "lift reader macro ^ should expand to lift call"
+(defn test-sharp-macro-^ [monad-runner]
+  "lift sharp macro ^ should expand to lift call"
   (def [monad run] monad-runner)
   (def unit monad.unit)
   (assert (m= ((lift inc) (unit data)) (#^inc (unit data)))))
 
-(defn test-reader-macro-= [monad-runner]
-  "m-return reader macro = should expand to m-return call"
+(defn test-sharp-macro-= [monad-runner]
+  "m-return sharp macro = should expand to m-return call"
   (def [monad run] monad-runner)
   (def unit monad.unit)
   (def m-return unit)

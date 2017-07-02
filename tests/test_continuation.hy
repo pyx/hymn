@@ -10,8 +10,8 @@
   [hymn.types.continuation [<]]
   [hymn.macros [do-monad]])
 
-(defn test-reader-macro-continuation-unit []
-  "unit reader macro < should work as cont-m.unit"
+(defn test-sharp-macro-continuation-unit []
+  "unit sharp macro < should work as cont-m.unit"
   (assert (= -1 (.run (do-monad [a #<1 b #<2] (- a b))))))
 
 (defn test-module-level-unit []

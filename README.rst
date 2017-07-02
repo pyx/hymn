@@ -128,7 +128,7 @@ The list monad
   => (list (do-monad [x xs y ys :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
   => (require [hymn.types.list [*]])
-  => ;; * is the reader macro for list-m
+  => ;; * is the sharp macro for list-m
   => (list (do-monad [x #*(range 2) y #*(range 3) :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
 
@@ -225,7 +225,7 @@ Operations on monads
   => ;; <- is an alias of lookup
   => (import [hymn.types.reader [<-]])
   => (require [hymn.macros [^]])
-  => ;; ^ is the reader macro for lift
+  => ;; ^ is the sharp macro for lift
   => (def p (#^print (<- 'message) :end (<- 'end)))
   => (.run p {'message "Hello world" 'end "!\n"})
   Hello world!

@@ -6,16 +6,16 @@
 (import
   [hymn.utils [thread-first thread-last thread-bindings]])
 
-;;; lift reader macro, e.g. #^+ => (lift +)
-(defreader ^ [f]
+;;; lift sharp macro, e.g. #^+ => (lift +)
+(defsharp ^ [f]
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
-;;; monad return reader macro, replaced by 'm-return, used in do-monad, e.g.
+;;; monad return sharp macro, replaced by 'm-return, used in do-monad, e.g.
 ;;; (do-monad-m [a (Just 1) b #=(inc a)] #=[a b])
 ;;; is equivalent to
 ;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])
-(defreader = [expr] `(m-return ~expr))
+(defsharp = [expr] `(m-return ~expr))
 
 (defmacro do-monad-m [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"

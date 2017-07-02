@@ -60,23 +60,23 @@
   [hymn.operations
     [k-compose <=< k-pipe >=> lift m-map replicate sequence]])
 
-;;; reader macro for the continuation monad
+;;; sharp macro for the continuation monad
 (require [hymn.types.continuation [<]])
 
-;;; reader macro for the either monad
+;;; sharp macro for the either monad
 (require [hymn.types.either [|]])
 
 ;;; macros for the lazy monad
 (require [hymn.types.lazy [lazy]])
 
-;;; reader macro for the list monad
+;;; sharp macro for the list monad
 ;;; NOTE: this in fact pulls in all macros instead of the one named '*'
 (require [hymn.types.list [*]])
 
-;;; reader macro for the maybe monad
+;;; sharp macro for the maybe monad
 (require [hymn.types.maybe [?]])
 
-;;; reader macro for the writer monad
+;;; sharp macro for the writer monad
 (require [hymn.types.writer [+]])
 
 ;;; macros for monad operations

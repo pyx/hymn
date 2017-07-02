@@ -47,8 +47,8 @@ Functions
   alias of :func:`writer_with_type_of`
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. function:: + [w]
 
@@ -177,13 +177,13 @@ Use :func:`censor` to apply function to the output
   6
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. code-block:: clojure
 
   => (require [hymn.types.writer [+]])
-  => ;; reader macro + works like tell
+  => ;; sharp macro + works like tell
   => #+1
   IntWriter((None, 1))
   => (.execute #+1)

@@ -18,8 +18,8 @@ Hy Specific API
   alias of :class:`List`
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. function:: * [seq]
 
@@ -91,12 +91,12 @@ instead of the builtin `list`
   3
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. code-block:: clojure
 
-  => ;; this in fact pulls in all macros in the module, not just reader macro *
+  => ;; this in fact pulls in all macros in the module, not just sharp macro *
   => (import [hymn.types.list [list-m]])
   => (require [hymn.types.list [*]])
   => (instance? list-m #*[0 1 2])

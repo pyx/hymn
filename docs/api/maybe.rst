@@ -25,8 +25,8 @@ Hy Specific API
   alias of :class:`Maybe`
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. function:: ? [f]
 
@@ -173,8 +173,8 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   Nothing
 
 
-Reader Macro
-^^^^^^^^^^^^
+Sharp Macro
+^^^^^^^^^^^
 
 .. code-block:: clojure
 

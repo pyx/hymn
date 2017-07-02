@@ -180,12 +180,12 @@ All do monad macros support :code:`:when` if the monad is of type
   [1.0, 2.0]
 
 
-Reader Macros
--------------
+Sharp Macros
+------------
 
 .. function:: ^ [f]
 
-  :func:`lift` reader macro, :code:`#^f` is expanded to :code:`(lift f)`
+  :func:`lift` sharp macro, :code:`#^f` is expanded to :code:`(lift f)`
 
 .. code-block:: clojure
 
@@ -198,7 +198,7 @@ Reader Macros
 
 .. function:: = [value]
 
-  reader macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
+  sharp macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
   :code:`#=v` is expanded to :code:`(m-return v)`
 
 .. code-block:: clojure
