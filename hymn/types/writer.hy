@@ -18,9 +18,10 @@
   computation which accumulate output along with result"
   (defn bind [self f]
     "the bind operation of :class:`Writer`"
-    (let [[v a] self.value
-          [nv na] (. (f v) value)]
-      ((type self) (, nv (+ a na)))))
+    (def
+      [v a] self.value
+      [nv na] (. (f v) value))
+    ((type self) (, nv (+ a na))))
 
   (with-decorator classmethod
     (defn unit [cls value]

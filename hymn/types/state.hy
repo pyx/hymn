@@ -21,7 +21,7 @@
 
     use the final state of this computation as the initial state of the
     second"
-    ((type self) (fn [s] (let [(, a ns) (.run self s)] (.run (f a) ns)))))
+    ((type self) (fn [s] (def (, a ns) (.run self s)) (.run (f a) ns))))
 
   (with-decorator classmethod
     (defn unit [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))

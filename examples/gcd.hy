@@ -21,7 +21,7 @@
 (defmain [&rest args]
   (if (-> args len (!= 3))
     (print "usage:" (first args) "number1 number2")
-    (let [a (int (get args 1))
-          b (int (get args 2))]
+    (do
+      (def a (int (get args 1)) b (int (get args 2)))
       (print "calculating the greatest common divisor of" a "and" b)
       (print (.execute (gcd a b))))))

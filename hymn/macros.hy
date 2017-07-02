@@ -28,11 +28,12 @@
   (defn bind-action [mexpr [binding expr]]
     (if
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
-      (= binding :let) `(let ~expr ~mexpr)
+      (= binding :let) `(do (def ~@expr) ~mexpr)
       (with-gensyms [monad]
-        `(let [~monad ~expr]
-          (>> ~monad (fn [~binding &optional [m-return (. ~monad unit)]]
-                     ~mexpr))))))
+        `(do
+           (def ~monad ~expr)
+           (>> ~monad (fn [~binding &optional [m-return (. ~monad unit)]]
+                        ~mexpr))))))
   (reduce bind-action bindings expr))
 
 (defmacro do-monad [binding-forms expr]
@@ -80,4 +81,4 @@
 
 (defmacro with-monad [monad &rest exprs]
   "provide default function m-return as the unit of the monad"
-  `(let [m-return (. ~monad unit)] ~@exprs))
+  `(do (def m-return (. ~monad unit)) ~@exprs))
