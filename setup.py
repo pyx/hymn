@@ -13,29 +13,19 @@ from hymn import VERSION
 from hymn import __doc__ as DESCRIPTION
 LONG_DESCRIPTION = open(path.join(ROOT_DIR, 'README.rst')).read()
 
-DEP = [
-    'hy>=0.13.0',
-]
-
-EXTRA_DEP = {
-    'dev': [
-        'twine',
-    ],
-    'doc': [
-        'Sphinx>=1.2.3',
-    ],
-    'test': [
-        'pytest>=2.6.4',
-    ],
-}
 
 HYSRC = ['**.hy']
+
 
 setup(
     name='hymn',
     version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
+    url='https://github.com/pyx/hymn/',
+    author='Philip Xu',
+    author_email='pyx@xrefactor.com',
+    license='BSD-New',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -45,17 +35,30 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords='monad functional programming',
-    author='Philip Xu',
-    author_email='pyx@xrefactor.com',
-    url='https://github.com/pyx/hymn/',
+    keywords='hy lisp monad functional programming',
     download_url=(
         'https://bitbucket.org/pyx/hymn/get/%s.tar.bz2' % VERSION),
-    install_requires=DEP,
-    extras_require=EXTRA_DEP,
+    install_requires=[
+        'hy>=0.13.0',
+    ],
+    extras_require={
+        'dev': [
+            'twine',
+        ],
+        'doc': [
+            'Sphinx',
+        ],
+        'test': [
+            'flake8',
+            'pytest',
+            'tox',
+        ],
+    },
     packages=['hymn', 'hymn.types'],
     package_data={'hymn': HYSRC, 'hymn.types': HYSRC},
-    license='BSD-New',
+    zip_safe=False,
+    platforms='any',
 )

@@ -1,1 +1,1 @@
-Sphinx
+-e .[doc]

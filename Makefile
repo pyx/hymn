@@ -23,12 +23,10 @@ help:
 	@echo '  clean        : remove files created by other targets.'
 
 install:
-	pip install .
+	pip install --upgrade .
 
 dev-install:
-	pip install -r requirements/test.txt
-	pip install -r requirements/doc.txt
-	pip install -e .
+	pip install --upgrade -e .[dev,doc,test]
 
 docs: doc-html doc-pdf
 
