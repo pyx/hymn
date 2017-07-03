@@ -8,13 +8,13 @@
   [hymn.types.list [list-m]])
 
 (require
-  [hymn.types.list [*]]
+  [hymn.types.list [~]]
   [hymn.macros [do-monad]])
 
 (defn test-sharp-macro-list []
-  "list sharp macro * should turn a sequence into List monad"
-  (assert (instance? list-m #*(range 5)))
-  (assert (= (list #*[1 2 3 4 5]) (list (list-m [1 2 3 4 5])))))
+  "list sharp macro ~ should turn a sequence into List monad"
+  (assert (instance? list-m #~(range 5)))
+  (assert (= (list #~[1 2 3 4 5]) (list (list-m [1 2 3 4 5])))))
 
 (defn test-module-level-unit []
   "list module should have a working module level unit function"
@@ -44,17 +44,17 @@
 
 (defn test-sequence-list []
   "sequence on list"
-  (assert (= (list (sequence [#*['a 'b] #*(range 3)]))
+  (assert (= (list (sequence [#~['a 'b] #~(range 3)]))
              [['a 0] ['a 1] ['a 2] ['b 0] ['b 1] ['b 2]])))
 
 (defn test-do-monad-list []
   "list comprehension with do-monad"
-  (assert (= (list (do-monad [x #*['a 'b] y #*(range 3)] [x y]))
+  (assert (= (list (do-monad [x #~['a 'b] y #~(range 3)] [x y]))
              [['a 0] ['a 1] ['a 2] ['b 0] ['b 1] ['b 2]])))
 
 (defn test-do-monad-list-when []
   "list is monadplus, :when can be used in do-monad"
-  (assert (= (list (do-monad [a #*[1 2] b #*[1 2] :when (not (= a b))] [a b]))
+  (assert (= (list (do-monad [a #~[1 2] b #~[1 2] :when (not (= a b))] [a b]))
              [[1 2] [2 1]])))
 
 (defn test-replicate-should-not-miss []

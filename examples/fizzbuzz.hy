@@ -8,7 +8,7 @@
 
 (import [hymn.dsl [<> from-maybe maybe-m]])
 
-(require [hymn.dsl [do-monad-with]])
+(require [hymn.macros [do-monad-with]])
 
 (defn fizzbuzz [i]
   (from-maybe

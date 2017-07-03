@@ -10,7 +10,7 @@
   [time [time]]
   [hymn.dsl [get-state replicate set-state]])
 
-(require [hymn.dsl [do-monad]])
+(require [hymn.macros [do-monad]])
 
 ;;; Knuth!
 (def a 6364136223846793005)

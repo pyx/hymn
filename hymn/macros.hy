@@ -82,3 +82,21 @@
 (defmacro with-monad [monad &rest exprs]
   "provide default function m-return as the unit of the monad"
   `(do (def m-return (. ~monad unit)) ~@exprs))
+
+;;; sharp macro for the continuation monad
+(require [hymn.types.continuation [<]])
+
+;;; sharp macro for the either monad
+(require [hymn.types.either [|]])
+
+;;; macros for the lazy monad
+(require [hymn.types.lazy [lazy]])
+
+;;; sharp macro for the list monad
+(require [hymn.types.list [~]])
+
+;;; sharp macro for the maybe monad
+(require [hymn.types.maybe [?]])
+
+;;; sharp macro for the writer monad
+(require [hymn.types.writer [+]])

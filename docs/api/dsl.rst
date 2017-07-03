@@ -16,14 +16,6 @@ Hy
 
   (import [hymn.dsl [*]])
 
-This module also provides all the macros defined in other modules,
-
-.. code-block:: clojure
-
-  (require [hymn.dsl [*]])
-
-is all you need to use any macro defined in :code:`Hymn`
-
 .. note::
 
   Some of the function are renamed to more descriptive one to avoid name clash,

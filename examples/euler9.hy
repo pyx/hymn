@@ -5,15 +5,15 @@
 
 ;;; list monad example
 
-(require [hymn.dsl [*]])
+(require [hymn.macros [~ do-monad]])
 
 (def total 1000)
 (def limit (-> total (** 0.5) int inc))
 
 (def triplet
   (do-monad
-    [m #*(range 2 limit)
-     n #*(range 1 m)
+    [m #~(range 2 limit)
+     n #~(range 1 m)
      :let [a (- (** m 2) (** n 2))
            b (* 2 m n)
            c (+ (** m 2) (** n 2))]

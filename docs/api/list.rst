@@ -21,9 +21,18 @@ Hy Specific API
 Sharp Macro
 ^^^^^^^^^^^
 
-.. function:: * [seq]
+.. function:: ~ [seq]
 
   turn iterable :code:`seq` into a :class:`List`
+
+.. versionadded:: 0.7.0
+
+.. note::
+
+  This is the new name of sharp macro :code:`*`.  Starting from 0.12, macros in
+  Hy are namespaced/qualified, using symbol :code:`*` as sharp macro is no
+  longer a good idea since :code:`(require [hymn.macros [*]])` should mean
+  importing *all* macros.
 
 
 Examples
@@ -96,11 +105,10 @@ Sharp Macro
 
 .. code-block:: clojure
 
-  => ;; this in fact pulls in all macros in the module, not just sharp macro *
   => (import [hymn.types.list [list-m]])
-  => (require [hymn.types.list [*]])
-  => (instance? list-m #*[0 1 2])
+  => (require [hymn.types.list [~]])
+  => (instance? list-m #~[0 1 2])
   True
   => (require [hymn.macros [do-monad]])
-  => (list (do-monad [a #*(range 10) :when (odd? a)] (* a 2)))
+  => (list (do-monad [a #~(range 10) :when (odd? a)] (* a 2)))
   [2, 6, 10, 14, 18]

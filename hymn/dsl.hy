@@ -59,36 +59,3 @@
      execute :as execute-writer]]
   [hymn.operations
     [k-compose <=< k-pipe >=> lift m-map replicate sequence]])
-
-;;; sharp macro for the continuation monad
-(require [hymn.types.continuation [<]])
-
-;;; sharp macro for the either monad
-(require [hymn.types.either [|]])
-
-;;; macros for the lazy monad
-(require [hymn.types.lazy [lazy]])
-
-;;; sharp macro for the list monad
-;;; NOTE: this in fact pulls in all macros instead of the one named '*'
-(require [hymn.types.list [*]])
-
-;;; sharp macro for the maybe monad
-(require [hymn.types.maybe [?]])
-
-;;; sharp macro for the writer monad
-(require [hymn.types.writer [+]])
-
-;;; macros for monad operations
-(require
-  [hymn.macros
-    [^ =
-     do-monad
-     do-monad-m
-     do-monad-with
-     m-for
-     m-when
-     monad->
-     monad->>
-     monad-comp
-     with-monad]])

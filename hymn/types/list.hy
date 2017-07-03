@@ -9,7 +9,7 @@
   [hymn.types.monoid [Monoid]]
   [hymn.utils [CachedSequence]])
 
-(defsharp * [seq]
+(defsharp ~ [seq]
   (with-gensyms [List]
     `(do (import [hymn.types.list [List :as ~List]]) (~List ~seq))))
 

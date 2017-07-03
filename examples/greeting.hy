@@ -7,7 +7,7 @@
 
 (import [hymn.dsl [cont-m call-cc]])
 
-(require [hymn.dsl [do-monad m-when with-monad]])
+(require [hymn.macros [do-monad m-when with-monad]])
 
 (defn validate [name exit]
   (with-monad cont-m

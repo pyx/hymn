@@ -7,7 +7,7 @@
 
 (import [hymn.dsl [force lift]])
 
-(require [hymn.dsl [lazy]])
+(require [hymn.macros [lazy]])
 
 (def depends (lift (constantly None)))
 
