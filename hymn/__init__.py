@@ -4,7 +4,7 @@
 """Hy Monad Notation - a monad library for Hy"""
 
 __version__ = (0, 7)
-__release__ = '.dev0'
+__release__ = ''
 
 VERSION = '%d.%d' % __version__ + __release__
 

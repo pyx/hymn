@@ -1,6 +1,12 @@
 Changelog
 =========
 
+- 0.7
+
+  - Backward incompatible change supporting hy 0.13
+  - Renamed sharp macro * to ~
+  - Removed macros in hymn.dsl, use hymn.macros instead
+
 - 0.6
 
   - Backward incompatible change supporting hy 0.12, using new syntax
