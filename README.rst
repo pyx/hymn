@@ -317,5 +317,8 @@ Source Package @ PyPI:
 Mercurial Repository @ bitbucket:
   https://bitbucket.org/pyx/hymn/
 
+Git Repository @ Gitlab:
+  https://gitlab.com/pyx/hymn/
+
 Git Repository @ Github:
   https://github.com/pyx/hymn/
