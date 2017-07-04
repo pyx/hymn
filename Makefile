@@ -45,7 +45,7 @@ release: quality tox
 	hg tag $(VERSION)
 	@echo "Creating packages."
 	python setup.py sdist bdist_wheel
-	@echo "Signing packages.
+	@echo "Signing packages."
 	gpg --detach-sign -a 'dist/$(FULLNAME).tar.gz'
 	gpg --detach-sign -a 'dist/$(FULLNAME)-py2.py3-none-any.whl'
 	@echo "Uploading to PyPI."
