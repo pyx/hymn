@@ -8,7 +8,7 @@
   fractions
   [hymn.types.monad [Monad]])
 
-(defsharp + [w]
+(deftag + [w]
   (with-gensyms [tell]
     `(do (import [hymn.types.writer [tell :as ~tell]]) (~tell ~w))))
 

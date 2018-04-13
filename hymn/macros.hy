@@ -7,7 +7,7 @@
   [hymn.utils [thread-first thread-last thread-bindings]])
 
 ;;; lift sharp macro, e.g. #^+ => (lift +)
-(defsharp ^ [f]
+(deftag ^ [f]
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
@@ -15,7 +15,7 @@
 ;;; (do-monad-m [a (Just 1) b #=(inc a)] #=[a b])
 ;;; is equivalent to
 ;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])
-(defsharp = [expr] `(m-return ~expr))
+(deftag = [expr] `(m-return ~expr))
 
 (defmacro do-monad-m [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"

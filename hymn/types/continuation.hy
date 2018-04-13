@@ -6,7 +6,7 @@
 (import
   [hymn.types.monad [Monad]])
 
-(defsharp < [v]
+(deftag < [v]
   (with-gensyms [Continuation]
     `(do (import [hymn.types.continuation [Continuation :as ~Continuation]])
        (.unit ~Continuation ~v))))
