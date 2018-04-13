@@ -12,5 +12,5 @@
   (defn bind [self f] (f self.value)))
 
 ;;; alias
-(def identity-m Identity)
-(def unit Identity.unit)
+(setv identity-m Identity)
+(setv unit Identity.unit)

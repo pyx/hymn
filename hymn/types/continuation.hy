@@ -32,10 +32,10 @@
     (self.value k)))
 
 ;;; alias
-(def continuation-m Continuation)
-(def cont-m Continuation)
-(def unit Continuation.unit)
-(def run Continuation.run)
+(setv continuation-m Continuation)
+(setv cont-m Continuation)
+(setv unit Continuation.unit)
+(setv run Continuation.run)
 
 (defn call-cc [f]
   "call with current continuation"

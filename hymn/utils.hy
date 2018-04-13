@@ -8,7 +8,7 @@
 (defclass CachedSequence [object]
   "sequence wrapper that is lazy while keeps the items"
   (defn --init-- [self iterable]
-    (def [self._parent] (tee iterable 1)))
+    (setv [self._parent] (tee iterable 1)))
 
   (defn --iter-- [self]
     ;; fork when we need a child, never touch the first one
@@ -54,8 +54,8 @@
 
 (defn thread-bindings [thread-fn init-value exprs]
   "create a stream of symbol and expressions to be used in threading macros"
-  (def [l-val r-val] (tee (repeatedly gensym)))
-  (def next-sym (next l-val))
+  (setv [l-val r-val] (tee (repeatedly gensym)))
+  (setv next-sym (next l-val))
   (yield next-sym)
   (yield init-value)
   (for [[next-sym last-sym expr] (zip l-val r-val (butlast exprs))]

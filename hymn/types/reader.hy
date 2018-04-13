@@ -32,16 +32,16 @@
     (self.value e)))
 
 ;;; alias
-(def reader-m Reader)
-(def run Reader.run)
-(def unit Reader.unit)
+(setv reader-m Reader)
+(setv run Reader.run)
+(setv unit Reader.unit)
 
 (defn asks [f]
   "create a simple reader action from :code:`f`"
   (Reader f))
-(def reader asks)
+(setv reader asks)
 
-(def ask (reader identity))
+(setv ask (reader identity))
 
 (defn local [f]
   "executes a computation in a modified environment, :code:`f :: e -> e`"
@@ -50,4 +50,4 @@
 (defn lookup [key]
   "create a lookup reader of :code:`key` in the environment"
   (reader (itemgetter key)))
-(def <- lookup)
+(setv <- lookup)

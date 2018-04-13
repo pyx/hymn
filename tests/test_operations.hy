@@ -9,38 +9,38 @@
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
 
-(def data 42)
+(setv data 42)
 
 (defn test-l-to-r-kleisli-composition [monad-runner]
   "left to right Kleisli composition of monads should work"
-  (def [monad run] monad-runner)
-  (def m-inc (monad.monadic inc))
-  (def m-double (monad.monadic (fn [n] (* n 2))))
-  (def m (monad.unit data))
+  (setv [monad run] monad-runner)
+  (setv m-inc (monad.monadic inc))
+  (setv m-double (monad.monadic (fn [n] (* n 2))))
+  (setv m (monad.unit data))
   (assert (m= (>> m (k-pipe m-inc m-double)) (>> m m-inc m-double)))
   (assert (m= (>> m (>=> m-inc m-double)) (>> m m-inc m-double))))
 
 (defn test-r-to-l-kleisli-composition [monad-runner]
   "right to left Kleisli composition of monads should work"
-  (def [monad run] monad-runner)
-  (def m-inc (monad.monadic inc))
-  (def m-double (monad.monadic (fn [n] (* n 2))))
-  (def m (monad.unit data))
+  (setv [monad run] monad-runner)
+  (setv m-inc (monad.monadic inc))
+  (setv m-double (monad.monadic (fn [n] (* n 2))))
+  (setv m (monad.unit data))
   (assert (m= (>> m (k-compose m-inc m-double)) (<< m-inc (<< m-double m))))
   (assert (m= (>> m (<=< m-inc m-double)) (<< m-inc (<< m-double m)))))
 
 (defn test-lift [monad-runner]
   "lift should promote a function to a monad"
-  (def [monad run] monad-runner)
-  (def minc (lift inc))
-  (def unit monad.unit)
+  (setv [monad run] monad-runner)
+  (setv minc (lift inc))
+  (setv unit monad.unit)
   (assert (instance? monad (minc (unit data))))
   (assert (m= (minc (unit data)) (unit (inc data)))))
 
 (defn test-lift-no-argument []
   "lift should work on functions called with no argument"
-  (def mint (lift int))
-  (def mlist (lift list))
+  (setv mint (lift int))
+  (setv mlist (lift list))
   (assert (instance? identity-m (mint)))
   (assert (instance? identity-m (mlist)))
   (assert (= (>> (mint) identity) (int)))
@@ -48,55 +48,55 @@
 
 (defn test-lift-multiple-arguments [monad-runner]
   "lift should work on functions having multiple arguments"
-  (def [monad run] monad-runner)
-  (def unit monad.unit)
-  (def m+ (lift +))
-  (def a1 data)
-  (def m1 (unit a1))
-  (def a2 (inc a1))
-  (def m2 (unit a2))
-  (def a3 (inc a2))
-  (def m3 (unit a3))
+  (setv [monad run] monad-runner)
+  (setv unit monad.unit)
+  (setv m+ (lift +))
+  (setv a1 data)
+  (setv m1 (unit a1))
+  (setv a2 (inc a1))
+  (setv m2 (unit a2))
+  (setv a3 (inc a2))
+  (setv m3 (unit a3))
   (assert (m= (m+ m1 m2 m3) (unit (+ a1 a2 a3)))))
 
 (defn test-lift-keyword-arguments [monad-runner]
   "lift should work on functions having keyword arguments"
-  (def [monad run] monad-runner)
-  (def unit monad.unit)
-  (def mint (lift int))
+  (setv [monad run] monad-runner)
+  (setv unit monad.unit)
+  (setv mint (lift int))
   (assert (m= (mint (unit (str data)) :base (unit 16))
               (unit (int (str data) :base 16)))))
 
 (defn test-lift-only-keyword-arguments [monad-runner]
   "lift should work on functions passing only keyword arguments"
-  (def [monad run] monad-runner)
-  (def unit monad.unit)
-  (def mcomplex (lift complex))
+  (setv [monad run] monad-runner)
+  (setv unit monad.unit)
+  (setv mcomplex (lift complex))
   (assert (m= (mcomplex :imag (unit data))
               (unit (complex :imag data)))))
 
 (defn test-m-map [monad-runner]
   "m-map should work as :code:`sequence . map f`"
-  (def [monad run] monad-runner)
-  (def minc (monad.monadic inc))
+  (setv [monad run] monad-runner)
+  (setv minc (monad.monadic inc))
   (assert (= (list (run (sequence (map minc (range 42)))))
              (list (run (m-map minc (range 42)))))))
 
 (defn test-replicate [monad-runner]
   "replicate should perform the monadic action said times"
-  (def [monad run] monad-runner)
-  (def unit monad.unit)
-  (def m (unit data))
-  (def n 5)
-  (def result (* [data] n))
+  (setv [monad run] monad-runner)
+  (setv unit monad.unit)
+  (setv m (unit data))
+  (setv n 5)
+  (setv result (* [data] n))
   (assert (instance? monad (replicate n m)))
   (assert (m= (replicate n m) (unit result))))
 
 (defn test-sequence [monad-runner]
   "sequence should work on all monads"
-  (def [monad run] monad-runner)
-  (def unit monad.unit)
-  (def values (list (range data (+ data 5))))
+  (setv [monad run] monad-runner)
+  (setv unit monad.unit)
+  (setv values (list (range data (+ data 5))))
   (assert (instance? monad (sequence (map unit values))))
   (assert (m= (sequence (map unit values)) (unit values))))
 

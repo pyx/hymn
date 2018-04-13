@@ -59,5 +59,5 @@
 
 (defn test-replicate-should-not-miss []
   "replicate on list monad should not miss elements"
-  (def m (list-m [0 1]))
+  (setv m (list-m [0 1]))
   (assert (= (list (replicate 2 m)) [[0 0] [0 1] [1 0] [1 1]])))

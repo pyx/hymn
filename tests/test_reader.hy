@@ -9,7 +9,7 @@
 
 (require hymn.operations)
 
-(def env {'a 42 'b None 'c "hello"})
+(setv env {'a 42 'b None 'c "hello"})
 
 (defn test-module-level-unit []
   "reader module should have a working module level unit function"
@@ -47,6 +47,6 @@
   (for [key env]
     (assert (= (.run (lookup key) env) (get env key)))
     (assert (= (.run (lookup key) env) (.run (<- key) env))))
-  (def keys (.keys env))
+  (setv keys (.keys env))
   (assert (= (list-comp (get env key) [key keys])
              (.run (sequence (map <- keys)) env))))

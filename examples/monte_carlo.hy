@@ -13,19 +13,19 @@
 (require [hymn.macros [do-monad]])
 
 ;;; Knuth!
-(def a 6364136223846793005)
-(def c 1442695040888963407)
-(def m (** 2 64))
+(setv a 6364136223846793005)
+(setv c 1442695040888963407)
+(setv m (** 2 64))
 
 ;;; linear congruential generator
-(def random
+(setv random
   (do-monad
     [seed get-state
      _ (set-state (-> seed (* a) (+ c) (% m)))
      new-seed get-state]
     (/ new-seed m)))
 
-(def random-point (do-monad [x random y random] (, x y)))
+(setv random-point (do-monad [x random y random] (, x y)))
 
 (defn points [seed]
   "stream of random points"
@@ -38,8 +38,8 @@
 
 (defn monte-carlo [number-of-points]
   "use monte carlo method to calculate value of pi"
-  (def samples (take number-of-points (points (int (time)))))
-  (def result
+  (setv samples (take number-of-points (points (int (time)))))
+  (setv result
     (Counter (genexpr (>= 1.0 (+ (** x 2) (** y 2))) [[x y] samples])))
   (-> result (get True) (/ number-of-points) (* 4)))
 

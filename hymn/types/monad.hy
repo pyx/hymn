@@ -18,14 +18,14 @@
   are mutual recursive, subclasses should at least either override
   :meth:`bind`, or :meth:`fmap` and :meth:`join`, or all of them for better
   performance."
-  (defn --init-- [self value] (def self.value value))
+  (defn --init-- [self value] (setv self.value value))
 
   (defn --repr-- [self]
     (.format "{}({!r})" (. (type self) --name--) self.value))
 
   (defn --rshift-- [self f] (.bind self f))
 
-  (def --rlshift-- --rshift--)
+  (setv --rlshift-- --rshift--)
 
   (defn bind [self f]
     "the bind operation

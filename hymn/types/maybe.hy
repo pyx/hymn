@@ -63,29 +63,29 @@
       (if value (Just value) Nothing))))
 
 (defclass Just [Maybe] ":code:`Just` of the :class:`Maybe`")
-(def Maybe.unit Just)
-(def unit Maybe.unit)
+(setv Maybe.unit Just)
+(setv unit Maybe.unit)
 
 (defclass Nothing [Maybe]
   "the :class:`Maybe` that represents nothing, a singleton, like :code:`None`"
   (defn --bool-- [self] False)
-  (def --nonzero-- --bool--)
+  (setv --nonzero-- --bool--)
   (defn --repr-- [self] "Nothing")
   (defn bind [self f] Nothing)
   (defn plus [self other] other))
 
 ;;; shadow the class intensionally
-(def Nothing (Nothing (object)))
-(def Maybe.zero Nothing)
-(def Maybe.empty Nothing)
+(setv Nothing (Nothing (object)))
+(setv Maybe.zero Nothing)
+(setv Maybe.empty Nothing)
 
 ;;; alias
-(def maybe-m Maybe)
-(def zero Maybe.zero)
-(def from-maybe Maybe.from-maybe)
-(def <-maybe from-maybe)
-(def to-maybe Maybe.from-value)
-(def ->maybe to-maybe)
+(setv maybe-m Maybe)
+(setv zero Maybe.zero)
+(setv from-maybe Maybe.from-maybe)
+(setv <-maybe from-maybe)
+(setv to-maybe Maybe.from-value)
+(setv ->maybe to-maybe)
 
 (defn nothing? [m]
   "return :code:`True` if :code:`m` is :data:`Nothing`"
@@ -98,10 +98,10 @@
              :predicate predicate
              :nothing-on-exceptions nothing-on-exceptions)
     (do
-      (def exceptions (or nothing-on-exceptions [BaseException]))
+      (setv exceptions (or nothing-on-exceptions [BaseException]))
       (with-decorator (wraps func)
         (fn [&rest args &kwargs kwargs]
-          (def result Nothing)
+          (setv result Nothing)
           (with [(apply suppress exceptions)]
             (setv result (Just (apply func args kwargs))))
           (when (and predicate (not (>> result predicate)))

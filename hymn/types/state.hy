@@ -21,7 +21,7 @@
 
     use the final state of this computation as the initial state of the
     second"
-    ((type self) (fn [s] (def (, a ns) (.run self s)) (.run (f a) ns))))
+    ((type self) (fn [s] (setv (, a ns) (.run self s)) (.run (f a) ns))))
 
   (with-decorator classmethod
     (defn unit [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))
@@ -39,23 +39,23 @@
     (self.value s)))
 
 ;;; alias
-(def state-m State)
-(def unit State.unit)
-(def evaluate State.evaluate)
-(def execute State.execute)
-(def run State.run)
+(setv state-m State)
+(setv unit State.unit)
+(setv evaluate State.evaluate)
+(setv execute State.execute)
+(setv run State.run)
 
 (with-decorator State
   (defn get-state [s] "return the current state" (, s s)))
-(def <-state get-state)
+(setv <-state get-state)
 
 (defn lookup [key]
   "return a monadic function that lookup the vaule with key in the state"
   (gets (itemgetter key)))
-(def <- lookup)
+(setv <- lookup)
 
 ;;; gets specific component of the state, using a projection function f
-(def gets get-state.fmap)
+(setv gets get-state.fmap)
 
 (defn modify [f]
   "maps the current state with `f` to a new state inside a state monad"
@@ -64,7 +64,7 @@
 (defn set-state [s]
   "replace the current state and return the previous one"
   (State (fn [ps] (, ps s))))
-(def state<- set-state)
+(setv state<- set-state)
 
 (defn set-value [key value]
   "return a monadic function that set the vaule of key in the state"

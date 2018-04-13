@@ -9,10 +9,10 @@
 
 (require [hymn.macros [lazy]])
 
-(def depends (lift (constantly None)))
+(setv depends (lift (constantly None)))
 
 (defmacro deftask [n &rest actions]
-  `(def ~n
+  `(setv ~n
      (depends (lazy (print "(started" '~n))
               ~@actions
               (lazy (print " finished " '~n ")" :sep "")))))
