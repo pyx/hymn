@@ -12,7 +12,7 @@
 
 (defn test-sharp-macro-continuation-unit []
   "unit sharp macro < should work as cont-m.unit"
-  (assert (= -1 (.run (do-monad [a #<1 b #<2] (- a b))))))
+  (assert (= -1 (.run (do-monad [a #< 1 b #< 2] (- a b))))))
 
 (defn test-module-level-unit []
   "continuation module should have a working module level unit function"
@@ -25,13 +25,13 @@
 
 (defn test-continuation-run []
   "run the continuation"
-  (assert (= -1 (.run (do-monad [a #<1 b #<2] (- a b))))))
+  (assert (= -1 (.run (do-monad [a #< 1 b #< 2] (- a b))))))
 
 (defn test-call-with-conintuation []
   "call with current continuation should capture a continuation"
   (assert (instance? cont-m (call-cc identity)))
   (setv c [])
-  (setv 1-2 (do-monad [a #<1 b (call-cc (fn [k] (c.append k) (k 2)))] (- a b)))
+  (setv 1-2 (do-monad [a #< 1 b (call-cc (fn [k] (c.append k) (k 2)))] (- a b)))
   (assert (empty? c))
   (assert (= -1 (.run 1-2)))
   (assert (= 1 (len c)))

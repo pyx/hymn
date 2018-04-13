@@ -13,7 +13,7 @@
 
 (defn test-sharp-macro-maybe []
   "maybe sharp macro ? should wrap a function with decorator maybe"
-  (setv maybe-int #?int)
+  (setv maybe-int #? int)
   (assert (instance? maybe-m (maybe-int 1)))
   (assert (= (maybe-int 1) (maybe-m.unit 1))))
 

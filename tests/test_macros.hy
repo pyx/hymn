@@ -27,14 +27,14 @@
   "lift sharp macro ^ should expand to lift call"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
-  (assert (m= ((lift inc) (unit data)) (#^inc (unit data)))))
+  (assert (m= ((lift inc) (unit data)) (#^ inc (unit data)))))
 
 (defn test-sharp-macro-= [monad-runner]
   "m-return sharp macro = should expand to m-return call"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (setv m-return unit)
-  (assert (m= (unit data) #=data)))
+  (assert (m= (unit data) #= data)))
 
 (defn test-do-monad-return-monad [monad-runner]
   "do-monad macro should wrap result in monad automatically"
@@ -145,7 +145,7 @@
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) b (m-when (= a data) #=(inc a))] b))))
+              (do-monad [a (unit data) b (m-when (= a data) #= (inc a))] b))))
 
 (defn test-monad-comp [monad-runner]
   "monad comprehension macro should work as do monad in different syntax"

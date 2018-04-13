@@ -18,13 +18,13 @@
             :op2 (. op2 --name--) :op3 (. op3 --name--)))
 
 ;;; use maybe monad to handle division by zero
-(defmacro safe [expr] `(#?(fn [] ~expr)))
+(defmacro safe [expr] `(#? (fn [] ~expr)))
 
 (defn template [[a b c d]]
   (do-monad-m
-    [op1 #~ops
-     op2 #~ops
-     op3 #~ops]
+    [op1 #~ ops
+     op2 #~ ops
+     op3 #~ ops]
     ;; (, result infix-representation)
     [(, (safe (op1 (op2 a b) (op3 c d)))
         (infix-repr "({a} {op2} {b}) {op1} ({c} {op3} {d})"))
@@ -36,7 +36,7 @@
 (defn combinations [numbers]
   (do-monad
     [:let [seemed (set)]
-     [a b c d] #~(permutations numbers 4)
+     [a b c d] #~ (permutations numbers 4)
      :when (not-in (, a b c d) seemed)]
     (do
       (.add seemed (, a b c d))

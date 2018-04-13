@@ -26,7 +26,7 @@
 
 (defn test-sharp-macro-tell []
   "writer sharp macro + should work as tell"
-  (assert (= 3 (.execute (do-monad [_ #+1 _ #+2] None)))))
+  (assert (= 3 (.execute (do-monad [_ #+ 1 _ #+ 2] None)))))
 
 (defn test-module-level-execute []
   "writer module should have a module level execute"
