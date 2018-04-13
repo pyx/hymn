@@ -53,22 +53,22 @@
 (defclass Left [Either]
   "left of :class:`Either`"
   (defn --bool-- [self] False)
-  (def --nonzero-- --bool--)
+  (setv --nonzero-- --bool--)
   (defn plus [self other] other))
 
 (defclass Right [Either]
   "right of :class:`Either`")
 
 ;;; we are always right!
-(def Either.unit Right)
-(def Either.zero (Left "unknown error"))
+(setv Either.unit Right)
+(setv Either.zero (Left "unknown error"))
 
 ;;; alias
-(def either-m Either)
-(def unit Either.unit)
-(def zero Either.zero)
-(def ->either Either.from-value)
-(def to-either ->either)
+(setv either-m Either)
+(setv unit Either.unit)
+(setv zero Either.zero)
+(setv ->either Either.from-value)
+(setv to-either ->either)
 
 (defn left? [m]
   "return :code:`True` if :code:`m` is a :class:`Left`"

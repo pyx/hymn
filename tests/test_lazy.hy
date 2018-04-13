@@ -22,16 +22,16 @@
 
 (defn test-lazy-should-be-lazy []
   "make sure the computation is deferred"
-  (def a [1 2])
+  (setv a [1 2])
   (assert (= (len a) 2))
-  (def m (lazy (.pop a) 3))
+  (setv m (lazy (.pop a) 3))
   (assert (= (len a) 2)))
 
 (defn test-lazy-evaluate-only-once []
   "lazy should be evaluate only once"
-  (def a [1 2])
+  (setv a [1 2])
   (assert (= (len a) 2))
-  (def m (lazy (.pop a) 42))
+  (setv m (lazy (.pop a) 42))
   (assert (= (len a) 2))
   (assert (= (.evaluate m) 42))
   (assert (= (len a) 1))
@@ -40,9 +40,9 @@
 
 (defn test-force []
   "force should works as .evaluate"
-  (def a [1 2])
+  (setv a [1 2])
   (assert (= (len a) 2))
-  (def m (lazy (.pop a) 42))
+  (setv m (lazy (.pop a) 42))
   (assert (= (len a) 2))
   (assert (= (force m) 42))
   (assert (= (len a) 1))

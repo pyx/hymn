@@ -13,7 +13,7 @@
 (defn k-compose [&rest monadic-funcs]
   "right-to-left Kleisli composition of monads."
   (apply >=> (reversed monadic-funcs)))
-(def <=< k-compose)
+(setv <=< k-compose)
 
 (defn k-pipe [&rest monadic-funcs]
   "left-to-right Kleisli composition of monads."
@@ -21,7 +21,7 @@
     (reduce (fn [m f] (>> m f))
             (rest monadic-funcs)
             (apply (first monadic-funcs) args kwargs))))
-(def >=> k-pipe)
+(setv >=> k-pipe)
 
 (defn lift [f]
   "promote a function to a monad"
@@ -32,7 +32,7 @@
       (empty? kwargs)
         (do-monad [unwrapped-args (sequence args)] (apply f unwrapped-args))
       (do
-        (def
+        (setv
           keys/values (list (.items kwargs))
           keys (list (map first keys/values))
           values (sequence (map second keys/values)))

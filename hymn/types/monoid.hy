@@ -24,4 +24,4 @@
 (defn append [&rest monoids]
   "the associative operation of monoid"
   (reduce (fn [m1 m2] (m1.append m2)) monoids))
-(def <> append)
+(setv <> append)

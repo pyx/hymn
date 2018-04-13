@@ -13,7 +13,7 @@
 
 (defn test-sharp-macro-maybe []
   "maybe sharp macro ? should wrap a function with decorator maybe"
-  (def maybe-int #?int)
+  (setv maybe-int #?int)
   (assert (instance? maybe-m (maybe-int 1)))
   (assert (= (maybe-int 1) (maybe-m.unit 1))))
 
@@ -103,7 +103,7 @@
     (defn safe-div [a b] (/ a b)))
   (assert (is Nothing (safe-div 1 0)))
   (assert (= (Just 2) (safe-div 4 2)))
-  (def safe-int (maybe int))
+  (setv safe-int (maybe int))
   (assert (= (Just 42) (safe-int "42")))
   (assert (is Nothing (safe-int "this is no a number"))))
 

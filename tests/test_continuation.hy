@@ -20,7 +20,7 @@
 
 (defn test-module-level-run []
   "continuation module should have a module level run"
-  (def c (cont-m.unit None))
+  (setv c (cont-m.unit None))
   (assert (= (continuation-module.run c) (.run c))))
 
 (defn test-continuation-run []
@@ -30,12 +30,12 @@
 (defn test-call-with-conintuation []
   "call with current continuation should capture a continuation"
   (assert (instance? cont-m (call-cc identity)))
-  (def c [])
-  (def 1-2 (do-monad [a #<1 b (call-cc (fn [k] (c.append k) (k 2)))] (- a b)))
+  (setv c [])
+  (setv 1-2 (do-monad [a #<1 b (call-cc (fn [k] (c.append k) (k 2)))] (- a b)))
   (assert (empty? c))
   (assert (= -1 (.run 1-2)))
   (assert (= 1 (len c)))
-  (def 1- (.pop c))
+  (setv 1- (.pop c))
   (assert (instance? cont-m (1- 1)))
   (assert (= 0 (.run (1- 1))))
   (assert (= 42 (.run (1- -41)))))

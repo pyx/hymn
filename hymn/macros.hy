@@ -21,17 +21,17 @@
   "macro for sequencing monadic computations, a.k.a do notation in haskell"
   (when (odd? (len binding-forms))
     (macro-error None "do-monad-m binding forms must come in pairs"))
-  (def iterator (iter binding-forms))
-  (def bindings (-> (zip iterator iterator) list reversed list))
+  (setv iterator (iter binding-forms))
+  (setv bindings (-> (zip iterator iterator) list reversed list))
   (unless (len bindings)
     (macro-error None "do-monad-m must have at least one binding form"))
   (defn bind-action [mexpr [binding expr]]
     (if
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
-      (= binding :let) `(do (def ~@expr) ~mexpr)
+      (= binding :let) `(do (setv ~@expr) ~mexpr)
       (with-gensyms [monad]
         `(do
-           (def ~monad ~expr)
+           (setv ~monad ~expr)
            (>> ~monad (fn [~binding &optional [m-return (. ~monad unit)]]
                         ~mexpr))))))
   (reduce bind-action bindings expr))
@@ -49,7 +49,7 @@
 
 (defmacro monad-> [init-value &rest actions]
   "threading macro for monad"
-  (def bindings (list (thread-bindings thread-first init-value actions)))
+  (setv bindings (list (thread-bindings thread-first init-value actions)))
   `(do (require hymn.macros)
     (hymn.macros.do-monad-m
       [~@(butlast bindings)]
@@ -57,7 +57,7 @@
 
 (defmacro monad->> [init-value &rest actions]
   "threading tail macro for monad"
-  (def bindings (list (thread-bindings thread-last init-value actions)))
+  (setv bindings (list (thread-bindings thread-last init-value actions)))
   `(do (require hymn.macros)
      (hymn.macros.do-monad-m
        [~@(butlast bindings)]
@@ -75,13 +75,13 @@
 
 (defmacro monad-comp [expr bindings &optional condition]
   "different syntax for do notation"
-  (def guard (if (none? condition) `() `(:when ~condition)))
+  (setv guard (if (none? condition) `() `(:when ~condition)))
   `(do (require hymn.macros)
      (hymn.macros.do-monad ~(+ bindings guard) ~expr)))
 
 (defmacro with-monad [monad &rest exprs]
   "provide default function m-return as the unit of the monad"
-  `(do (def m-return (. ~monad unit)) ~@exprs))
+  `(do (setv m-return (. ~monad unit)) ~@exprs))
 
 ;;; sharp macro for the continuation monad
 (require [hymn.types.continuation [<]])

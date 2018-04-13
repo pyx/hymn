@@ -51,13 +51,13 @@
       "the unit, create a :class:`List` from :code:`values`"
       (cls values)))
 
-  (def zero (-Zero))
-  (def empty zero))
+  (setv zero (-Zero))
+  (setv empty zero))
 
 ;;; alias
-(def list-m List)
-(def unit List.unit)
-(def zero List.zero)
+(setv list-m List)
+(setv unit List.unit)
+(setv zero List.zero)
 
 (defn fmap [f iterable]
   ":code:`fmap` works like the builtin :code:`map`, but return a :class:`List`

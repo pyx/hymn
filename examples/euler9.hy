@@ -7,10 +7,10 @@
 
 (require [hymn.macros [~ do-monad]])
 
-(def total 1000)
-(def limit (-> total (** 0.5) int inc))
+(setv total 1000)
+(setv limit (-> total (** 0.5) int inc))
 
-(def triplet
+(setv triplet
   (do-monad
     [m #~(range 2 limit)
      n #~(range 1 m)

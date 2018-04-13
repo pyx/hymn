@@ -18,7 +18,7 @@
   computation which accumulate output along with result"
   (defn bind [self f]
     "the bind operation of :class:`Writer`"
-    (def
+    (setv
       [v a] self.value
       [nv na] (. (f v) value))
     ((type self) (, nv (+ a na))))
@@ -38,27 +38,27 @@
 
 ;;; Here, some predefined writers, it's not necessary because of the way we
 ;;; create writers with the above actions, just for convenience
-(def ComplexWriter (writer-with-type complex))
-(def DecimalWriter (writer-with-type decimal.Decimal))
-(def FloatWriter (writer-with-type float))
-(def FractionWriter (writer-with-type fractions.Fraction))
-(def ListWriter (writer-with-type list))
-(def IntWriter (writer-with-type int))
-(def StringWriter (writer-with-type str))
-(def TupleWriter (writer-with-type tuple))
+(setv ComplexWriter (writer-with-type complex))
+(setv DecimalWriter (writer-with-type decimal.Decimal))
+(setv FloatWriter (writer-with-type float))
+(setv FractionWriter (writer-with-type fractions.Fraction))
+(setv ListWriter (writer-with-type list))
+(setv IntWriter (writer-with-type int))
+(setv StringWriter (writer-with-type str))
+(setv TupleWriter (writer-with-type tuple))
 
 ;;; alias
-(def writer-m Writer)
-(def complex-writer-m ComplexWriter)
-(def decimal-writer-m DecimalWriter)
-(def float-writer-m FloatWriter)
-(def fraction-writer-m FractionWriter)
-(def list-writer-m ListWriter)
-(def int-writer-m IntWriter)
-(def string-writer-m StringWriter)
-(def tuple-writer-m TupleWriter)
-(def execute Writer.execute)
-(def run Writer.run)
+(setv writer-m Writer)
+(setv complex-writer-m ComplexWriter)
+(setv decimal-writer-m DecimalWriter)
+(setv float-writer-m FloatWriter)
+(setv fraction-writer-m FractionWriter)
+(setv list-writer-m ListWriter)
+(setv int-writer-m IntWriter)
+(setv string-writer-m StringWriter)
+(setv tuple-writer-m TupleWriter)
+(setv execute Writer.execute)
+(setv run Writer.run)
 
 (defn writer-with-type-of [message]
   "create a writer of type of message"
@@ -74,7 +74,7 @@
 
 (defn listen [m]
   "execute :code:`m` and adds its output to the value of computation"
-  (def [v a] m.value)
+  (setv [v a] m.value)
   ((type m) (, m.value a)))
 
 ;;; NOTE:
@@ -82,5 +82,5 @@
 ;;; output without notice.
 (defn censor [f m]
   "apply :code:`f` to the output"
-  (def [v a] m.value)
+  (setv [v a] m.value)
   ((type m) (, v (f a))))

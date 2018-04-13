@@ -20,7 +20,7 @@
   (defn --init-- [self value]
     (unless (callable value)
       (raise (TypeError (.format "{} object is not callable" value))))
-    (def self.value (, False value)))
+    (setv self.value (, False value)))
 
   (defn --repr-- [self]
     (.format "{}({})"
@@ -45,9 +45,9 @@
       (first self.value))))
 
 ;;; alias
-(def lazy-m Lazy)
-(def unit Lazy.unit)
-(def evaluate Lazy.evaluate)
+(setv lazy-m Lazy)
+(setv unit Lazy.unit)
+(setv evaluate Lazy.evaluate)
 
 (defn force [m]
   "force the deferred computation :code:`m` if it is a :class:`Lazy`, act as

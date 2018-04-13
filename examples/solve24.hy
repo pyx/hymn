@@ -11,7 +11,7 @@
 
 (require [hymn.macros [~ ? do-monad do-monad-m]])
 
-(def ops [+ - * /])
+(setv ops [+ - * /])
 
 (defmacro infix-repr [fmt]
   `(.format ~fmt :a a :b b :c c :d d :op1 (. op1 --name--)

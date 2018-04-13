@@ -12,11 +12,11 @@
   [hymn.types.either [|]]
   [hymn.macros [do-monad]])
 
-(def data 42)
+(setv data 42)
 
 (defn test-sharp-macro-failsafe []
   "failsafe sharp macro | should wrap a function with decorator failsafe"
-  (def failsafe-int #|int)
+  (setv failsafe-int #|int)
   (assert (instance? either-m (failsafe-int 1)))
   (assert (= (failsafe-int 1) (either-m.unit 1))))
 
@@ -91,7 +91,7 @@
     (defn safe-div [a b] (/ a b)))
   (assert (left? (safe-div 1 0)))
   (assert (= (Right 2) (safe-div 4 2)))
-  (def safe-int (failsafe int))
+  (setv safe-int (failsafe int))
   (assert (= (Right 42) (safe-int "42")))
   (assert (left? (safe-int "this is no a number"))))
 
