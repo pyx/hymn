@@ -8,7 +8,7 @@
   [hymn.mixins [Ord]]
   [hymn.types.monadplus [MonadPlus]])
 
-(defsharp | [f]
+(deftag | [f]
   (with-gensyms [failsafe]
     `(do (import [hymn.types.either [failsafe :as ~failsafe]])
        (~failsafe ~f))))
