@@ -6,7 +6,8 @@
 (import
   [functools [wraps]]
   [hymn.mixins [Ord]]
-  [hymn.types.monadplus [MonadPlus]])
+  [hymn.types.monadplus [MonadPlus]]
+  [hymn.utils [apply]])
 
 (deftag | [f]
   (with-gensyms [failsafe]

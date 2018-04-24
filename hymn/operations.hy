@@ -4,7 +4,8 @@
 "hymn.operations - operations on monads"
 
 (import
-  [hymn.types.identity [identity-m]])
+  [hymn.types.identity [identity-m]]
+  [hymn.utils [apply]])
 
 (require
   [hy.extra.anaphoric [*]]

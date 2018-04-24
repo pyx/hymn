@@ -8,7 +8,7 @@
   [hymn.mixins [Ord]]
   [hymn.types.monadplus [MonadPlus]]
   [hymn.types.monoid [Monoid]]
-  [hymn.utils [suppress]])
+  [hymn.utils [suppress apply]])
 
 (deftag ? [f]
   (with-gensyms [maybe]
