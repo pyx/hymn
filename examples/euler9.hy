@@ -5,7 +5,9 @@
 
 ;;; list monad example
 
-(require [hymn.macros [~ do-monad]])
+(require
+  [hymn.macros [do-monad]]
+  [hymn.types.list [~]])
 
 (setv total 1000)
 (setv limit (-> total (** 0.5) int inc))

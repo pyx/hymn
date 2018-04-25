@@ -9,7 +9,10 @@
   [functools [partial]]
   [itertools [permutations]])
 
-(require [hymn.macros [~ ? do-monad do-monad-m]])
+(require
+  [hymn.macros [do-monad do-monad-m]]
+  [hymn.types.list [~]]
+  [hymn.types.maybe [?]])
 
 (setv ops [+ - * /])
 

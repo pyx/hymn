@@ -7,7 +7,7 @@
 
 (import [hymn.dsl [force lift]])
 
-(require [hymn.macros [lazy]])
+(require [hymn.types.lazy [lazy]])
 
 (setv depends (lift (constantly None)))
 

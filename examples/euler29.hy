@@ -5,7 +5,9 @@
 
 ;;; lift and list monad reader macros example
 
-(require [hymn.macros [*]])
+(require
+  [hymn.macros [^]]
+  [hymn.types.list [~]])
 
 (defmain [&rest args]
   (print "Project Euler Problem 29 - lift and list monad example"
