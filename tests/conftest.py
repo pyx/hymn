@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2014-2017, Philip Xu <pyx@xrefactor.com>
 # License: BSD New, see LICENSE for details.
+from pytest import Module
 
 from hymn.types.monadplus import MonadPlus
 from hymn.types.monoid import Monoid
@@ -23,6 +24,11 @@ from hymn.types.writer import (
     StringWriter,
     TupleWriter,
 )
+
+
+def pytest_collect_file(path, parent):
+    if path.ext == ".hy" and path.basename.startswith('test_'):
+        return Module(path, parent)
 
 
 def extract(m):
