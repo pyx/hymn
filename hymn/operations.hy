@@ -4,8 +4,7 @@
 "hymn.operations - operations on monads"
 
 (import
-  [hymn.types.identity [identity-m]]
-  [hymn.utils [apply]])
+  [hymn.types.identity [identity-m]])
 
 (require
   [hy.extra.anaphoric [*]]
@@ -13,7 +12,7 @@
 
 (defn k-compose [&rest monadic-funcs]
   "right-to-left Kleisli composition of monads."
-  (apply >=> (reversed monadic-funcs)))
+  (>=> #* (reversed monadic-funcs)))
 (setv <=< k-compose)
 
 (defn k-pipe [&rest monadic-funcs]
@@ -21,7 +20,7 @@
   (fn [&rest args &kwargs kwargs]
     (reduce (fn [m f] (>> m f))
             (rest monadic-funcs)
-            (apply (first monadic-funcs) args kwargs))))
+            ((first monadic-funcs) #* args #** kwargs))))
 (setv >=> k-pipe)
 
 (defn lift [f]
@@ -31,7 +30,7 @@
       (and (empty? args) (empty? kwargs))
         (identity-m.unit (f))
       (empty? kwargs)
-        (do-monad [unwrapped-args (sequence args)] (apply f unwrapped-args))
+        (do-monad [unwrapped-args (sequence args)] (f #* unwrapped-args))
       (do
         (setv
           keys/values (list (.items kwargs))
@@ -41,10 +40,10 @@
           (do-monad
             [unwrapped-kwargs values
              unwrapped-args (sequence args)]
-            (apply f unwrapped-args (dict (zip keys unwrapped-kwargs))))
+            (f #* unwrapped-args #** (dict (zip keys unwrapped-kwargs))))
           (do-monad
             [unwrapped-kwargs values]
-            (apply f [] (dict (zip keys unwrapped-kwargs)))))))))
+            (f #* [] #** (dict (zip keys unwrapped-kwargs)))))))))
 
 (defn m-map [mf seq]
   "map monadic function :code:`mf` to a sequence, then execute that sequence

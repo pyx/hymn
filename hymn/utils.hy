@@ -62,6 +62,3 @@
     (yield next-sym)
     (yield (thread-fn last-sym expr)))
   (yield (thread-fn next-sym (last exprs))))
-
-(defn apply [f args &optional [kwargs {}]]
-  (f #* args #** kwargs))

@@ -6,8 +6,7 @@
 (import
   [functools [wraps]]
   [hymn.mixins [Ord]]
-  [hymn.types.monadplus [MonadPlus]]
-  [hymn.utils [apply]])
+  [hymn.types.monadplus [MonadPlus]])
 
 (deftag | [f]
   (with-gensyms [failsafe]
@@ -95,6 +94,6 @@
   (with-decorator (wraps func)
     (fn [&rest args &kwargs kwargs]
       (try
-        (Right (apply func args kwargs))
+        (Right (func #* args #** kwargs))
         (except [e BaseException]
           (Left e))))))
