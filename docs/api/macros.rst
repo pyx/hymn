@@ -82,8 +82,8 @@ All do monad macros support :code:`:when` if the monad is of type
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [maybe-m]])
-  => (def m-inc (maybe-m.monadic inc))
-  => (def m-div (maybe-m.monadic /))
+  => (setv m-inc (maybe-m.monadic inc))
+  => (setv m-div (maybe-m.monadic /))
   => (require [hymn.macros [monad->]])
   => ;; threading macro for monadic actions
   => (monad-> (maybe-m.unit 99) m-inc (m-div 5) (m-div 2))
@@ -100,8 +100,8 @@ All do monad macros support :code:`:when` if the monad is of type
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [maybe-m]])
-  => (def m-inc (maybe-m.monadic inc))
-  => (def m-div (maybe-m.monadic /))
+  => (setv m-inc (maybe-m.monadic inc))
+  => (setv m-div (maybe-m.monadic /))
   => (require [hymn.macros [monad->>]])
   => ;; threading tail macro for monadic actions
   => (monad->> (maybe-m.unit 4) m-inc (m-div 25) (m-div 100))
@@ -124,7 +124,7 @@ All do monad macros support :code:`:when` if the monad is of type
   Just([0, 1, 2])
   => ;; with reader monad
   => (import [hymn.types.reader [<-]])
-  => (def readers
+  => (setv readers
   ...  (m-for [a (range 5)]
   ...    (print "create reader" a)
   ...    (<- a)))
@@ -185,27 +185,27 @@ Sharp Macros
 
 .. function:: ^ [f]
 
-  :func:`lift` sharp macro, :code:`#^f` is expanded to :code:`(lift f)`
+  :func:`lift` sharp macro, :code:`#^ f` is expanded to :code:`(lift f)`
 
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just Nothing]])
   => (require [hymn.macros [^]])
-  => (#^+ (Just 1) (Just 2))
+  => (#^ + (Just 1) (Just 2))
   Just(3)
-  => (#^+ (Just 1) Nothing)
+  => (#^ + (Just 1) Nothing)
   Nothing
 
 .. function:: = [value]
 
   sharp macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
-  :code:`#=v` is expanded to :code:`(m-return v)`
+  :code:`#= v` is expanded to :code:`(m-return v)`
 
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just maybe-m]])
   => (require [hymn.macros [= do-monad-m do-monad-with]])
-  => (do-monad-with maybe-m [a #=1 b #=2] (+ a b))
+  => (do-monad-with maybe-m [a #= 1 b #= 2] (+ a b))
   Just(3)
-  => (do-monad-m [a (Just 1)] #=(inc a))
+  => (do-monad-m [a (Just 1)] #= (inc a))
   Just(2)

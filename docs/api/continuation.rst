@@ -64,11 +64,11 @@ Operations
   => (import [hymn.types.continuation [call-cc cont-m]])
   => (require [hymn.macros [m-when do-monad-with]])
   => (defn search [n seq]
-  ...   (call-cc
-  ...     (fn [exit]
-  ...       (do-monad-with cont-m
-  ...         [_ (m-when (in n seq) (exit (.index seq n)))]
-  ...         "not found."))))
+  ...    (call-cc
+  ...      (fn [exit]
+  ...        (do-monad-with cont-m
+  ...          [_ (m-when (in n seq) (exit (.index seq n)))]
+  ...          "not found."))))
   => (.run (search 0 [1 2 3 4 5]))
   'not found.'
   => (.run (search 0 [1 2 3 0 5]))
@@ -81,8 +81,8 @@ Sharp Macro
 .. code-block:: clojure
 
   => (require [hymn.types.continuation [<]])
-  => (#<42)
+  => (#< 42)
   42
   => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [a #<25 b #<17] (+ a b)))
+  => (.run (do-monad [a #< 25 b #< 17] (+ a b)))
   42

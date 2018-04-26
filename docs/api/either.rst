@@ -87,7 +87,7 @@ Do Notation with :when
   => (import [hymn.types.either [either-m]])
   => (require [hymn.macros [do-monad-with]])
   => (defn safe-div [a b]
-  ...   (do-monad-with either-m [:when (not (zero? b))] (/ a b)))
+  ...    (do-monad-with either-m [:when (not (zero? b))] (/ a b)))
   => (safe-div 1 2)
   Right(0.5)
   => (safe-div 1 0)
@@ -137,7 +137,7 @@ Use :func:`left?` and :func:`right?` to test the type
   Right(42)
   => (add1 "nan")
   Left(ValueError("invalid literal for int() with base 10: 'nan'",))
-  => (def safe-div (failsafe /))
+  => (setv safe-div (failsafe /))
   => (safe-div 1 2)
   Right(0.5)
   => (safe-div 1 0)
@@ -150,11 +150,11 @@ Sharp Macro
 .. code-block:: clojure
 
   => (require [hymn.types.either [|]])
-  => (#|int "42")
+  => (#| int "42")
   Right(42)
-  => (#|int "nan")
+  => (#| int "nan")
   Left(ValueError("invalid literal for int() with base 10: 'nan'",))
-  => (def safe-div #|/)
+  => (setv safe-div #| /)
   => (safe-div 1 2)
   Right(0.5)
   => (safe-div 1 0)

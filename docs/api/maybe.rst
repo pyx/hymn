@@ -137,8 +137,8 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   => (import [hymn.types.maybe [<-maybe ->maybe nothing?]])
   => (nothing? (->maybe None))
   True
-  => (def answer (->maybe 42))
-  => (def nothing (->maybe None))
+  => (setv answer (->maybe 42))
+  => (setv nothing (->maybe None))
   => (<-maybe answer "not this one")
   42
   => (<-maybe nothing "I got nothing")
@@ -166,7 +166,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   Just(42)
   => (add1 "nan")
   Nothing
-  => (def safe-div (maybe /))
+  => (setv safe-div (maybe /))
   => (safe-div 1 2)
   Just(0.5)
   => (safe-div 1 0)
@@ -179,11 +179,11 @@ Sharp Macro
 .. code-block:: clojure
 
   => (require [hymn.types.maybe [?]])
-  => (#?int "42")
+  => (#? int "42")
   Just(42)
-  => (#?int "not a number")
+  => (#? int "not a number")
   Nothing
-  => (def safe-div #?/)
+  => (setv safe-div #? /)
   => (safe-div 1 2)
   Just(0.5)
   => (safe-div 1 0)

@@ -18,7 +18,7 @@ The continuation monad
   => (import [hymn.types.continuation [cont-m call-cc]])
   => ;; computations in continuation passing style
   => (defn double [x] (cont-m.unit (* x 2)))
-  => (def length (cont-m.monadic len))
+  => (setv length (cont-m.monadic len))
   => ;; chain with bind
   => (.run (>> (cont-m.unit [1 2 3]) length double))
   6
@@ -43,16 +43,16 @@ The either monad
   => (do-monad [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
   => (do-monad [a (Right 1) b (Left 'nan)] (/ a b))
-  Left(nan)
+  Left(HySymbol('nan'))
   => ;; failsafe is a function decorator that wraps return value into either
-  => (def safe-div (failsafe /))
+  => (setv safe-div (failsafe /))
   => ;; returns Right if nothing wrong
   => (safe-div 4 2)
   Right(2.0)
   => ;; returns Left when bad thing happened, like exception being thrown
   => (safe-div 1 0)
   Left(ZeroDivisionError('division by zero',))
-  => ;; function either tests the value and call functions accordingly
+  => ;; function either tests the value and calls functions accordingly
   => (either print inc (safe-div 4 2))
   3.0
   => (either print inc (safe-div 1 0))
@@ -76,7 +76,7 @@ The lazy monad
   => (require [hymn.types.lazy [lazy]])
   => ;; lazy computation implemented as monad
   => ;; macro lazy creates deferred computation
-  => (def a (lazy (print "evaluate a") 42))
+  => (setv a (lazy (print "evaluate a") 42))
   => ;; the computation is deferred, notice the value is shown as '_'
   => a
   Lazy(_)
@@ -90,7 +90,7 @@ The lazy monad
   => ;; calling evaluate again will not trigger the computation
   => (.evaluate a)
   42
-  => (def b (lazy (print "evaluate b") 21))
+  => (setv b (lazy (print "evaluate b") 21))
   => b
   Lazy(_)
   => ;; force evaluate the computation, same as calling .evaluate on the monad
@@ -102,7 +102,7 @@ The lazy monad
   42
   => (require [hymn.macros [do-monad]])
   => ;; do notation with lazy monad
-  => (def c (do-monad [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
+  => (setv c (do-monad [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
   => ;; the computation is deferred
   => c
   Lazy(_)
@@ -122,8 +122,8 @@ The list monad
   => (import [hymn.types.list [list-m]])
   => (require [hymn.macros [do-monad]])
   => ;; use list-m contructor to turn sequence into list monad
-  => (def xs (list-m (range 2)))
-  => (def ys (list-m (range 3)))
+  => (setv xs (list-m (range 2)))
+  => (setv ys (list-m (range 3)))
   => ;; do notation with list monad is list comprehension
   => (list (do-monad [x xs y ys :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
@@ -146,7 +146,7 @@ The maybe monad
   Nothing
   => ;; maybe is a function decorator that wraps return value into maybe
   => ;; a safe-div with maybe monad
-  => (def safe-div (maybe /))
+  => (setv safe-div (maybe /))
   => (safe-div 42 42)
   Just(1.0)
   => (safe-div 42 'answer)
@@ -161,7 +161,7 @@ The reader monad
   => (import [hymn.types.reader [lookup]])
   => (require [hymn.macros [do-monad]])
   => ;; do notation with reader monad, lookup assumes the environment is subscriptable
-  => (def r (do-monad [a (lookup 'a) b (lookup 'b)] (+ a b)))
+  => (setv r (do-monad [a (lookup 'a) b (lookup 'b)] (+ a b)))
   => ;; run reader monad r with environment
   => (.run r {'a 1 'b 2})
   3
@@ -173,10 +173,10 @@ The state monad
   => (import [hymn.types.state [lookup set-value]])
   => (require [hymn.macros [do-monad]])
   => ;; do notation with state monad, set-value sets the value with key in the state
-  => (def s (do-monad [a (lookup 'a) _ (set-value 'b (inc a))] a))
+  => (setv s (do-monad [a (lookup 'a) _ (set-value 'b (inc a))] a))
   => ;; run state monad s with initial state
   => (.run s {'a 1})
-  (1, {'b': 2, 'a': 1})
+  (1, {HySymbol('a'): 1, HySymbol('b'): 2})
 
 The writer monad
 
@@ -197,7 +197,7 @@ Operations on monads
 
   => (import [hymn.operations [lift]])
   => ;; lift promotes function into monad
-  => (def m+ (lift +))
+  => (setv m+ (lift +))
   => ;; lifted function can work on any monad
   => ;; on the maybe monad
   => (import [hymn.types.maybe [Just Nothing]])
@@ -226,17 +226,17 @@ Operations on monads
   => (import [hymn.types.reader [<-]])
   => (require [hymn.macros [^]])
   => ;; ^ is the sharp macro for lift
-  => (def p (#^print (<- 'message) :end (<- 'end)))
+  => (setv p (#^ print (<- 'message) :end (<- 'end)))
   => (.run p {'message "Hello world" 'end "!\n"})
   Hello world!
   => ;; random number - linear congruential generator
   => (import [hymn.types.state [get-state set-state]])
-  => (def random (>> get-state (fn [s] (-> s (* 69069) inc (% (** 2 32)) set-state))))
+  => (setv random (>> get-state (fn [s] (-> s (* 69069) inc (% (** 2 32)) set-state))))
   => (.run random 1234)
   (1234, 85231147)
   => ;; random can be even shorter by using modify
   => (import [hymn.types.state [modify]])
-  => (def random (modify (fn [s] (-> s (* 69069) inc (% (** 2 32))))))
+  => (setv random (modify (fn [s] (-> s (* 69069) inc (% (** 2 32))))))
   => (.run random 1234)
   (1234, 85231147)
   => ;; use replicate to do computation repeatly

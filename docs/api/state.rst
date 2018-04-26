@@ -168,7 +168,7 @@ an alias of :func:`lookup`
 
   => (import [hymn.types.state [set-values]])
   => (.run (set-values :a 1 :b 2) {})
-  ({}, {'b': 2, 'a': 1})
+  ({}, {'a': 1, 'b': 2})
 
 :func:`update` changes the value with the key by applying a function to it
 

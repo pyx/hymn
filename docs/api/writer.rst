@@ -170,7 +170,7 @@ Use :func:`censor` to apply function to the output
 
   => (import [hymn.types.writer [censor tell]])
   => (require [hymn.macros [do-monad]])
-  => (def logs (do-monad [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
+  => (setv logs (do-monad [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
   => (.execute logs)
   [1, 2, 3]
   => (.execute (censor sum logs))
@@ -184,10 +184,10 @@ Sharp Macro
 
   => (require [hymn.types.writer [+]])
   => ;; sharp macro + works like tell
-  => #+1
+  => #+ 1
   IntWriter((None, 1))
-  => (.execute #+1)
+  => (.execute #+ 1)
   1
   => (require [hymn.macros [do-monad]])
-  => (do-monad [_ #+1 _ #+2 _ #+4] 42)
+  => (do-monad [_ #+ 1 _ #+ 2 _ #+ 4] 42)
   IntWriter((42, 7))

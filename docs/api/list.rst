@@ -107,8 +107,8 @@ Sharp Macro
 
   => (import [hymn.types.list [list-m]])
   => (require [hymn.types.list [~]])
-  => (instance? list-m #~[0 1 2])
+  => (instance? list-m #~ [0 1 2])
   True
   => (require [hymn.macros [do-monad]])
-  => (list (do-monad [a #~(range 10) :when (odd? a)] (* a 2)))
+  => (list (do-monad [a #~ (range 10) :when (odd? a)] (* a 2)))
   [2, 6, 10, 14, 18]

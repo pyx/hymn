@@ -50,7 +50,7 @@ Do Notation
 
   => (require [hymn.macros [do-monad]])
   => (require [hymn.types.lazy [lazy]])
-  => (def two (do-monad [x (lazy (print "evaluate two") 2)] x))
+  => (setv two (do-monad [x (lazy (print "evaluate two") 2)] x))
   => two
   Lazy(_)
   => (.evaluate two)
@@ -67,7 +67,7 @@ computation will not be evaluated until asked explicitly
 .. code-block:: clojure
 
   => (require [hymn.types.lazy [lazy]])
-  => (def answer (lazy (print "the answer is ...") 42))
+  => (setv answer (lazy (print "the answer is ...") 42))
   => answer
   Lazy(_)
   => (.evaluate answer)
@@ -81,7 +81,7 @@ Deferred computation can also be created with expressions wrapped in a function
 .. code-block:: clojure
 
   => (import [hymn.types.lazy [lazy-m]])
-  => (def a (lazy-m (fn [] (print "^o^") 42)))
+  => (setv a (lazy-m (fn [] (print "^o^") 42)))
   => (.evaluate a)
   ^o^
   42
@@ -92,7 +92,7 @@ cached
 .. code-block:: clojure
 
   => (require [hymn.types.lazy [lazy]])
-  => (def who (lazy (input "enter your name? ")))
+  => (setv who (lazy (input "enter your name? ")))
   => who
   Lazy(_)
   => (.evaluate who)
@@ -101,11 +101,11 @@ cached
   => who
   Lazy('Marvin')
   => (import [hymn.operations [lift]])
-  => (def m+ (lift +))
-  => (def x (lazy (print "get x") 2))
+  => (setv m+ (lift +))
+  => (setv x (lazy (print "get x") 2))
   => x
   Lazy(_)
-  => (def x3 (m+ x x x))
+  => (setv x3 (m+ x x x))
   => x3
   Lazy(_)
   => (.evaluate x3)
@@ -127,7 +127,7 @@ Use :func:`force` to evaluate :class:`Lazy` as well as other values
   1
   => (force 1)
   1
-  => (def a (lazy (print "Stat!") (+ 1 2 3)))
+  => (setv a (lazy (print "Stat!") (+ 1 2 3)))
   => a
   Lazy(_)
   => (force a)
