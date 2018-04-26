@@ -1,6 +1,14 @@
 Changelog
 =========
 
+- 0.8
+
+  - Backward incompatible change supporting hy 0.14
+  - Drop python 3.3 support
+  - Remove type-specific sharp macros in `hymn.macros`, newer hy does not
+    support aggregating macros in a module.  Type-specific sharp macros are
+    still available in their respective type modules.
+
 - 0.7
 
   - Backward incompatible change supporting hy 0.13

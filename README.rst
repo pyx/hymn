@@ -274,7 +274,9 @@ Using Hymn in Python
 Requirements
 ============
 
-- hy >= 0.13.0
+- hy >= 0.14.0
+
+For hy version 0.13, please install hymn 0.7.
 
 For hy version 0.12, please install hymn 0.6.
 
