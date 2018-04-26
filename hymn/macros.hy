@@ -6,12 +6,12 @@
 (import
   [hymn.utils [thread-first thread-last thread-bindings]])
 
-;;; lift sharp macro, e.g. #^ + => (lift +)
+;;; lift tag macro, e.g. #^ + => (lift +)
 (deftag ^ [f]
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
-;;; monad return sharp macro, replaced by 'm-return, used in do-monad, e.g.
+;;; monad return tag macro, replaced by 'm-return, used in do-monad, e.g.
 ;;; (do-monad-m [a (Just 1) b #= (inc a)] #= [a b])
 ;;; is equivalent to
 ;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])

@@ -23,14 +23,14 @@
 
 (setv data 42)
 
-(defn test-sharp-macro-^ [monad-runner]
-  "lift sharp macro ^ should expand to lift call"
+(defn test-tag-macro-^ [monad-runner]
+  "lift tag macro ^ should expand to lift call"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= ((lift inc) (unit data)) (#^ inc (unit data)))))
 
-(defn test-sharp-macro-= [monad-runner]
-  "m-return sharp macro = should expand to m-return call"
+(defn test-tag-macro-= [monad-runner]
+  "m-return tag macro = should expand to m-return call"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (setv m-return unit)

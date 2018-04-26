@@ -14,8 +14,8 @@
 
 (setv data 42)
 
-(defn test-sharp-macro-failsafe []
-  "failsafe sharp macro | should wrap a function with decorator failsafe"
+(defn test-tag-macro-failsafe []
+  "failsafe tag macro | should wrap a function with decorator failsafe"
   (setv failsafe-int #| int)
   (assert (instance? either-m (failsafe-int 1)))
   (assert (= (failsafe-int 1) (either-m.unit 1))))

@@ -20,8 +20,8 @@ Hy Specific API
   alias of :class:`Either`
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. function:: | [f]
 
@@ -144,8 +144,8 @@ Use :func:`left?` and :func:`right?` to test the type
   Left(ZeroDivisionError('division by zero',))
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. code-block:: clojure
 

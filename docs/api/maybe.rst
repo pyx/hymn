@@ -25,8 +25,8 @@ Hy Specific API
   alias of :class:`Maybe`
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. function:: ? [f]
 
@@ -173,8 +173,8 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   Nothing
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. code-block:: clojure
 

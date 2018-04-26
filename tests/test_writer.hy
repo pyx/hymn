@@ -24,8 +24,8 @@
   [hymn.types.writer [+]]
   [hymn.macros [do-monad]])
 
-(defn test-sharp-macro-tell []
-  "writer sharp macro + should work as tell"
+(defn test-tag-macro-tell []
+  "writer tag macro + should work as tell"
   (assert (= 3 (.execute (do-monad [_ #+ 1 _ #+ 2] None)))))
 
 (defn test-module-level-execute []

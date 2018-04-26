@@ -180,12 +180,12 @@ All do monad macros support :code:`:when` if the monad is of type
   [1.0, 2.0]
 
 
-Sharp Macros
-------------
+Tag Macros
+----------
 
 .. function:: ^ [f]
 
-  :func:`lift` sharp macro, :code:`#^ f` is expanded to :code:`(lift f)`
+  :func:`lift` tag macro, :code:`#^ f` is expanded to :code:`(lift f)`
 
 .. code-block:: clojure
 
@@ -198,7 +198,7 @@ Sharp Macros
 
 .. function:: = [value]
 
-  sharp macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
+  tag macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
   :code:`#= v` is expanded to :code:`(m-return v)`
 
 .. code-block:: clojure

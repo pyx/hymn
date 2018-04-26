@@ -23,8 +23,8 @@ Hy Specific API
   alias of :class:`Continuation`
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. function:: < [v]
 
@@ -75,8 +75,8 @@ Operations
   3
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. code-block:: clojure
 

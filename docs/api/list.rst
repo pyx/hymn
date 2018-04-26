@@ -18,8 +18,8 @@ Hy Specific API
   alias of :class:`List`
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. function:: ~ [seq]
 
@@ -29,8 +29,8 @@ Sharp Macro
 
 .. note::
 
-  This is the new name of sharp macro :code:`*`.  Starting from 0.12, macros in
-  Hy are namespaced/qualified, using symbol :code:`*` as sharp macro is no
+  This is the new name of tag macro :code:`*`.  Starting from 0.12, macros in
+  Hy are namespaced/qualified, using symbol :code:`*` as tag macro is no
   longer a good idea since :code:`(require [hymn.macros [*]])` should mean
   importing *all* macros.
 
@@ -100,8 +100,8 @@ instead of the builtin `list`
   3
 
 
-Sharp Macro
-^^^^^^^^^^^
+Tag Macro
+^^^^^^^^^
 
 .. code-block:: clojure
 

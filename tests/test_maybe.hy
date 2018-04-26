@@ -11,8 +11,8 @@
   [hymn.types.maybe [?]]
   [hymn.macros [do-monad]])
 
-(defn test-sharp-macro-maybe []
-  "maybe sharp macro ? should wrap a function with decorator maybe"
+(defn test-tag-macro-maybe []
+  "maybe tag macro ? should wrap a function with decorator maybe"
   (setv maybe-int #? int)
   (assert (instance? maybe-m (maybe-int 1)))
   (assert (= (maybe-int 1) (maybe-m.unit 1))))

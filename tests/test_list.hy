@@ -11,8 +11,8 @@
   [hymn.types.list [~]]
   [hymn.macros [do-monad]])
 
-(defn test-sharp-macro-list []
-  "list sharp macro ~ should turn a sequence into List monad"
+(defn test-tag-macro-list []
+  "list tag macro ~ should turn a sequence into List monad"
   (assert (instance? list-m #~ (range 5)))
   (assert (= (list #~ [1 2 3 4 5]) (list (list-m [1 2 3 4 5])))))
 
