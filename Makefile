@@ -64,3 +64,8 @@ quality:
 clean:
 	cd $(DOCS_DIR) && $(MAKE) clean
 	rm -rf build/ dist/ htmlcov/ *.egg-info MANIFEST $(DOCS_DIR)/conf.pyc *~
+	rm -rf hymn/*.pyc hymn/__pycache__/
+	rm -rf hymn/types/*.pyc hymn/types/__pycache__/
+	rm -rf tests/*.pyc tests/__pycache__/
+	rm -rf tests/*.pyc tests/__pycache__/
+	rm -rf examples/*.pyc examples/__pycache__/
