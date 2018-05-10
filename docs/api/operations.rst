@@ -29,7 +29,7 @@ Monad Operations
 .. autofunction:: k_pipe
 .. function:: >=>
 
-  alias of :func:`k_compose`
+  alias of :func:`k_pipe`
 
 .. code-block:: clojure
 
