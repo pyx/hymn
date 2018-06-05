@@ -10,7 +10,7 @@
 
 (require
   [hymn.types.either [|]]
-  [hymn.macros [do-monad]])
+  [hymn.macros [do-monad-return]])
 
 (setv data 42)
 
@@ -96,10 +96,10 @@
   (assert (left? (safe-int "this is no a number"))))
 
 (defn test-do-monad-either []
-  "either computation with do-monad"
-  (assert (= (Right 3) (do-monad [a (Right 1) b (Right 2)] (+ a b))))
-  (assert (left? (do-monad [a (Left 1) b (Right 0)] (/ a b))))
-  (assert (left? (do-monad
+  "either computation with do-monad-return"
+  (assert (= (Right 3) (do-monad-return [a (Right 1) b (Right 2)] (+ a b))))
+  (assert (left? (do-monad-return [a (Left 1) b (Right 0)] (/ a b))))
+  (assert (left? (do-monad-return
                    [a (Right 1)
                     b (Right 0)
                     :when (not (zero? b))]

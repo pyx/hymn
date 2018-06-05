@@ -9,7 +9,7 @@
 
 (require
   [hymn.types.list [~]]
-  [hymn.macros [do-monad]])
+  [hymn.macros [do-monad-return]])
 
 (defn test-tag-macro-list []
   "list tag macro ~ should turn a sequence into List monad"
@@ -48,13 +48,13 @@
              [['a 0] ['a 1] ['a 2] ['b 0] ['b 1] ['b 2]])))
 
 (defn test-do-monad-list []
-  "list comprehension with do-monad"
-  (assert (= (list (do-monad [x #~ ['a 'b] y #~ (range 3)] [x y]))
+  "list comprehension with do-monad-return"
+  (assert (= (list (do-monad-return [x #~ ['a 'b] y #~ (range 3)] [x y]))
              [['a 0] ['a 1] ['a 2] ['b 0] ['b 1] ['b 2]])))
 
 (defn test-do-monad-list-when []
-  "list is monadplus, :when can be used in do-monad"
-  (assert (= (list (do-monad [a #~ [1 2] b #~ [1 2] :when (not (= a b))] [a b]))
+  "list is monadplus, :when can be used in do-monad-return"
+  (assert (= (list (do-monad-return [a #~ [1 2] b #~ [1 2] :when (not (= a b))] [a b]))
              [[1 2] [2 1]])))
 
 (defn test-replicate-should-not-miss []

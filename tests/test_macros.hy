@@ -8,7 +8,7 @@
 (require
   [hymn.macros
     [^ =
-     do-monad
+     do-monad-return
      do-monad-m
      do-monad-with
      m-for
@@ -36,42 +36,42 @@
   (setv m-return unit)
   (assert (m= (unit data) #= data)))
 
-(defn test-do-monad-return-monad [monad-runner]
-  "do-monad macro should wrap result in monad automatically"
+(defn test-do-monad-return-return-monad [monad-runner]
+  "do-monad-return macro should wrap result in monad automatically"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
-  (assert (instance? monad (do-monad [a (unit data)] a))))
+  (assert (instance? monad (do-monad-return [a (unit data)] a))))
 
-(defn test-do-monad [monad-runner]
-  "do-monad macro should work"
+(defn test-do-monad-return [monad-runner]
+  "do-monad-return macro should work"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data)] (inc a)))))
+              (do-monad-return [a (unit data)] (inc a)))))
 
-(defn test-do-monad-let-binding [monad-runner]
-  "do-monad macro should support let binding"
+(defn test-do-monad-return-let-binding [monad-runner]
+  "do-monad-return macro should support let binding"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) :let [b (inc a)]] b))))
+              (do-monad-return [a (unit data) :let [b (inc a)]] b))))
 
 (defn test-do-monad-multiple-bindings [monad-runner]
-  "do-monad macro should allow multiple bindings"
+  "do-monad-return macro should allow multiple bindings"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (setv m-inc (monad.monadic inc))
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) b (m-inc a)] b))))
+              (do-monad-return [a (unit data) b (m-inc a)] b))))
 
 (defn test-do-monad-when [monadplus-runner]
-  "do-monad macro should support when with monadplus"
+  "do-monad-return macro should support when with monadplus"
   (setv [monadplus run] monadplus-runner)
   (setv unit monadplus.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) :when (= a data)] (inc a))))
+              (do-monad-return [a (unit data) :when (= a data)] (inc a))))
   (assert (m= monadplus.zero
-              (do-monad [a (unit data) :when (!= a data)] (inc a)))))
+              (do-monad-return [a (unit data) :when (!= a data)] (inc a)))))
 
 (defn test-do-monad-m [monad-runner]
   "do-monad-m macro should work"
@@ -145,23 +145,23 @@
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad [a (unit data) b (m-when (= a data) #= (inc a))] b))))
+              (do-monad-return [a (unit data) b (m-when (= a data) #= (inc a))] b))))
 
 (defn test-monad-comp [monad-runner]
   "monad comprehension macro should work as do monad in different syntax"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (monad-comp (inc data) [a (unit data)])
-              (do-monad [a (unit data)] (inc a)))))
+              (do-monad-return [a (unit data)] (inc a)))))
 
 (defn test-monad-comp-condition [monadplus-runner]
   "monad comprehension macro should support :when with monadplus"
   (setv [monadplus run] monadplus-runner)
   (setv unit monadplus.unit)
   (assert (m= (monad-comp (inc data) [a (unit data)] (= a data))
-              (do-monad [a (unit data) :when (= a data)] (inc a))))
+              (do-monad-return [a (unit data) :when (= a data)] (inc a))))
   (assert (m= (monad-comp (inc data) [a (unit data)] (!= a data))
-              (do-monad [a (unit data) :when (!= a data)] (inc a)))))
+              (do-monad-return [a (unit data) :when (!= a data)] (inc a)))))
 
 (defn test-with-monad [monad]
   "with-monad should provide default function m-return"

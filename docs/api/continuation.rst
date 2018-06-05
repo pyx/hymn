@@ -49,8 +49,8 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.continuation [cont-m]])
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [a (cont-m.unit 1)] (inc a)))
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [a (cont-m.unit 1)] (inc a)))
   2
 
 
@@ -83,6 +83,6 @@ Tag Macro
   => (require [hymn.types.continuation [<]])
   => (#< 42)
   42
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [a #< 25 b #< 17] (+ a b)))
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [a #< 25 b #< 17] (+ a b)))
   42

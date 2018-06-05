@@ -10,7 +10,7 @@
   [time [time]]
   [hymn.dsl [get-state replicate set-state]])
 
-(require [hymn.macros [do-monad]])
+(require [hymn.macros [do-monad-return]])
 
 ;;; Knuth!
 (setv a 6364136223846793005)
@@ -19,13 +19,13 @@
 
 ;;; linear congruential generator
 (setv random
-  (do-monad
+  (do-monad-return
     [seed get-state
      _ (set-state (-> seed (* a) (+ c) (% m)))
      new-seed get-state]
     (/ new-seed m)))
 
-(setv random-point (do-monad [x random y random] (, x y)))
+(setv random-point (do-monad-return [x random y random] (, x y)))
 
 (defn points [seed]
   "stream of random points"

@@ -10,7 +10,7 @@
   [itertools [permutations]])
 
 (require
-  [hymn.macros [do-monad do-monad-m]]
+  [hymn.macros [do-monad-return do-monad-m]]
   [hymn.types.list [~]]
   [hymn.types.maybe [?]])
 
@@ -37,7 +37,7 @@
         (infix-repr "(({a} {op3} {b}) {op2} {c}) {op1} {d}"))]))
 
 (defn combinations [numbers]
-  (do-monad
+  (do-monad-return
     [:let [seemed (set)]
      [a b c d] #~ (permutations numbers 4)
      :when (not-in (, a b c d) seemed)]
@@ -50,7 +50,7 @@
 (defn close-enough [a b] (< (abs (- a b)) 0.0001))
 
 (defn solve [numbers]
-  (do-monad
+  (do-monad-return
     [[result infix-repr] (<< template (combinations numbers))
      :when (>> result (partial close-enough 24))]
     infix-repr))

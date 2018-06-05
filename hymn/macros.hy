@@ -11,7 +11,7 @@
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
-;;; monad return tag macro, replaced by 'm-return, used in do-monad, e.g.
+;;; monad return tag macro, replaced by 'm-return, used in do-monad-return, e.g.
 ;;; (do-monad-m [a (Just 1) b #= (inc a)] #= [a b])
 ;;; is equivalent to
 ;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])
@@ -36,7 +36,7 @@
                         ~mexpr))))))
   (reduce bind-action bindings expr))
 
-(defmacro do-monad [binding-forms expr]
+(defmacro do-monad-return [binding-forms expr]
   "macro for sequencing monadic computations, with automatic return"
   `(do (require hymn.macros)
      (hymn.macros.do-monad-m ~binding-forms (m-return ~expr))))
@@ -45,7 +45,7 @@
   "macro for sequencing monadic composition, with said monad as default"
   `(do (require hymn.macros)
      (hymn.macros.with-monad ~monad
-       (hymn.macros.do-monad ~binding-forms ~expr))))
+       (hymn.macros.do-monad-return ~binding-forms ~expr))))
 
 (defmacro monad-> [init-value &rest actions]
   "threading macro for monad"
@@ -77,7 +77,7 @@
   "different syntax for do notation"
   (setv guard (if (none? condition) `() `(:when ~condition)))
   `(do (require hymn.macros)
-     (hymn.macros.do-monad ~(+ bindings guard) ~expr)))
+     (hymn.macros.do-monad-return ~(+ bindings guard) ~expr)))
 
 (defmacro with-monad [monad &rest exprs]
   "provide default function m-return as the unit of the monad"

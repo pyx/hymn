@@ -9,7 +9,7 @@
 
 (require
   [hymn.types.maybe [?]]
-  [hymn.macros [do-monad]])
+  [hymn.macros [do-monad-return]])
 
 (defn test-tag-macro-maybe []
   "maybe tag macro ? should wrap a function with decorator maybe"
@@ -108,13 +108,13 @@
   (assert (is Nothing (safe-int "this is no a number"))))
 
 (defn test-do-monad-maybe []
-  "maybe computation with do-monad"
-  (assert (= (Just 3) (do-monad [a (Just 1) b (Just 2)] (+ a b)))))
+  "maybe computation with do-monad-return"
+  (assert (= (Just 3) (do-monad-return [a (Just 1) b (Just 2)] (+ a b)))))
 
 (defn test-do-monad-maybe-when []
-  "maybe is monadplus, :when can be used in do-monad"
+  "maybe is monadplus, :when can be used in do-monad-return"
   (assert (is Nothing
-            (do-monad
+            (do-monad-return
               [a (Just 1)
                b (Just 0)
               :when (not (zero? b))]

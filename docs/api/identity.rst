@@ -24,8 +24,8 @@ Examples
 .. code-block:: clojure
 
   => (import [hymn.types.identity [identity-m]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [a (identity-m.unit 1) b (identity-m.unit 2)] (+ a b))
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [a (identity-m.unit 1) b (identity-m.unit 2)] (+ a b))
   Identity(3)
 
 Identity monad is comparable as long as what's wrapped inside are comparable.

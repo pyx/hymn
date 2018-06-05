@@ -29,8 +29,8 @@ The continuation monad
   145
   => (.run (square 12) str)
   '144'
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [sqr (square 42)] (.format "answer^2 = {}" sqr)))
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [sqr (square 42)] (.format "answer^2 = {}" sqr)))
   'answer^2 = 1764'
 
 The either monad
@@ -38,11 +38,11 @@ The either monad
 .. code-block:: clojure
 
   => (import [hymn.types.either [Left Right either failsafe]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with either monad
-  => (do-monad [a (Right 1) b (Right 2)] (/ a b))
+  => (do-monad-return [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
-  => (do-monad [a (Right 1) b (Left 'nan)] (/ a b))
+  => (do-monad-return [a (Right 1) b (Left 'nan)] (/ a b))
   Left(HySymbol('nan'))
   => ;; failsafe is a function decorator that wraps return value into either
   => (setv safe-div (failsafe /))
@@ -63,9 +63,9 @@ The identity monad
 .. code-block:: clojure
 
   => (import [hymn.types.identity [identity-m]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with identity monad is like let binding
-  => (do-monad [a (identity-m 1) b (identity-m 2)] (+ a b))
+  => (do-monad-return [a (identity-m 1) b (identity-m 2)] (+ a b))
   Identity(3)
 
 The lazy monad
@@ -100,9 +100,9 @@ The lazy monad
   => ;; force on values other than lazy return the value unchanged
   => (force 42)
   42
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with lazy monad
-  => (setv c (do-monad [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
+  => (setv c (do-monad-return [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
   => ;; the computation is deferred
   => c
   Lazy(_)
@@ -120,16 +120,16 @@ The list monad
 .. code-block:: clojure
 
   => (import [hymn.types.list [list-m]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; use list-m contructor to turn sequence into list monad
   => (setv xs (list-m (range 2)))
   => (setv ys (list-m (range 3)))
   => ;; do notation with list monad is list comprehension
-  => (list (do-monad [x xs y ys :when (not (zero? y))] (/ x y)) )
+  => (list (do-monad-return [x xs y ys :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
   => (require [hymn.types.list [~]])
   => ;; ~ is the tag macro for list-m
-  => (list (do-monad [x #~(range 2) y #~(range 3) :when (not (zero? y))] (/ x y)) )
+  => (list (do-monad-return [x #~(range 2) y #~(range 3) :when (not (zero? y))] (/ x y)) )
   [0.0, 0.0, 1.0, 0.5]
 
 The maybe monad
@@ -137,12 +137,12 @@ The maybe monad
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just Nothing maybe]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with maybe monad
-  => (do-monad [a (Just 1) b (Just 1)] (/ a b))
+  => (do-monad-return [a (Just 1) b (Just 1)] (/ a b))
   Just(1.0)
   => ;; Nothing yields Nothing
-  => (do-monad [a Nothing b (Just 1)] (/ a b))
+  => (do-monad-return [a Nothing b (Just 1)] (/ a b))
   Nothing
   => ;; maybe is a function decorator that wraps return value into maybe
   => ;; a safe-div with maybe monad
@@ -159,9 +159,9 @@ The reader monad
 .. code-block:: clojure
 
   => (import [hymn.types.reader [lookup]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with reader monad, lookup assumes the environment is subscriptable
-  => (setv r (do-monad [a (lookup 'a) b (lookup 'b)] (+ a b)))
+  => (setv r (do-monad-return [a (lookup 'a) b (lookup 'b)] (+ a b)))
   => ;; run reader monad r with environment
   => (.run r {'a 1 'b 2})
   3
@@ -171,9 +171,9 @@ The state monad
 .. code-block:: clojure
 
   => (import [hymn.types.state [lookup set-value]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with state monad, set-value sets the value with key in the state
-  => (setv s (do-monad [a (lookup 'a) _ (set-value 'b (inc a))] a))
+  => (setv s (do-monad-return [a (lookup 'a) _ (set-value 'b (inc a))] a))
   => ;; run state monad s with initial state
   => (.run s {'a 1})
   (1, {HySymbol('a'): 1, HySymbol('b'): 2})
@@ -183,12 +183,12 @@ The writer monad
 .. code-block:: clojure
 
   => (import [hymn.types.writer [tell]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => ;; do notation with writer monad
-  => (do-monad [_ (tell "hello") _ (tell " world")] None)
+  => (do-monad-return [_ (tell "hello") _ (tell " world")] None)
   StrWriter((None, 'hello world'))
   => ;; int is monoid, too
-  => (.execute (do-monad [_ (tell 1) _ (tell 2) _ (tell 3)] None))
+  => (.execute (do-monad-return [_ (tell 1) _ (tell 2) _ (tell 3)] None))
   6
 
 Operations on monads

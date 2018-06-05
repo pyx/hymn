@@ -101,10 +101,10 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.writer [tell]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [_ (tell 1) _ (tell 2)] None)
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [_ (tell 1) _ (tell 2)] None)
   IntWriter((None, 3))
-  => (do-monad [_ (tell "hello ") _ (tell "world!")] None)
+  => (do-monad-return [_ (tell "hello ") _ (tell "world!")] None)
   StrWriter((None, 'hello world!'))
 
 
@@ -169,8 +169,8 @@ Use :func:`censor` to apply function to the output
 .. code-block:: clojure
 
   => (import [hymn.types.writer [censor tell]])
-  => (require [hymn.macros [do-monad]])
-  => (setv logs (do-monad [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
+  => (require [hymn.macros [do-monad-return]])
+  => (setv logs (do-monad-return [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
   => (.execute logs)
   [1, 2, 3]
   => (.execute (censor sum logs))
@@ -188,6 +188,6 @@ Tag Macro
   IntWriter((None, 1))
   => (.execute #+ 1)
   1
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [_ #+ 1 _ #+ 2 _ #+ 4] 42)
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [_ #+ 1 _ #+ 2 _ #+ 4] 42)
   IntWriter((42, 7))

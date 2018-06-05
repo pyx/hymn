@@ -9,15 +9,15 @@ Macros
 Operation Macros
 ----------------
 
-.. function:: do-monad [binding-forms expr]
+.. function:: do-monad-return [binding-forms expr]
 
   macro for sequencing monadic computations, with automatic return
 
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [a (Just 41)] (inc a))
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [a (Just 41)] (inc a))
   Just(42)
 
 .. function:: do-monad-m [binding-forms expr]
@@ -52,9 +52,9 @@ All do monad macros support :code:`:let` binding, like this:
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => (defn half [x]
-  ...  (do-monad
+  ...  (do-monad-return
   ...    [:let [two 2]
   ...     a x
   ...     :let [b (/ a two)]]
@@ -161,9 +161,9 @@ All do monad macros support :code:`:when` if the monad is of type
 
 .. function:: monad-comp [expr binding-forms &optional condition]
 
-  different syntax for :code:`do-monad`, in the style of list/dict/set
+  different syntax for :code:`do-monad-return`, in the style of list/dict/set
   comprehensions, the :code:`condition` part is optional and can only be used
-  with :class:`~hymn.types.monadplus.MonadPlus` as in :code:`do-monad`
+  with :class:`~hymn.types.monadplus.MonadPlus` as in :code:`do-monad-return`
 
 .. code-block:: clojure
 
@@ -198,7 +198,7 @@ Tag Macros
 
 .. function:: = [value]
 
-  tag macro for :code:`m-return`, the :code:`unit` inside do-monad macros,
+  tag macro for :code:`m-return`, the :code:`unit` inside do-monad-return macros,
   :code:`#= v` is expanded to :code:`(m-return v)`
 
 .. code-block:: clojure

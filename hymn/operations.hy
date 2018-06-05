@@ -8,7 +8,7 @@
 
 (require
   [hy.extra.anaphoric [*]]
-  [hymn.macros [do-monad]])
+  [hymn.macros [do-monad-return]])
 
 (defn k-compose [&rest monadic-funcs]
   "right-to-left Kleisli composition of monads."
@@ -30,18 +30,18 @@
       (and (empty? args) (empty? kwargs))
         (identity-m.unit (f))
       (empty? kwargs)
-        (do-monad [unwrapped-args (sequence args)] (f #* unwrapped-args))
+        (do-monad-return [unwrapped-args (sequence args)] (f #* unwrapped-args))
       (do
         (setv
           keys/values (list (.items kwargs))
           keys (list (map first keys/values))
           values (sequence (map second keys/values)))
         (if-not (empty? args)
-          (do-monad
+          (do-monad-return
             [unwrapped-kwargs values
              unwrapped-args (sequence args)]
             (f #* unwrapped-args #** (dict (zip keys unwrapped-kwargs))))
-          (do-monad
+          (do-monad-return
             [unwrapped-kwargs values]
             (f #* [] #** (dict (zip keys unwrapped-kwargs)))))))))
 
@@ -58,7 +58,7 @@
   "evaluate each action in the sequence, and collect the results"
   (defn collect [mlist m]
     "collect the value inside monad m into list inside mlist"
-    (do-monad
+    (do-monad-return
       [value m
        value-list mlist]
       ;; NOTE: cannot use cons as cons will turn None into "None"

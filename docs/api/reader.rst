@@ -44,8 +44,8 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.reader [ask]])
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [e ask] (inc e)) 41)
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [e ask] (inc e)) 41)
   42
 
 
@@ -58,10 +58,10 @@ Operations
 .. code-block:: clojure
 
   => (import [hymn.types.reader [asks reader]])
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [h (asks first)] h) [5 4 3 2 1])
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [h (asks first)] h) [5 4 3 2 1])
   5
-  => (.run (do-monad [h (reader second)] h) [5 4 3 2 1])
+  => (.run (do-monad-return [h (reader second)] h) [5 4 3 2 1])
   4
 
 Use :func:`ask` to fetch the environment
@@ -71,8 +71,8 @@ Use :func:`ask` to fetch the environment
   => (import [hymn.types.reader [ask]])
   => (.run ask 42)
   42
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [e ask] (inc e)) 42)
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [e ask] (inc e)) 42)
   43
 
 :func:`local` runs the reader with modified environment
@@ -99,6 +99,6 @@ alias of :func:`lookup`
   2
   => (.run (<- 'b) {'a 1 'b 2})
   2
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [a (<- 'a) b (<- 'b)] (+ a b)) {'a 25 'b 17})
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [a (<- 'a) b (<- 'b)] (+ a b)) {'a 25 'b 17})
   42

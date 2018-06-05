@@ -10,7 +10,7 @@
 ;;; This is my own interpretation, especially the implementation of Maybe
 ;;; Monad has unbiased plus, which satisfy Monoid and *Left Distribution*.
 
-(require [hymn.macros [do-monad]])
+(require [hymn.macros [do-monad-return]])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
@@ -70,8 +70,8 @@
   (assert (m= (>> (+ m n) k) (+ (>> m k) (>> n k)))))
 
 (defn test-monadplus-do-monad-when [monadplus-runner]
-  "do-monad macro should allow using :when to filter result"
+  "do-monad-return macro should allow using :when to filter result"
   (setv [monadplus run] monadplus-runner)
   (setv unit monadplus.unit)
-  (assert (m= (do-monad [a (unit data) :when (!= a data)] a)
+  (assert (m= (do-monad-return [a (unit data) :when (!= a data)] a)
               monadplus.zero)))

@@ -6,14 +6,14 @@
 ;;; list monad example
 
 (require
-  [hymn.macros [do-monad]]
+  [hymn.macros [do-monad-return]]
   [hymn.types.list [~]])
 
 (setv total 1000)
 (setv limit (-> total (** 0.5) int inc))
 
 (setv triplet
-  (do-monad
+  (do-monad-return
     [m #~ (range 2 limit)
      n #~ (range 1 m)
      :let [a (- (** m 2) (** n 2))

@@ -84,10 +84,10 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just Nothing]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [a (Just 1) b (Just 2)] (+ a b))
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [a (Just 1) b (Just 2)] (+ a b))
   Just(3)
-  => (do-monad [a (Just 1) b Nothing] (+ a b))
+  => (do-monad-return [a (Just 1) b Nothing] (+ a b))
   Nothing
 
 

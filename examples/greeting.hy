@@ -7,7 +7,7 @@
 
 (import [hymn.dsl [cont-m call-cc]])
 
-(require [hymn.macros [do-monad m-when with-monad]])
+(require [hymn.macros [do-monad-return m-when with-monad]])
 
 (defn validate [name exit]
   (with-monad cont-m
@@ -16,7 +16,7 @@
 (defn greeting [name]
   (.run (call-cc
           (fn [exit]
-            (do-monad
+            (do-monad-return
               [_ (validate name exit)]
               (+ "Welcome, " name "!"))))))
 

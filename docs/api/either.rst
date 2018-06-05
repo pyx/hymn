@@ -72,10 +72,10 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.either [Left Right]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [a (Right 1) b (Right 2)] (+ a b))
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [a (Right 1) b (Right 2)] (+ a b))
   Right(3)
-  => (do-monad [a (Left 1) b (Right 2)] (+ a b))
+  => (do-monad-return [a (Left 1) b (Right 2)] (+ a b))
   Left(1)
 
 

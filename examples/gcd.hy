@@ -7,11 +7,11 @@
 
 (import [hymn.dsl [tell]])
 
-(require [hymn.macros [do-monad do-monad-m]])
+(require [hymn.macros [do-monad-return do-monad-m]])
 
 (defn gcd [a b]
   (if (zero? b)
-    (do-monad
+    (do-monad-return
       [_ (tell (.format "the result is: {}\n" (abs a)))]
       (abs a))
     (do-monad-m

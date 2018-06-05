@@ -7,7 +7,7 @@
   [operator [itemgetter]]
   [hymn.types.monad [Monad]])
 
-(require [hymn.macros [do-monad]])
+(require [hymn.macros [do-monad-return]])
 
 (defclass State [Monad]
   "the state monad
@@ -59,7 +59,7 @@
 
 (defn modify [f]
   "maps the current state with `f` to a new state inside a state monad"
-  (do-monad [s get-state _ (set-state (f s))] s))
+  (do-monad-return [s get-state _ (set-state (f s))] s))
 
 (defn set-state [s]
   "replace the current state and return the previous one"
@@ -76,7 +76,7 @@
 
 (defn update [key f]
   "return a monadic function that update the vaule by f with key in the state"
-  (do-monad
+  (do-monad-return
     [s get-state
      value (<- key)
      _ (set-state (doto ((type s) s) (assoc key (f value))))]

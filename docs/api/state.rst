@@ -79,8 +79,8 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.state [gets]])
-  => (require [hymn.macros [do-monad]])
-  => (.run (do-monad [a (gets first)] a) [1 2 3])
+  => (require [hymn.macros [do-monad-return]])
+  => (.run (do-monad-return [a (gets first)] a) [1 2 3])
   (1, [1, 2, 3])
 
 

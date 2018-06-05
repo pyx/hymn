@@ -45,12 +45,12 @@ Do Notation
 .. code-block:: clojure
 
   => (import [hymn.types.list [list-m]])
-  => (require [hymn.macros [do-monad]])
-  => (list (do-monad [a (list-m [1 2 3])] (inc a)))
+  => (require [hymn.macros [do-monad-return]])
+  => (list (do-monad-return [a (list-m [1 2 3])] (inc a)))
   [2, 3, 4]
-  => (list (do-monad [a (list-m [1 2 3]) b (list-m [4 5 6])] (+ a b)))
+  => (list (do-monad-return [a (list-m [1 2 3]) b (list-m [4 5 6])] (+ a b)))
   [5, 6, 7, 6, 7, 8, 7, 8, 9]
-  => (list (do-monad [a (list-m "123") b (list-m "xy")] (+ a b)))
+  => (list (do-monad-return [a (list-m "123") b (list-m "xy")] (+ a b)))
   ['1x', '1y', '2x', '2y', '3x', '3y']
 
 
@@ -60,8 +60,8 @@ Do Notation with :when
 .. code-block:: clojure
 
   => (import [hymn.types.list [list-m]])
-  => (require [hymn.macros [do-monad]])
-  => (list (do-monad
+  => (require [hymn.macros [do-monad-return]])
+  => (list (do-monad-return
   ...         [a (list-m [1 2 4])
   ...          b (list-m [1 2 4])
   ...          :when (!= a b)]
@@ -109,6 +109,6 @@ Tag Macro
   => (require [hymn.types.list [~]])
   => (instance? list-m #~ [0 1 2])
   True
-  => (require [hymn.macros [do-monad]])
-  => (list (do-monad [a #~ (range 10) :when (odd? a)] (* a 2)))
+  => (require [hymn.macros [do-monad-return]])
+  => (list (do-monad-return [a #~ (range 10) :when (odd? a)] (* a 2)))
   [2, 6, 10, 14, 18]

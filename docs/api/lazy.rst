@@ -48,9 +48,9 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require [hymn.macros [do-monad]])
+  => (require [hymn.macros [do-monad-return]])
   => (require [hymn.types.lazy [lazy]])
-  => (setv two (do-monad [x (lazy (print "evaluate two") 2)] x))
+  => (setv two (do-monad-return [x (lazy (print "evaluate two") 2)] x))
   => two
   Lazy(_)
   => (.evaluate two)
