@@ -9,7 +9,7 @@
   [hymn.macros
     [^ =
      do-monad-return
-     do-monad-m
+     do-monad
      do-monad-with
      m-for
      m-when
@@ -56,7 +56,7 @@
   (assert (m= (unit (inc data))
               (do-monad-return [a (unit data) :let [b (inc a)]] b))))
 
-(defn test-do-monad-multiple-bindings [monad-runner]
+(defn test-do-monadultiple-bindings [monad-runner]
   "do-monad-return macro should allow multiple bindings"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
@@ -73,12 +73,12 @@
   (assert (m= monadplus.zero
               (do-monad-return [a (unit data) :when (!= a data)] (inc a)))))
 
-(defn test-do-monad-m [monad-runner]
-  "do-monad-m macro should work"
+(defn test-do-monad [monad-runner]
+  "do-monad macro should work"
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad-m [a (unit data)] (m-return (inc a))))))
+              (do-monad [a (unit data)] (m-return (inc a))))))
 
 (defn test-do-monad-with [monad-runner]
   "do-monad-with macro should provide a default m-return"
@@ -89,14 +89,14 @@
               (do-monad-with monad [a (m-return data)] (inc a)))))
 
 (defn test-monad-threading-macro [monad-runner]
-  "monad-> macro should transform the form into do-monad-m macro"
+  "monad-> macro should transform the form into do-monad macro"
   (setv [monad run] monad-runner)
   (setv m+ (monad.monadic +))
   (setv m/ (monad.monadic /))
   (setv m (monad.unit data))
-  (assert (m= (do-monad-m [a m] (m/ a 2))
+  (assert (m= (do-monad [a m] (m/ a 2))
               (monad-> m (m/ 2))))
-  (assert (m= (do-monad-m [a m b (m+ a 4) c (m+ b 8)] (m/ c 2))
+  (assert (m= (do-monad [a m b (m+ a 4) c (m+ b 8)] (m/ c 2))
               (monad-> m (m+ 4) (m+ 8) (m/ 2)))))
 
 (defn test-monad-threading-macro-single-symbol [monad-runner]
@@ -105,20 +105,20 @@
   (setv m-inc (monad.monadic inc))
   (setv m-half (monad.monadic (fn [n] (/ n 2))))
   (setv m (monad.unit data))
-  (assert (m= (do-monad-m [a m] (m-half a))
+  (assert (m= (do-monad [a m] (m-half a))
               (monad-> m m-half)))
-  (assert (m= (do-monad-m [a m b (m-inc a) c (m-inc b)] (m-half c))
+  (assert (m= (do-monad [a m b (m-inc a) c (m-inc b)] (m-half c))
               (monad-> m m-inc m-inc m-half))))
 
 (defn test-monad-threading-tail-macro [monad-runner]
-  "monad->> macro should transform the form into do-monad-m macro"
+  "monad->> macro should transform the form into do-monad macro"
   (setv [monad run] monad-runner)
   (setv m+ (monad.monadic +))
   (setv m/ (monad.monadic /))
   (setv m (monad.unit data))
-  (assert (m= (do-monad-m [a m] (m/ 2 a))
+  (assert (m= (do-monad [a m] (m/ 2 a))
               (monad->> m (m/ 2))))
-  (assert (m= (do-monad-m [a m b (m+ 4 a) c (m+ 8 b)] (m/ 2 c))
+  (assert (m= (do-monad [a m b (m+ 4 a) c (m+ 8 b)] (m/ 2 c))
               (monad->> m (m+ 4) (m+ 8) (m/ 2)))))
 
 (defn test-monad-threading-tail-macro-single-symbol [monad-runner]
@@ -127,9 +127,9 @@
   (setv m-inc (monad.monadic inc))
   (setv m-invert (monad.monadic (fn [n] (/ 1 n))))
   (setv m (monad.unit data))
-  (assert (m= (do-monad-m [a m] (m-invert a))
+  (assert (m= (do-monad [a m] (m-invert a))
               (monad->> m m-invert)))
-  (assert (m= (do-monad-m [a m b (m-inc a) c (m-inc b)] (m-invert c))
+  (assert (m= (do-monad [a m b (m-inc a) c (m-inc b)] (m-invert c))
               (monad->> m m-inc m-inc m-invert))))
 
 (defn test-m-for [monad-runner]

@@ -107,11 +107,11 @@
   (assert (= (Just 42) (safe-int "42")))
   (assert (is Nothing (safe-int "this is no a number"))))
 
-(defn test-do-monad-maybe []
+(defn test-do-monadaybe []
   "maybe computation with do-monad-return"
   (assert (= (Just 3) (do-monad-return [a (Just 1) b (Just 2)] (+ a b)))))
 
-(defn test-do-monad-maybe-when []
+(defn test-do-monadaybe-when []
   "maybe is monadplus, :when can be used in do-monad-return"
   (assert (is Nothing
             (do-monad-return

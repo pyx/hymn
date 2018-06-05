@@ -12,19 +12,19 @@
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
 ;;; monad return tag macro, replaced by 'm-return, used in do-monad-return, e.g.
-;;; (do-monad-m [a (Just 1) b #= (inc a)] #= [a b])
+;;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
 ;;; is equivalent to
-;;; (do-monad-m [a (Just 1) b (m-return (inc c))] (m-return [a b])
+;;; (do-monad [a (Just 1) b (m-return (inc c))] (m-return [a b])
 (deftag = [expr] `(m-return ~expr))
 
-(defmacro do-monad-m [binding-forms expr]
+(defmacro do-monad [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"
   (when (odd? (len binding-forms))
-    (macro-error None "do-monad-m binding forms must come in pairs"))
+    (macro-error None "do-monad binding forms must come in pairs"))
   (setv iterator (iter binding-forms))
   (setv bindings (-> (zip iterator iterator) list reversed list))
   (unless (len bindings)
-    (macro-error None "do-monad-m must have at least one binding form"))
+    (macro-error None "do-monad must have at least one binding form"))
   (defn bind-action [mexpr [binding expr]]
     (if
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
@@ -39,7 +39,7 @@
 (defmacro do-monad-return [binding-forms expr]
   "macro for sequencing monadic computations, with automatic return"
   `(do (require hymn.macros)
-     (hymn.macros.do-monad-m ~binding-forms (m-return ~expr))))
+     (hymn.macros.do-monad ~binding-forms (m-return ~expr))))
 
 (defmacro do-monad-with [monad binding-forms expr]
   "macro for sequencing monadic composition, with said monad as default"
@@ -51,7 +51,7 @@
   "threading macro for monad"
   (setv bindings (list (thread-bindings thread-first init-value actions)))
   `(do (require hymn.macros)
-    (hymn.macros.do-monad-m
+    (hymn.macros.do-monad
       [~@(butlast bindings)]
       ~(last bindings))))
 
@@ -59,7 +59,7 @@
   "threading tail macro for monad"
   (setv bindings (list (thread-bindings thread-last init-value actions)))
   `(do (require hymn.macros)
-     (hymn.macros.do-monad-m
+     (hymn.macros.do-monad
        [~@(butlast bindings)]
        ~(last bindings))))
 

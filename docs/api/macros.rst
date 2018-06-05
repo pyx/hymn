@@ -20,15 +20,15 @@ Operation Macros
   => (do-monad-return [a (Just 41)] (inc a))
   Just(42)
 
-.. function:: do-monad-m [binding-forms expr]
+.. function:: do-monad [binding-forms expr]
 
   macro for sequencing monadic computations, a.k.a do notation in haskell
 
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad-m]])
-  => (do-monad-m [a (Just 41)] (m-return (inc a)))
+  => (require [hymn.macros [do-monad]])
+  => (do-monad [a (Just 41)] (m-return (inc a)))
   Just(42)
 
 .. function:: do-monad-with [monad binding-forms expr]
@@ -89,8 +89,8 @@ All do monad macros support :code:`:when` if the monad is of type
   => (monad-> (maybe-m.unit 99) m-inc (m-div 5) (m-div 2))
   Just(10.0)
   => ;; is equivalent to
-  => (require [hymn.macros [do-monad-m]])
-  => (do-monad-m [a (maybe-m.unit 99) b (m-inc a) c (m-div b 5)] (m-div c 2))
+  => (require [hymn.macros [do-monad]])
+  => (do-monad [a (maybe-m.unit 99) b (m-inc a) c (m-div b 5)] (m-div c 2))
   Just(10.0)
 
 .. function:: monad->> [init-value &rest actions]
@@ -107,8 +107,8 @@ All do monad macros support :code:`:when` if the monad is of type
   => (monad->> (maybe-m.unit 4) m-inc (m-div 25) (m-div 100))
   Just(20.0)
   => ;; is equivalent to
-  => (require [hymn.macros [do-monad-m]])
-  => (do-monad-m [a (maybe-m.unit 4) b (m-inc a) c (m-div 25 b)] (m-div 100 c))
+  => (require [hymn.macros [do-monad]])
+  => (do-monad [a (maybe-m.unit 4) b (m-inc a) c (m-div 25 b)] (m-div 100 c))
   Just(20.0)
 
 .. function:: m-for [[n seq] &rest expr]
@@ -204,8 +204,8 @@ Tag Macros
 .. code-block:: clojure
 
   => (import [hymn.types.maybe [Just maybe-m]])
-  => (require [hymn.macros [= do-monad-m do-monad-with]])
+  => (require [hymn.macros [= do-monad do-monad-with]])
   => (do-monad-with maybe-m [a #= 1 b #= 2] (+ a b))
   Just(3)
-  => (do-monad-m [a (Just 1)] #= (inc a))
+  => (do-monad [a (Just 1)] #= (inc a))
   Just(2)

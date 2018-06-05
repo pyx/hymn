@@ -10,7 +10,7 @@
   [itertools [permutations]])
 
 (require
-  [hymn.macros [do-monad-return do-monad-m]]
+  [hymn.macros [do-monad-return do-monad]]
   [hymn.types.list [~]]
   [hymn.types.maybe [?]])
 
@@ -24,7 +24,7 @@
 (defmacro safe [expr] `(#? (fn [] ~expr)))
 
 (defn template [[a b c d]]
-  (do-monad-m
+  (do-monad
     [op1 #~ ops
      op2 #~ ops
      op3 #~ ops]
