@@ -3,8 +3,6 @@
 ;;; License: BSD New, see LICENSE for details.
 "hymn.utils - utility functions"
 
-(import [itertools [tee]])
-
 (defclass CachedSequence [object]
   "sequence wrapper that is lazy while keeps the items"
   (defn --init-- [self iterable]

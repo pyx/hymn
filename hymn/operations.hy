@@ -18,7 +18,7 @@
 (defn k-pipe [&rest monadic-funcs]
   "left-to-right Kleisli composition of monads."
   (fn [&rest args &kwargs kwargs]
-    (reduce (fn [m f] (>> m f))
+    (reduce >>
             (rest monadic-funcs)
             ((first monadic-funcs) #* args #** kwargs))))
 (setv >=> k-pipe)
