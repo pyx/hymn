@@ -1,6 +1,11 @@
 Changelog
 =========
 
+- 0.9
+
+  - Renamed macro do-monad as do-monad-return
+  - Renamed macro do-monad-m as do-monad
+
 - 0.8
 
   - Backward incompatible change supporting hy 0.14

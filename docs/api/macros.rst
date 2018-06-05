@@ -9,18 +9,11 @@ Macros
 Operation Macros
 ----------------
 
-.. function:: do-monad-return [binding-forms expr]
-
-  macro for sequencing monadic computations, with automatic return
-
-.. code-block:: clojure
-
-  => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad-return]])
-  => (do-monad-return [a (Just 41)] (inc a))
-  Just(42)
-
 .. function:: do-monad [binding-forms expr]
+
+  .. versionchanged:: 0.9
+
+    This macro was named ``do-monad-m`` before version 0.9
 
   macro for sequencing monadic computations, a.k.a do notation in haskell
 
@@ -29,6 +22,21 @@ Operation Macros
   => (import [hymn.types.maybe [Just]])
   => (require [hymn.macros [do-monad]])
   => (do-monad [a (Just 41)] (m-return (inc a)))
+  Just(42)
+
+.. function:: do-monad-return [binding-forms expr]
+
+  .. versionchanged:: 0.9
+
+    This macro was named ``do-monad`` before version 0.9
+
+  macro for sequencing monadic computations, with automatic return
+
+.. code-block:: clojure
+
+  => (import [hymn.types.maybe [Just]])
+  => (require [hymn.macros [do-monad-return]])
+  => (do-monad-return [a (Just 41)] (inc a))
   Just(42)
 
 .. function:: do-monad-with [monad binding-forms expr]
