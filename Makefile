@@ -67,5 +67,5 @@ clean:
 	rm -rf hymn/*.pyc hymn/__pycache__/
 	rm -rf hymn/types/*.pyc hymn/types/__pycache__/
 	rm -rf tests/*.pyc tests/__pycache__/
-	rm -rf tests/*.pyc tests/__pycache__/
+	rm -rf .tox/
 	rm -rf examples/*.pyc examples/__pycache__/
