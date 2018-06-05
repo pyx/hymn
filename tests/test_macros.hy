@@ -145,7 +145,9 @@
   (setv [monad run] monad-runner)
   (setv unit monad.unit)
   (assert (m= (unit (inc data))
-              (do-monad-return [a (unit data) b (m-when (= a data) #= (inc a))] b))))
+              (do-monad-return
+                [a (unit data) b (m-when (= a data) #= (inc a))]
+                b))))
 
 (defn test-monad-comp [monad-runner]
   "monad comprehension macro should work as do monad in different syntax"

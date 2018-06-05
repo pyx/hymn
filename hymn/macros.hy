@@ -11,7 +11,8 @@
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
-;;; monad return tag macro, replaced by 'm-return, used in do-monad-return, e.g.
+;;; monad return tag macro, replaced by 'm-return, used in do-monad,
+;;; e.g.
 ;;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
 ;;; is equivalent to
 ;;; (do-monad [a (Just 1) b (m-return (inc c))] (m-return [a b])

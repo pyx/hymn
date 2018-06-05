@@ -170,7 +170,7 @@ Use :func:`censor` to apply function to the output
 
   => (import [hymn.types.writer [censor tell]])
   => (require [hymn.macros [do-monad-return]])
-  => (setv logs (do-monad-return [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
+  => (setv logs (do-monad-return [_ (tell [1]) _ (tell [2]) _ (tell [3])] ()))
   => (.execute logs)
   [1, 2, 3]
   => (.execute (censor sum logs))

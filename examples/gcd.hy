@@ -7,7 +7,7 @@
 
 (import [hymn.dsl [tell]])
 
-(require [hymn.macros [do-monad-return do-monad]])
+(require [hymn.macros [do-monad do-monad-return]])
 
 (defn gcd [a b]
   (if (zero? b)

@@ -31,7 +31,10 @@
   "call with current continuation should capture a continuation"
   (assert (instance? cont-m (call-cc identity)))
   (setv c [])
-  (setv 1-2 (do-monad-return [a #< 1 b (call-cc (fn [k] (c.append k) (k 2)))] (- a b)))
+  (setv 1-2
+        (do-monad-return
+          [a #< 1 b (call-cc (fn [k] (c.append k) (k 2)))]
+          (- a b)))
   (assert (empty? c))
   (assert (= -1 (.run 1-2)))
   (assert (= 1 (len c)))

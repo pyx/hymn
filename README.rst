@@ -102,7 +102,10 @@ The lazy monad
   42
   => (require [hymn.macros [do-monad-return]])
   => ;; do notation with lazy monad
-  => (setv c (do-monad-return [x (lazy (print "get x") 1) y (lazy (print "get y") 2)] (+ x y)))
+  => (setv c (do-monad-return
+  ...          [x (lazy (print "get x") 1)
+  ...           y (lazy (print "get y") 2)]
+  ...          (+ x y)))
   => ;; the computation is deferred
   => c
   Lazy(_)
@@ -129,7 +132,12 @@ The list monad
   [0.0, 0.0, 1.0, 0.5]
   => (require [hymn.types.list [~]])
   => ;; ~ is the tag macro for list-m
-  => (list (do-monad-return [x #~(range 2) y #~(range 3) :when (not (zero? y))] (/ x y)) )
+  => (list
+  ...  (do-monad-return
+  ...    [x #~ (range 2)
+  ...     y #~ (range 3)
+  ...     :when (not (zero? y))]
+  ...    (/ x y)))
   [0.0, 0.0, 1.0, 0.5]
 
 The maybe monad
@@ -160,7 +168,8 @@ The reader monad
 
   => (import [hymn.types.reader [lookup]])
   => (require [hymn.macros [do-monad-return]])
-  => ;; do notation with reader monad, lookup assumes the environment is subscriptable
+  => ;; do notation with reader monad,
+  => ;; lookup assumes the environment is subscriptable
   => (setv r (do-monad-return [a (lookup 'a) b (lookup 'b)] (+ a b)))
   => ;; run reader monad r with environment
   => (.run r {'a 1 'b 2})
@@ -172,7 +181,8 @@ The state monad
 
   => (import [hymn.types.state [lookup set-value]])
   => (require [hymn.macros [do-monad-return]])
-  => ;; do notation with state monad, set-value sets the value with key in the state
+  => ;; do notation with state monad,
+  => ;; set-value sets the value with key in the state
   => (setv s (do-monad-return [a (lookup 'a) _ (set-value 'b (inc a))] a))
   => ;; run state monad s with initial state
   => (.run s {'a 1})
@@ -229,9 +239,12 @@ Operations on monads
   => (setv p (#^ print (<- 'message) :end (<- 'end)))
   => (.run p {'message "Hello world" 'end "!\n"})
   Hello world!
-  => ;; random number - linear congruential generator
+  => ;; pseudo random number - linear congruential generator
   => (import [hymn.types.state [get-state set-state]])
-  => (setv random (>> get-state (fn [s] (-> s (* 69069) inc (% (** 2 32)) set-state))))
+  => (setv random
+  ...      (>> get-state
+  ...          (fn [s] (-> s (* 69069) inc (% (** 2 32))
+  ...          set-state))))
   => (.run random 1234)
   (1234, 85231147)
   => ;; random can be even shorter by using modify

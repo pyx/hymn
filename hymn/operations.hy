@@ -30,7 +30,9 @@
       (and (empty? args) (empty? kwargs))
         (identity-m.unit (f))
       (empty? kwargs)
-        (do-monad-return [unwrapped-args (sequence args)] (f #* unwrapped-args))
+        (do-monad-return
+          [unwrapped-args (sequence args)]
+          (f #* unwrapped-args))
       (do
         (setv
           keys/values (list (.items kwargs))

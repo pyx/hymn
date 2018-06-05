@@ -54,7 +54,9 @@
 
 (defn test-do-monad-list-when []
   "list is monadplus, :when can be used in do-monad-return"
-  (assert (= (list (do-monad-return [a #~ [1 2] b #~ [1 2] :when (not (= a b))] [a b]))
+  (assert (= (list (do-monad-return
+                     [a #~ [1 2] b #~ [1 2] :when (not (= a b))]
+                     [a b]))
              [[1 2] [2 1]])))
 
 (defn test-replicate-should-not-miss []

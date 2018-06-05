@@ -76,7 +76,8 @@ computation will not be evaluated until asked explicitly
   => (.evaluate answer)
   42
 
-Deferred computation can also be created with expressions wrapped in a function
+Deferred computation can also be created with expressions wrapped in a
+function
 
 .. code-block:: clojure
 

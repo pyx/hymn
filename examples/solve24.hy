@@ -10,7 +10,7 @@
   [itertools [permutations]])
 
 (require
-  [hymn.macros [do-monad-return do-monad]]
+  [hymn.macros [do-monad do-monad-return]]
   [hymn.types.list [~]]
   [hymn.types.maybe [?]])
 
