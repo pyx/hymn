@@ -80,7 +80,7 @@
   (for [key s]
     (assert (= (get s key) (.evaluate (lookup key) s) (.evaluate (<- key) s))))
   (setv keys (.keys s))
-  (assert (= (list-comp (get s key) [key keys])
+  (assert (= (lfor key keys (get s key))
              (.evaluate (sequence (map <- keys)) s))))
 
 (defn test-gets []

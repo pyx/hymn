@@ -28,7 +28,7 @@ from hymn.types.writer import (
 
 def pytest_collect_file(path, parent):
     if path.ext == ".hy" and path.basename.startswith('test_'):
-        return Module(path, parent)
+        return Module.from_parent(parent, fspath=path)
 
 
 def extract(m):
@@ -111,5 +111,5 @@ params = [
 
 def pytest_generate_tests(metafunc):
     for name, args, ids in params:
-        if name in metafunc.funcargnames:
+        if name in metafunc.fixturenames:
             metafunc.parametrize(name, args, ids=ids)

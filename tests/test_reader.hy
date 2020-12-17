@@ -48,5 +48,5 @@
     (assert (= (.run (lookup key) env) (get env key)))
     (assert (= (.run (lookup key) env) (.run (<- key) env))))
   (setv keys (.keys env))
-  (assert (= (list-comp (get env key) [key keys])
+  (assert (= (lfor key keys (get env key))
              (.run (sequence (map <- keys)) env))))

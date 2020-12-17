@@ -26,7 +26,8 @@
   (setv bindings (-> (zip iterator iterator) list reversed list))
   (unless (len bindings)
     (macro-error None "do-monad must have at least one binding form"))
-  (defn bind-action [mexpr [binding expr]]
+  (defn bind-action [mexpr actions]
+    (setv [binding expr] actions)
     (if
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
       (= binding :let) `(do (setv ~@expr) ~mexpr)
@@ -64,8 +65,9 @@
        [~@(butlast bindings)]
        ~(last bindings))))
 
-(defmacro m-for [[n seq] &rest mexpr]
+(defmacro m-for [forms &rest mexpr]
   "macro for sequencing monadic actions"
+  (setv [n seq] forms)
   (with-gensyms [m-map]
     `(do (import [hymn.operations [m-map :as ~m-map]])
        (~m-map (fn [~n] ~@mexpr) ~seq))))

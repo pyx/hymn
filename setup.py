@@ -3,8 +3,8 @@ import sys
 from os import path
 from setuptools import setup
 
-if sys.version_info < (2, 7):
-    sys.exit('hymn requires Python 2.7 or higher')
+if sys.version_info < (3, 6):
+    sys.exit('hymn requires Python 3.6 or higher')
 
 ROOT_DIR = path.abspath(path.dirname(__file__))
 sys.path.insert(0, ROOT_DIR)
@@ -31,17 +31,20 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        "Programming Language :: Lisp",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords='hy lisp monad functional programming',
     download_url=(
         'https://bitbucket.org/pyx/hymn/get/%s.tar.bz2' % VERSION),
     install_requires=[
-        'hy>=0.14.0',
+        'hy>=0.19.0',
     ],
     extras_require={
         'dev': [

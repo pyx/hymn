@@ -34,7 +34,7 @@
 
 (defn writer-with-type [t]
   "create a writer for type t"
-  (type (+ (.title (. t --name--)) (str 'Writer)) (, Writer) {'output-type t}))
+  (type (+ (.title (. t --name--)) (str 'Writer)) (, Writer) {'output_type t}))
 
 ;;; Here, some predefined writers, it's not necessary because of the way we
 ;;; create writers with the above actions, just for convenience
