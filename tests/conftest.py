@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
+# Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
 # License: BSD New, see LICENSE for details.
 from pytest import Module
 
@@ -39,12 +39,12 @@ def run_cont(c):
     return c.run()
 
 
-def run_lazy(l):
-    return l.evaluate()
+def run_lazy(m):
+    return m.evaluate()
 
 
-def run_list(l):
-    return list(l)
+def run_list(lst):
+    return list(lst)
 
 
 def run_reader(r):

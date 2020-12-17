@@ -6,10 +6,12 @@ The Lazy Monad
   :show-inheritance:
 
 .. function:: unit
+  :noindex:
 
   alias of :meth:`Lazy.unit`
 
 .. function:: evaluate
+  :noindex:
 
   alias of :meth:`Lazy.evaluate`
 

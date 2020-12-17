@@ -6,7 +6,10 @@ Monad Operations
 :code:`hymn.operations` provide operations for monad computations
 
 
-.. autofunction:: k_compose
+.. function:: k_compose
+
+  right-to-left Kleisli composition of monads.
+
 .. function:: <=<
 
   alias of :func:`k_compose`
@@ -26,7 +29,10 @@ Monad Operations
   => (*2+1 "two")
   Nothing
 
-.. autofunction:: k_pipe
+.. function:: k_pipe
+
+  left-to-right Kleisli composition of monads.
+
 .. function:: >=>
 
   alias of :func:`k_pipe`
@@ -46,7 +52,9 @@ Monad Operations
   => (make-array 2)
   Just([0, 0])
 
-.. autofunction:: lift
+.. function:: lift
+
+  promote a function to a monad
 
 .. code-block:: clojure
 
@@ -56,7 +64,11 @@ Monad Operations
   => (m+ (Just 1) (Just 2))
   Just(3)
 
-.. autofunction:: m_map
+.. function:: m_map
+
+  map monadic function mf to a sequence, then execute that sequence of monadic
+  values
+
 .. function:: m-map
 
   alias of :func:`m_map`
@@ -73,7 +85,9 @@ Monad Operations
   => (.execute (m-map tell (range 1 101)))
   5050
 
-.. autofunction:: replicate
+.. function:: replicate
+
+  perform the monadic action n times, gathering the results
 
 .. code-block:: clojure
 
@@ -82,7 +96,9 @@ Monad Operations
   => (list (replicate 2 (list-m [0 1])))
   [[0, 0], [0, 1], [1, 0], [1, 1]]
 
-.. autofunction:: sequence
+.. function:: sequence
+
+  evaluate each action in the sequence, and collect the results
 
 .. code-block:: clojure
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env hy
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 
-;;; lift and list monad reader macros example
+;; lift and list monad reader macros example
 
 (require
   [hymn.macros [^]]

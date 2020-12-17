@@ -6,10 +6,12 @@ The Writer Monad
   :show-inheritance:
 
 .. function:: execute
+  :noindex:
 
   alias of :meth:`Writer.execute`
 
 .. function:: run
+  :noindex:
 
   alias of :meth:`Writer.run`
 
@@ -18,13 +20,21 @@ Predefined Writers
 ------------------
 
 .. autoclass:: ComplexWriter
+  :noindex:
 .. autoclass:: DecimalWriter
+  :noindex:
 .. autoclass:: FloatWriter
+  :noindex:
 .. autoclass:: FractionWriter
+  :noindex:
 .. autoclass:: ListWriter
+  :noindex:
 .. autoclass:: IntWriter
+  :noindex:
 .. autoclass:: StringWriter
+  :noindex:
 .. autoclass:: TupleWriter
+  :noindex:
 
 
 Hy Specific API
@@ -135,26 +145,39 @@ appropriate type
 .. code-block:: clojure
 
   => (import [hymn.types.writer [tell writer]])
-  => (writer None "a")
-  StrWriter((None, 'a'))
-  => (writer None 1)
-  IntWriter((None, 1))
+  => (writer None 98j)
+  ComplexWriter((None, 98j))
+  => (import [decimal [Decimal]])
+  => (writer None (Decimal "7.31"))
+  DecimalWriter((None, Decimal('7.31')))
   => (writer None 1.0)
   FloatWriter((None, 1.0))
-  => (writer None (, 1))
-  TupleWriter((None, (1,)))
-  => (writer None [1])
-  ListWriter((None, [1]))
-  => (tell "a")
-  StrWriter((None, 'a'))
-  => (tell 1)
+  => (writer None 7/31)
+  FractionWriter((None, Fraction(7, 31)))
+  => (writer None [85 70 92])
+  ListWriter((None, [85, 70, 92]))
+  => (writer None 1)
   IntWriter((None, 1))
+  => (writer None "a")
+  StrWriter((None, 'a'))
+  => (writer None (, 1151130 1151330))
+  TupleWriter((None, (1151130, 1151330)))
+  => (tell 98j)
+  ComplexWriter((None, 98j))
+  => (tell (Decimal "7.31"))
+  DecimalWriter((None, Decimal('7.31')))
   => (tell 1.0)
   FloatWriter((None, 1.0))
-  => (tell (, 1))
-  TupleWriter((None, (1,)))
-  => (tell [1])
-  ListWriter((None, [1]))
+  => (tell 7/31)
+  FractionWriter((None, Fraction(7, 31)))
+  => (tell [85 70 92])
+  ListWriter((None, [85, 70, 92]))
+  => (tell 1)
+  IntWriter((None, 1))
+  => (tell "a")
+  StrWriter((None, 'a'))
+  => (tell (, 1151130 1151330))
+  TupleWriter((None, (1151130, 1151330)))
 
 Use :func:`listen` to get the value of the writer
 
@@ -170,7 +193,7 @@ Use :func:`censor` to apply function to the output
 
   => (import [hymn.types.writer [censor tell]])
   => (require [hymn.macros [do-monad-return]])
-  => (setv logs (do-monad-return [_ (tell [1]) _ (tell [2]) _ (tell [3])] ()))
+  => (setv logs (do-monad-return [_ (tell [1]) _ (tell [2]) _ (tell [3])] None))
   => (.execute logs)
   [1, 2, 3]
   => (.execute (censor sum logs))

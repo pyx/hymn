@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.writer - the writer monad"
 
 (import
@@ -34,31 +34,31 @@
 
 (defn writer-with-type [t]
   "create a writer for type t"
-  (type (+ (.title (. t --name--)) (str 'Writer)) (, Writer) {'output_type t}))
+  (type f"{(.title (name t))}Writer" (, Writer) {'output_type t}))
 
-;;; Here, some predefined writers, it's not necessary because of the way we
-;;; create writers with the above actions, just for convenience
-(setv ComplexWriter (writer-with-type complex))
-(setv DecimalWriter (writer-with-type decimal.Decimal))
-(setv FloatWriter (writer-with-type float))
-(setv FractionWriter (writer-with-type fractions.Fraction))
-(setv ListWriter (writer-with-type list))
-(setv IntWriter (writer-with-type int))
-(setv StringWriter (writer-with-type str))
-(setv TupleWriter (writer-with-type tuple))
+;; Here, some predefined writers, it's not necessary because of the way we
+;; create writers with the above actions, just for convenience
+(setv ComplexWriter (writer-with-type complex)
+      DecimalWriter (writer-with-type decimal.Decimal)
+      FloatWriter (writer-with-type float)
+      FractionWriter (writer-with-type fractions.Fraction)
+      ListWriter (writer-with-type list)
+      IntWriter (writer-with-type int)
+      StringWriter (writer-with-type str)
+      TupleWriter (writer-with-type tuple))
 
-;;; alias
-(setv writer-m Writer)
-(setv complex-writer-m ComplexWriter)
-(setv decimal-writer-m DecimalWriter)
-(setv float-writer-m FloatWriter)
-(setv fraction-writer-m FractionWriter)
-(setv list-writer-m ListWriter)
-(setv int-writer-m IntWriter)
-(setv string-writer-m StringWriter)
-(setv tuple-writer-m TupleWriter)
-(setv execute Writer.execute)
-(setv run Writer.run)
+;; alias
+(setv writer-m Writer
+      complex-writer-m ComplexWriter
+      decimal-writer-m DecimalWriter
+      float-writer-m FloatWriter
+      fraction-writer-m FractionWriter
+      list-writer-m ListWriter
+      int-writer-m IntWriter
+      string-writer-m StringWriter
+      tuple-writer-m TupleWriter
+      execute Writer.execute
+      run Writer.run)
 
 (defn writer-with-type-of [message]
   "create a writer of type of message"
@@ -77,9 +77,9 @@
   (setv [v a] m.value)
   ((type m) (, m.value a)))
 
-;;; NOTE:
-;;; Hy/Python is dynamically-typed, this function might change the type of the
-;;; output without notice.
+;; NOTE:
+;; Hy/Python is dynamically-typed, this function might change the type of the
+;; output without notice.
 (defn censor [f m]
   "apply :code:`f` to the output"
   (setv [v a] m.value)

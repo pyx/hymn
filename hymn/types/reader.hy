@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.reader - the reader monad"
 
 (import
@@ -11,8 +11,8 @@
   "the reader monad
 
   computations which read values from a shared environment"
-  (defn --repr-- [self]
-    (.format "{}({})" (. (type self) --name--) self.value.--name--))
+  (defn __repr__ [self]
+    (.format "{}({})" (name (type self)) (name self.value)))
 
   (defn bind [self f]
     "the bind operation of :class:`Reader`"
@@ -31,10 +31,10 @@
     "run the reader and extract the final vaule"
     (self.value e)))
 
-;;; alias
-(setv reader-m Reader)
-(setv run Reader.run)
-(setv unit Reader.unit)
+;; alias
+(setv reader-m Reader
+      run Reader.run
+      unit Reader.unit)
 
 (defn asks [f]
   "create a simple reader action from :code:`f`"

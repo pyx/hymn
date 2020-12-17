@@ -6,10 +6,12 @@ The Continuation Monad
   :show-inheritance:
 
 .. function:: unit
+  :noindex:
 
   alias of :meth:`Continuation.unit`
 
 .. function:: run
+  :noindex:
 
   alias of :meth:`Continuation.run`
 

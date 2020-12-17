@@ -3,6 +3,9 @@ Changelog
 
 - 0.9
 
+  - Backward incompatible change supporting hy 0.19
+  - Support python 3.7, 3.8, 3.9
+  - Drop python 2.7, 3.4, 3.5 support
   - Renamed macro do-monad as do-monad-return
   - Renamed macro do-monad-m as do-monad
 
@@ -32,7 +35,7 @@ Changelog
 - 0.4
 
   - Support python 3.5
-  - Remove alias of compose and pipe <| and |> to avoid confusion
+  - Remove alias of compose and pipe <| and \|> to avoid confusion
   - New macros: monad-> and monad->>, threading macros for monad
 
 - 0.3

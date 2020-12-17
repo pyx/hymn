@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.monadplus - base monadplus class"
 
 (import
@@ -10,7 +10,7 @@
   "the monadplus class
 
   Monads that also support choice and failure."
-  (defn --add-- [self other] (self.plus other))
+  (defn __add__ [self other] (self.plus other))
 
   (defn plus [self other]
     "the associative operation"

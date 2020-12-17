@@ -9,10 +9,12 @@ The Maybe Monad
 .. autodata:: zero
 
 .. function:: from_maybe
+  :noindex:
 
   alias of :meth:`~Maybe.from_maybe`
 
 .. function:: to_maybe
+  :noindex:
 
   alias of :meth:`~Maybe.from_value`
 

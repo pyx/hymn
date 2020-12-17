@@ -139,14 +139,16 @@ Example output:
 
 .. code-block:: sh
 
-  $ ./gcd.hy 24680 1352
-  calculating the greatest common divisor of 24680 and 1352
-  24680 mod 1352 = 344
-  1352 mod 344 = 320
-  344 mod 320 = 24
-  320 mod 24 = 8
-  24 mod 8 = 0
-  the result is: 8
+  $ ./gcd.hy 1151130 1151330
+  calculating the greatest common divisor of 1151130 and 1151330
+  1151130 mod 1151330 = 1151130
+  1151330 mod 1151130 = 200
+  1151130 mod 200 = 130
+  200 mod 130 = 70
+  130 mod 70 = 60
+  70 mod 60 = 10
+  60 mod 10 = 0
+  the result is: 10
 
 
 Project Euler Problem 9

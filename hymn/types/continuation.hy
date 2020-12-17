@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.continuation - the continuation monad"
 
 (import
@@ -13,10 +13,10 @@
 
 (defclass Continuation [Monad]
   "the continuation monad"
-  (defn --repr-- [self]
-    (.format "{}({})" (. (type self) --name--) self.value.--name--))
+  (defn __repr__ [self]
+    (.format "{}({})" (name (type self)) (name self.value)))
 
-  (defn --call-- [self &optional [k identity]] (self.value k))
+  (defn __call__ [self &optional [k identity]] (self.value k))
 
   (defn bind [self f]
     "the bind operation of :class:`Continuation`"
@@ -31,11 +31,11 @@
     "run the continuation"
     (self.value k)))
 
-;;; alias
-(setv continuation-m Continuation)
-(setv cont-m Continuation)
-(setv unit Continuation.unit)
-(setv run Continuation.run)
+;; alias
+(setv continuation-m Continuation
+      cont-m Continuation
+      unit Continuation.unit
+      run Continuation.run)
 
 (defn call-cc [f]
   "call with current continuation"

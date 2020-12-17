@@ -1,9 +1,9 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.dsl - dsl for computation with monads"
 
-;;; expose some types and actions here for easier import
+;; expose some types and actions here for easier import
 
 (import
   [hymn.types.monoid [<> append]]

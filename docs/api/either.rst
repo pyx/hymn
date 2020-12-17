@@ -8,6 +8,7 @@ The Either Monad
 .. autodata:: zero
 
 .. function:: to_either
+  :noindex:
 
   alias of :meth:`~Either.from_value`
 

@@ -1,29 +1,29 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.macros - monad operations implemented as macros"
 
 (import
   [hymn.utils [thread-first thread-last thread-bindings]])
 
-;;; lift tag macro, e.g. #^ + => (lift +)
+;; lift tag macro, e.g. #^ + => (lift +)
 (deftag ^ [f]
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
-;;; monad return tag macro, replaced by 'm-return, used in do-monad,
-;;; e.g.
-;;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
-;;; is equivalent to
-;;; (do-monad [a (Just 1) b (m-return (inc c))] (m-return [a b])
+;; monad return tag macro, replaced by 'm-return, used in do-monad,
+;; e.g.
+;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
+;; is equivalent to
+;; (do-monad [a (Just 1) b (m-return (inc c))] (m-return [a b])
 (deftag = [expr] `(m-return ~expr))
 
 (defmacro do-monad [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"
   (when (odd? (len binding-forms))
     (macro-error None "do-monad binding forms must come in pairs"))
-  (setv iterator (iter binding-forms))
-  (setv bindings (-> (zip iterator iterator) list reversed list))
+  (setv iterator (iter binding-forms)
+        bindings (-> (zip iterator iterator) list reversed list))
   (unless (len bindings)
     (macro-error None "do-monad must have at least one binding form"))
   (defn bind-action [mexpr actions]
@@ -31,10 +31,14 @@
     (if
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
       (= binding :let) `(do (setv ~@expr) ~mexpr)
-      (with-gensyms [monad]
+      (with-gensyms [monad m]
         `(do
            (setv ~monad ~expr)
-           (>> ~monad (fn [~binding &optional [m-return (. ~monad unit)]]
+           (>> ~monad (fn [~m &optional [m-return (. ~monad unit)]]
+                        ;; function arguments cannot be unpacked inline, use
+                        ;; setv here in case the binding contains structure,
+                        ;; e.g [a b]
+                        (setv ~binding ~m)
                         ~mexpr))))))
   (reduce bind-action bindings expr))
 

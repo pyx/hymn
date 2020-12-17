@@ -1,16 +1,16 @@
 #!/usr/bin/env hy
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 
-;;; list monad example
+;; list monad example
 
 (require
   [hymn.macros [do-monad-return]]
   [hymn.types.list [~]])
 
-(setv total 1000)
-(setv limit (-> total (** 0.5) int inc))
+(setv total 1000
+      limit (-> total (** 0.5) int inc))
 
 (setv triplet
   (do-monad-return

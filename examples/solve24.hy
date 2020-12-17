@@ -1,9 +1,9 @@
 #!/usr/bin/env hy
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 
-;;; list and maybe monad example
+;; list and maybe monad example
 
 (import
   [functools [partial]]
@@ -17,13 +17,14 @@
 (setv ops [+ - * /])
 
 (defmacro infix-repr [fmt]
-  `(.format ~fmt :a a :b b :c c :d d :op1 (. op1 --name--)
-            :op2 (. op2 --name--) :op3 (. op3 --name--)))
+  `(.format ~fmt :a a :b b :c c :d d :op1 (name op1)
+            :op2 (name op2) :op3 (name op3)))
 
-;;; use maybe monad to handle division by zero
+;; use maybe monad to handle division by zero
 (defmacro safe [expr] `(#? (fn [] ~expr)))
 
-(defn template [[a b c d]]
+(defn template [numbers]
+  (setv [a b c d] numbers)
   (do-monad
     [op1 #~ ops
      op2 #~ ops
@@ -45,8 +46,8 @@
       (.add seemed (, a b c d))
       [a b c d])))
 
-;;; In python, 8 / (3 - (8 / 3)) = 23.99999999999999, it should be 24 in fact,
-;;; so we have to use custom comparison function like this
+;; In python, 8 / (3 - (8 / 3)) = 23.99999999999999, it should be 24 in fact,
+;; so we have to use custom comparison function like this
 (defn close-enough [a b] (< (abs (- a b)) 0.0001))
 
 (defn solve [numbers]

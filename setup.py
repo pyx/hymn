@@ -41,8 +41,6 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords='hy lisp monad functional programming',
-    download_url=(
-        'https://bitbucket.org/pyx/hymn/get/%s.tar.bz2' % VERSION),
     install_requires=[
         'hy>=0.19.0',
     ],

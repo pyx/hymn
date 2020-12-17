@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.monad - base monad class"
 
 (defclass Monad [object]
@@ -18,14 +18,14 @@
   are mutual recursive, subclasses should at least either override
   :meth:`bind`, or :meth:`fmap` and :meth:`join`, or all of them for better
   performance."
-  (defn --init-- [self value] (setv self.value value))
+  (defn __init__ [self value] (setv self.value value))
 
-  (defn --repr-- [self]
-    (.format "{}({!r})" (. (type self) --name--) self.value))
+  (defn __repr__ [self]
+    (.format "{}({!r})" (name (type self)) self.value))
 
-  (defn --rshift-- [self f] (.bind self f))
+  (defn __rshift__ [self f] (.bind self f))
 
-  (setv --rlshift-- --rshift--)
+  (setv __rlshift__ __rshift__)
 
   (defn bind [self f]
     "the bind operation

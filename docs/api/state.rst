@@ -27,6 +27,7 @@ The State Monad
   return the current state
 
 .. function:: gets(f)
+  :noindex:
 
   gets specific component of the state, using a projection function :code:`f`
 
@@ -164,7 +165,7 @@ an alias of :func:`lookup`
 
 :func:`set-values` sets multiple values at once
 
-.. code-block:: clojure
+.. code-block::
 
   => (import [hymn.types.state [set-values]])
   => (.run (set-values :a 1 :b 2) {})

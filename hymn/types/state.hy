@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.state - the state monad"
 
 (import
@@ -13,8 +13,8 @@
   "the state monad
 
   computation with a shared state"
-  (defn --repr-- [self]
-    (.format "{}({})" (. (type self) --name--) self.value.--name--))
+  (defn __repr__ [self]
+    (.format "{}({})" (name (type self)) (name self.value)))
 
   (defn bind [self f]
     "the bind operation of :class:`State`
@@ -38,12 +38,12 @@
     "evaluate state monad with initial state, return result and state"
     (self.value s)))
 
-;;; alias
-(setv state-m State)
-(setv unit State.unit)
-(setv evaluate State.evaluate)
-(setv execute State.execute)
-(setv run State.run)
+;; alias
+(setv state-m State
+      unit State.unit
+      evaluate State.evaluate
+      execute State.execute
+      run State.run)
 
 (with-decorator State
   (defn get-state [s] "return the current state" (, s s)))
@@ -54,7 +54,7 @@
   (gets (itemgetter key)))
 (setv <- lookup)
 
-;;; gets specific component of the state, using a projection function f
+;; gets specific component of the state, using a projection function f
 (setv gets get-state.fmap)
 
 (defn modify [f]

@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.list - the list monad"
 
 (import
@@ -13,19 +13,19 @@
   (with-gensyms [List]
     `(do (import [hymn.types.list [List :as ~List]]) (~List ~seq))))
 
-(defclass -Zero [object]
+(defclass _Zero [object]
   "descriptor that returns an empty List"
-  (defn --get-- [self instance cls] (cls [])))
+  (defn __get__ [self instance cls] (cls [])))
 
 (defclass List [MonadPlus Monoid]
   "the list monad
 
   nondeterministic computation"
-  (defn --init-- [self value] (setv self.value (CachedSequence value)))
+  (defn __init__ [self value] (setv self.value (CachedSequence value)))
 
-  (defn --iter-- [self] (iter self.value))
+  (defn __iter__ [self] (iter self.value))
 
-  (defn --len-- [self] (len self.value))
+  (defn __len__ [self] (len self.value))
 
   (defn fmap [self f]
     "return list obtained by applying :code:`f` to each element of the list"
@@ -51,13 +51,13 @@
       "the unit, create a :class:`List` from :code:`values`"
       (cls values)))
 
-  (setv zero (-Zero))
-  (setv empty zero))
+  (setv zero (_Zero)
+        empty zero))
 
-;;; alias
-(setv list-m List)
-(setv unit List.unit)
-(setv zero List.zero)
+;; alias
+(setv list-m List
+      unit List.unit
+      zero List.zero)
 
 (defn fmap [f iterable]
   ":code:`fmap` works like the builtin :code:`map`, but return a :class:`List`

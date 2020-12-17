@@ -1,6 +1,6 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.lazy - the lazy monad"
 
 (import
@@ -17,14 +17,14 @@
   "the lazy monad
 
   lazy computation as monad"
-  (defn --init-- [self value]
+  (defn __init__ [self value]
     (unless (callable value)
       (raise (TypeError (.format "{} object is not callable" value))))
     (setv self.value (, False value)))
 
-  (defn --repr-- [self]
+  (defn __repr__ [self]
     (.format "{}({})"
-             (. (type self) --name--)
+             (name (type self))
              (if self.evaluated (repr (second self.value)) '_)))
   (defn bind [self f]
     "the bind operator of :class:`Lazy`"
@@ -44,10 +44,10 @@
       "return :code:`True` if this computation is evaluated"
       (first self.value))))
 
-;;; alias
-(setv lazy-m Lazy)
-(setv unit Lazy.unit)
-(setv evaluate Lazy.evaluate)
+;; alias
+(setv lazy-m Lazy
+      unit Lazy.unit
+      evaluate Lazy.evaluate)
 
 (defn force [m]
   "force the deferred computation :code:`m` if it is a :class:`Lazy`, act as

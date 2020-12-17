@@ -1,14 +1,14 @@
-;;; -*- coding: utf-8 -*-
-;;; Copyright (c) 2014-2018, Philip Xu <pyx@xrefactor.com>
-;;; License: BSD New, see LICENSE for details.
+;; -*- coding: utf-8 -*-
+;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
+;; License: BSD New, see LICENSE for details.
 "hymn.types.maybe - the maybe monad"
 
 (import
+  [contextlib [suppress]]
   [functools [partial wraps]]
   [hymn.mixins [Ord]]
   [hymn.types.monadplus [MonadPlus]]
-  [hymn.types.monoid [Monoid]]
-  [hymn.utils [suppress]])
+  [hymn.types.monoid [Monoid]])
 
 (deftag ? [f]
   (with-gensyms [maybe]
@@ -18,17 +18,17 @@
   "the maybe monad
 
   computation that may fail"
-  (defn --init-- [self value]
+  (defn __init__ [self value]
     (when (is (type self) Maybe)
       (raise (NotImplementedError "please use Just instead")))
-    (.--init-- (super Maybe self) value))
+    (.__init__ (super Maybe self) value))
 
-  (defn --lt-- [self other]
+  (defn __lt__ [self other]
     (if
       (and (nothing? self) (nothing? other)) False
       (nothing? self) True
       (nothing? other) False
-      (.--lt-- (super Maybe self) other)))
+      (.__lt__ (super Maybe self) other)))
 
   (defn append [self other]
     "the append operation of :class:`Maybe`"
@@ -63,29 +63,29 @@
       (if value (Just value) Nothing))))
 
 (defclass Just [Maybe] ":code:`Just` of the :class:`Maybe`")
-(setv Maybe.unit Just)
-(setv unit Maybe.unit)
+(setv Maybe.unit Just
+      unit Maybe.unit)
 
 (defclass Nothing [Maybe]
   "the :class:`Maybe` that represents nothing, a singleton, like :code:`None`"
-  (defn --bool-- [self] False)
-  (setv --nonzero-- --bool--)
-  (defn --repr-- [self] "Nothing")
+  (defn __bool__ [self] False)
+  (setv __nonzero__ __bool__)
+  (defn __repr__ [self] "Nothing")
   (defn bind [self f] Nothing)
   (defn plus [self other] other))
 
-;;; shadow the class intensionally
-(setv Nothing (Nothing (object)))
-(setv Maybe.zero Nothing)
-(setv Maybe.empty Nothing)
+;; shadow the class intensionally
+(setv Nothing (Nothing (object))
+      Maybe.zero Nothing
+      Maybe.empty Nothing)
 
-;;; alias
-(setv maybe-m Maybe)
-(setv zero Maybe.zero)
-(setv from-maybe Maybe.from-maybe)
-(setv <-maybe from-maybe)
-(setv to-maybe Maybe.from-value)
-(setv ->maybe to-maybe)
+;; alias
+(setv maybe-m Maybe
+      zero Maybe.zero
+      from-maybe Maybe.from-maybe
+      <-maybe from-maybe
+      to-maybe Maybe.from-value
+      ->maybe to-maybe)
 
 (defn nothing? [m]
   "return :code:`True` if :code:`m` is :data:`Nothing`"

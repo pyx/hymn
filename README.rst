@@ -42,8 +42,8 @@ The either monad
   => ;; do notation with either monad
   => (do-monad-return [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
-  => (do-monad-return [a (Right 1) b (Left 'nan)] (/ a b))
-  Left(HySymbol('nan'))
+  => (do-monad-return [a (Right 1) b (Left NaN)] (/ a b))
+  Left(nan)
   => ;; failsafe is a function decorator that wraps return value into either
   => (setv safe-div (failsafe /))
   => ;; returns Right if nothing wrong
@@ -177,16 +177,16 @@ The reader monad
 
 The state monad
 
-.. code-block:: clojure
+.. code-block::
 
   => (import [hymn.types.state [lookup set-value]])
   => (require [hymn.macros [do-monad-return]])
   => ;; do notation with state monad,
   => ;; set-value sets the value with key in the state
-  => (setv s (do-monad-return [a (lookup 'a) _ (set-value 'b (inc a))] a))
+  => (setv s (do-monad-return [x (lookup "a") _ (set-value "b" (inc x))] x))
   => ;; run state monad s with initial state
-  => (.run s {'a 1})
-  (1, {HySymbol('a'): 1, HySymbol('b'): 2})
+  => (.run s {"a" 1})
+  (1, {'a': 1, 'b': 2})
 
 The writer monad
 
@@ -287,7 +287,9 @@ Using Hymn in Python
 Requirements
 ============
 
-- hy >= 0.14.0
+- hy >= 0.19.0
+
+For hy version 0.14, please install hymn 0.8
 
 For hy version 0.13, please install hymn 0.7.
 
@@ -329,11 +331,8 @@ Issue Tracker:
 Source Package @ PyPI:
   https://pypi.python.org/pypi/hymn/
 
-Mercurial Repository @ bitbucket:
-  https://bitbucket.org/pyx/hymn/
+Git Repository @ Github:
+  https://github.com/pyx/hymn/
 
 Git Repository @ Gitlab:
   https://gitlab.com/pyx/hymn/
-
-Git Repository @ Github:
-  https://github.com/pyx/hymn/

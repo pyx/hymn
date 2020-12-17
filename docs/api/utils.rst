@@ -10,7 +10,3 @@ Helper Classes
 .. autoclass:: CachedSequence
   :members:
   :show-inheritance:
-
-.. autoclass:: SuppressContextManager
-  :members:
-  :show-inheritance:
