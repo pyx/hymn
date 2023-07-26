@@ -4,7 +4,8 @@
 "hymn.types.monadplus - base monadplus class"
 
 (import
-  [hymn.types.monad [Monad]])
+  hymn.types.monad [Monad]
+  hymn.types [identity])
 
 (defclass MonadPlus [Monad]
   "the monadplus class
@@ -16,12 +17,11 @@
     "the associative operation"
     (raise NotImplementedError))
 
-  (with-decorator property
-    (defn zero [self]
-      "the identity of :meth:`plus`.
+  (defn [property] zero [self]
+    "the identity of :meth:`plus`.
 
-      It should satisfy the following law, left zero
-      (notice the bind operator is haskell's :code:`>>=` here)::
+    It should satisfy the following law, left zero
+    (notice the bind operator is haskell's :code:`>>=` here)::
 
-       zero >>= f = zero"
-      (raise NotImplementedError))))
+     zero >>= f = zero"
+    (raise NotImplementedError)))

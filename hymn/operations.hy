@@ -4,39 +4,43 @@
 "hymn.operations - operations on monads"
 
 (import
-  [hymn.types.identity [identity-m]])
+  functools [reduce]
+  hymn.types.identity [identity-m]
+  hymn.utils [empty?]
+  hyrule.iterables [rest])
 
 (require
-  [hy.extra.anaphoric [*]]
-  [hymn.macros [do-monad-return]])
+  hymn.macros [do-monad-return]
+  hyrule.anaphoric [ap-if]
+  hyrule.argmove [doto])
 
 (defn k-compose [&rest monadic-funcs]
   "right-to-left Kleisli composition of monads."
   (>=> #* (reversed monadic-funcs)))
 (setv <=< k-compose)
 
-(defn k-pipe [&rest monadic-funcs]
+(defn k-pipe [#* monadic-funcs]
   "left-to-right Kleisli composition of monads."
-  (fn [&rest args &kwargs kwargs]
+  (fn [#* args #** kwargs]
     (reduce >>
             (rest monadic-funcs)
-            ((first monadic-funcs) #* args #** kwargs))))
+            ((get monadic-funcs 0) #* args #** kwargs))))
 (setv >=> k-pipe)
 
 (defn lift [f]
   "promote a function to a monad"
-  (fn [&rest args &kwargs kwargs]
-    (if
+  (fn [#* args #** kwargs]
+    (cond
       (and (empty? args) (empty? kwargs))
         (identity-m.unit (f))
       (empty? kwargs)
         (do-monad-return
           [unwrapped-args (sequence args)]
           (f #* unwrapped-args))
-      (do
+      True (do
         (setv
           keys/values (list (.items kwargs))
-          keys (list (map first keys/values))
+          keys (list (map next keys/values))
           values (sequence (map second keys/values)))
         (if-not (empty? args)
           (do-monad-return
@@ -66,5 +70,5 @@
       ;; NOTE: cannot use cons as cons will turn None into "None"
       (doto [value] (.extend value-list))))
   (ap-if (list m-values)
-    (reduce collect (reversed it) (.unit (first it) []))
+    (reduce collect (reversed it) (.unit (get it 0) []))
     (identity-m.unit [])))

@@ -38,3 +38,14 @@
     (yield next-sym)
     (yield (thread-fn last-sym expr)))
   (yield (thread-fn next-sym (last exprs))))
+
+; Hylang version 1.0a2 removed some functions and aliases; bring them back
+; here; they might be removed slowly while Hymn codebase is migrated to
+; newer version of the language
+(defn instance? [cls obj]
+  (isinstance obj cls))
+
+(defn odd? [v] (= (% v 2) 1))
+(defn none? [v] (is v None))
+(defn zero? [v] (= v 0))
+(defn empty? [coll] (= (len coll) 0))

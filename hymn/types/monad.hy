@@ -21,7 +21,7 @@
   (defn __init__ [self value] (setv self.value value))
 
   (defn __repr__ [self]
-    (.format "{}({!r})" (name (type self)) self.value))
+    (.format "{}({!r})" (. (type self) __name__) self.value))
 
   (defn __rshift__ [self f] (.bind self f))
 
@@ -52,10 +52,8 @@
     :meth:`bind` and :code:`identity` function."
     (.bind self identity))
 
-  (with-decorator classmethod
-    (defn monadic [cls f]
-      "decorator that turn :code:`f` into monadic function of the monad"
-      (comp cls.unit f)))
+  (defn [classmethod] monadic [cls f]
+    "decorator that turn :code:`f` into monadic function of the monad"
+    (fn [x] (cls.unit(f x))))
 
-  (with-decorator classmethod
-    (defn unit [cls value] "the unit of monad" (cls value))))
+  (defn [classmethod] unit [cls value] "the unit of monad" (cls value)))

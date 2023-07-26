@@ -3,13 +3,14 @@
 ;; License: BSD New, see LICENSE for details.
 
 (import
-  [hymn.operations [sequence]]
-  [hymn.types [maybe :as maybe-module]]
-  [hymn.types.maybe [maybe-m Just Nothing nothing? maybe]])
+  hymn.operations [sequence]
+  hymn.types [maybe :as maybe-module]
+  hymn.types.maybe [maybe-m Just Nothing nothing? maybe]
+  hymn.utils [instance? none? zero?])
 
 (require
-  [hymn.types.maybe [?]]
-  [hymn.macros [do-monad-return]])
+  hymn.types.maybe :readers [?]
+  hymn.macros [do-monad-return])
 
 (defn test-tag-macro-maybe []
   "maybe tag macro ? should wrap a function with decorator maybe"
@@ -99,8 +100,7 @@
 
 (defn test-maybe-decorator []
   "maybe decorator make function return Nothing when exception is raised"
-  (with-decorator maybe
-    (defn safe-div [a b] (/ a b)))
+  (defn [maybe] safe-div [a b] (/ a b))
   (assert (is Nothing (safe-div 1 0)))
   (assert (= (Just 2) (safe-div 4 2)))
   (setv safe-int (maybe int))

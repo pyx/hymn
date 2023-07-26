@@ -4,35 +4,38 @@
 "hymn.types.state - the state monad"
 
 (import
-  [operator [itemgetter]]
-  [hymn.types.monad [Monad]])
+  operator [itemgetter]
+  hymn.types.monad [Monad]
+  hyrule.misc [constantly])
 
-(require [hymn.macros [do-monad-return]])
+(require
+  hymn.macros [do-monad-return]
+  hyrule.collections [assoc]
+  hyrule.argmove [doto])
 
 (defclass State [Monad]
   "the state monad
 
   computation with a shared state"
   (defn __repr__ [self]
-    (.format "{}({})" (name (type self)) (name self.value)))
+    (.format "{}({})" (. (type self) __name__) (. self.value __name__)))
 
   (defn bind [self f]
     "the bind operation of :class:`State`
 
     use the final state of this computation as the initial state of the
     second"
-    ((type self) (fn [s] (setv (, a ns) (.run self s)) (.run (f a) ns))))
+    ((type self) (fn [s] (setv #(a ns) (.run self s)) (.run (f a) ns))))
 
-  (with-decorator classmethod
-    (defn unit [cls a] "the unit of state monad" (cls (fn [s] (, a s)))))
+  (defn [classmethod] unit [cls a] "the unit of state monad" (cls (fn [s] #(a s))))
 
   (defn evaluate [self s]
     "evaluate state monad with initial state and return the result"
-    (first (.run self s)))
+    (get (.run self s) 0))
 
   (defn execute [self s]
     "execute state monad with initial state, return the final state"
-    (second (.run self s)))
+    (get (.run self s) 1))
 
   (defn run [self s]
     "evaluate state monad with initial state, return result and state"
@@ -45,8 +48,7 @@
       execute State.execute
       run State.run)
 
-(with-decorator State
-  (defn get-state [s] "return the current state" (, s s)))
+(defn [State] get-state [s] "return the current state" #(s s))
 (setv <-state get-state)
 
 (defn lookup [key]
@@ -63,14 +65,14 @@
 
 (defn set-state [s]
   "replace the current state and return the previous one"
-  (State (fn [ps] (, ps s))))
+  (State (fn [ps] #(ps s))))
 (setv state<- set-state)
 
 (defn set-value [key value]
   "return a monadic function that set the vaule of key in the state"
   (modify (fn [s] (doto ((type s) s) (assoc key value)))))
 
-(defn set-values [&kwargs keys/values]
+(defn set-values [#** keys/values]
   "return a monadic function that set the vaules of keys in the state"
   (modify (fn [s] (doto ((type s) s) (.update keys/values)))))
 

@@ -79,9 +79,9 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [gets]])
-  => (require [hymn.macros [do-monad-return]])
-  => (.run (do-monad-return [a (gets first)] a) [1 2 3])
+  => (import hymn.types.state [gets])
+  => (require hymn.macros [do-monad-return])
+  => (.run (do-monad-return [a (gets (fn [x] (get x 0)))] a) [1 2 3])
   (1, [1, 2, 3])
 
 
@@ -93,7 +93,7 @@ Use :func:`get-state` to fetch the shared state, :code:`<-state` is an alias of
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [get-state <-state]])
+  => (import hymn.types.state [get-state <-state])
   => (.run get-state [1 2 3])
   ([1, 2, 3], [1, 2, 3])
   => (.run <-state [1 2 3])
@@ -104,7 +104,7 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [lookup <-]])
+  => (import hymn.types.state [lookup <-])
   => (.run (lookup 1) [1 2 3])
   (2, [1, 2, 3])
   => (.evaluate (lookup 1) [1 2 3])
@@ -122,10 +122,10 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [gets]])
-  => (.run (gets first) [1 2 3])
+  => (import hymn.types.state [gets])
+  => (.run (gets (fn [x] (get x 0))) [1 2 3])
   (1, [1, 2, 3])
-  => (.run (gets second) [1 2 3])
+  => (.run (gets (fn [x] (get x 1))) [1 2 3])
   (2, [1, 2, 3])
   => (.run (gets len) [1 2 3])
   (3, [1, 2, 3])
@@ -134,7 +134,9 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [modify]])
+  => (import
+        hymn.types.state [modify]
+        hyrule.misc [inc])
   => (.run (modify inc) 41)
   (41, 42)
   => (.evaluate (modify inc) 41)
@@ -149,7 +151,7 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [set-state state<-]])
+  => (import hymn.types.state [set-state state<-])
   => (.run (set-state 42) 1)
   (1, 42)
   => (.run (state<- 42) 1)
@@ -159,7 +161,7 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [set-value]])
+  => (import hymn.types.state [set-value])
   => (.run (set-value 2 42) [1 2 3])
   ([1, 2, 3], [1, 2, 42])
 
@@ -167,7 +169,7 @@ an alias of :func:`lookup`
 
 .. code-block::
 
-  => (import [hymn.types.state [set-values]])
+  => (import hymn.types.state [set-values])
   => (.run (set-values :a 1 :b 2) {})
   ({}, {'a': 1, 'b': 2})
 
@@ -175,7 +177,9 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [update]])
+  => (import
+        hymn.types.state [update]
+        hyrule.misc [inc])
   => (.run (update 0 inc) [0 1 2])
   (0, [1, 1, 2])
 
@@ -183,6 +187,6 @@ an alias of :func:`lookup`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.state [update-value]])
+  => (import hymn.types.state [update-value])
   => (.run (update-value 0 42) [0 1 2])
   (0, [42, 1, 2])
