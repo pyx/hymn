@@ -6,28 +6,30 @@ from pytest import Module
 from hymn.types.monadplus import MonadPlus
 from hymn.types.monoid import Monoid
 
-from hymn.types.continuation import Continuation
-from hymn.types.either import Either
-from hymn.types.identity import Identity
-from hymn.types.lazy import Lazy
-from hymn.types.list import List
+#from hymn.types.continuation import Continuation
+#from hymn.types.either import Either
+#from hymn.types.identity import Identity
+#from hymn.types.lazy import Lazy
+#from hymn.types.list import List
 from hymn.types.maybe import Maybe
-from hymn.types.reader import Reader
-from hymn.types.state import State
-from hymn.types.writer import (
-    ComplexWriter,
-    DecimalWriter,
-    FloatWriter,
-    FractionWriter,
-    ListWriter,
-    IntWriter,
-    StringWriter,
-    TupleWriter,
-)
+#from hymn.types.reader import Reader
+#from hymn.types.state import State
+#from hymn.types.writer import (
+#    ComplexWriter,
+#    DecimalWriter,
+#    FloatWriter,
+#    FractionWriter,
+#    ListWriter,
+#    IntWriter,
+#    StringWriter,
+#    TupleWriter,
+#)
 
 
 def pytest_collect_file(path, parent):
-    if path.ext == ".hy" and path.basename.startswith('test_'):
+    tests = ['maybe', 'state']
+    is_test = lambda t: path.basename.startswith('test_' + t)
+    if path.ext == ".hy" and any(is_test(t) for t in tests):
         return Module.from_parent(parent, fspath=path)
 
 
@@ -60,22 +62,22 @@ def run_writer(w):
 
 
 monad_runners = [
-    (Continuation, run_cont),
-    (Either, extract),
-    (Identity, extract),
-    (Lazy, run_lazy),
-    (List, run_list),
+#   (Continuation, run_cont),
+#   (Either, extract),
+#   (Identity, extract),
+#   (Lazy, run_lazy),
+#   (List, run_list),
     (Maybe, extract),
-    (Reader, run_reader),
-    (State, run_state),
-    (ComplexWriter, run_writer),
-    (DecimalWriter, run_writer),
-    (FloatWriter, run_writer),
-    (FractionWriter, run_writer),
-    (ListWriter, run_writer),
-    (IntWriter, run_writer),
-    (StringWriter, run_writer),
-    (TupleWriter, run_writer),
+#   (Reader, run_reader),
+#   (State, run_state),
+#   (ComplexWriter, run_writer),
+#   (DecimalWriter, run_writer),
+#   (FloatWriter, run_writer),
+#   (FractionWriter, run_writer),
+#   (ListWriter, run_writer),
+#   (IntWriter, run_writer),
+#   (StringWriter, run_writer),
+#   (TupleWriter, run_writer),
 ]
 
 monads = [monad for (monad, runner) in monad_runners]

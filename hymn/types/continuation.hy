@@ -4,9 +4,10 @@
 "hymn.types.continuation - the continuation monad"
 
 (import
-  [hymn.types.monad [Monad]])
+  hymn.types.monad [Monad]
+  hymn.types [identity])
 
-(deftag < [v]
+(defreader < (setv v (.parse-one-form &reader))
   (with-gensyms [Continuation]
     `(do (import [hymn.types.continuation [Continuation :as ~Continuation]])
        (.unit ~Continuation ~v))))
@@ -22,10 +23,9 @@
     "the bind operation of :class:`Continuation`"
     ((type self) (fn [k] (self.value (fn [v] (.value (f v) k))))))
 
-  (with-decorator classmethod
-    (defn unit [cls value]
-      "the unit of continuation monad"
-      (cls (fn [k] (k value)))))
+  (defn [classmethod] unit [cls value]
+    "the unit of continuation monad"
+    (cls (fn [k] (k value))))
 
   (defn run [self &optional [k identity]]
     "run the continuation"

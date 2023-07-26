@@ -144,8 +144,8 @@ The maybe monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing maybe]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.types.maybe [Just Nothing maybe])
+  => (require hymn.macros [do-monad-return])
   => ;; do notation with maybe monad
   => (do-monad-return [a (Just 1) b (Just 1)] (/ a b))
   Just(1.0)

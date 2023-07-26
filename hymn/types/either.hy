@@ -4,11 +4,11 @@
 "hymn.types.either - the either monad"
 
 (import
-  [functools [wraps]]
-  [hymn.mixins [Ord]]
-  [hymn.types.monadplus [MonadPlus]])
+  functools [wraps]
+  hymn.mixins [Ord]
+  hymn.types.monadplus [MonadPlus])
 
-(deftag | [f]
+(defreader | (setv f (.parse-one-form &reader))
   (with-gensyms [failsafe]
     `(do (import [hymn.types.either [failsafe :as ~failsafe]])
        (~failsafe ~f))))
@@ -26,13 +26,14 @@
 
   (defn __lt__ [self other]
     "left should always be less than right"
-    (if
+    (cond
       (not (instance? (, Left Right) self))
         (raise (TypeError "unorderable types:" (type self) (type other)))
       ;; same monad type, compare against the value inside
       (is (type self) (type other))
         (< self.value other.value)
-      (if self False True)))
+      self False
+      True True))
 
   (defn bind [self f]
     "the bind operation of :class:`Either`
@@ -42,13 +43,12 @@
 
   (defn plus [self other] (or self other))
 
-  (with-decorator classmethod
-    (defn from-value [cls value]
-      "wrap :code:`value` in an :class:`Either` monad
+  (defn [classmethod] from-value [cls value]
+    "wrap :code:`value` in an :class:`Either` monad
 
-      return a :class:`Right` if the value is evaluated as true.
-      :class:`Left` otherwise."
-      ((if value Right Left) value))))
+    return a :class:`Right` if the value is evaluated as true.
+    :class:`Left` otherwise."
+    ((if value Right Left) value)))
 
 (defclass Left [Either]
   "left of :class:`Either`"
@@ -85,9 +85,9 @@
   depending on the type of it,  raise :code:`TypeError` if :code:`m` is not an
   :class:`Either`"
   (cond
-    [(left? m) (handle-left m.value)]
-    [(right? m) (handle-right m.value)]
-    [true (raise (TypeError "use either on non-Either type"))]))
+    (left? m) (handle-left m.value)
+    (right? m) (handle-right m.value)
+    True (raise (TypeError "use either on non-Either type"))))
 
 (defn failsafe [func]
   "decorator to turn func into monadic function of :class:`Either` monad"

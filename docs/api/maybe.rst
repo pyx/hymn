@@ -85,8 +85,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.types.maybe [Just Nothing])
+  => (require hymn.macros [do-monad-return])
   => (do-monad-return [a (Just 1) b (Just 2)] (+ a b))
   Just(3)
   => (do-monad-return [a (Just 1) b Nothing] (+ a b))
@@ -98,8 +98,8 @@ Do Notation with :when
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
-  => (require [hymn.macros [do-monad-with]])
+  => (import hymn.types.maybe [maybe-m])
+  => (require hymn.macros [do-monad-with])
   => (defn safe-div [a b]
   ...   (do-monad-with maybe-m [:when (not (zero? b))] (/ a b)))
   => (safe-div 1 2)
@@ -115,7 +115,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [->maybe]])
+  => (import hymn.types.maybe [->maybe])
   => (->maybe 42)
   Just(42)
   => (->maybe None)
@@ -125,7 +125,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing nothing?]])
+  => (import hymn.types.maybe [Just Nothing nothing?])
   => (nothing? Nothing)
   True
   => (nothing? (Just 1))
@@ -136,7 +136,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [<-maybe ->maybe nothing?]])
+  => (import hymn.types.maybe [<-maybe ->maybe nothing?])
   => (nothing? (->maybe None))
   True
   => (setv answer (->maybe 42))
@@ -150,7 +150,7 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing]])
+  => (import hymn.types.maybe [Just Nothing])
   => (.append (Just 42) Nothing)
   Just(42)
   => (.append (Just 42) (Just 42))
@@ -162,8 +162,8 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe]])
-  => (with-decorator maybe (defn add1 [n] (inc (int n))))
+  => (import hymn.types.maybe [maybe])
+  => (defn [maybe] add1 [n] (inc (int n)))
   => (add1 "41")
   Just(42)
   => (add1 "nan")
@@ -180,7 +180,7 @@ Tag Macro
 
 .. code-block:: clojure
 
-  => (require [hymn.types.maybe [?]])
+  => (require hymn.types.maybe [?])
   => (#? int "42")
   Just(42)
   => (#? int "not a number")

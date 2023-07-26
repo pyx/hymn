@@ -4,10 +4,16 @@
 "hymn.macros - monad operations implemented as macros"
 
 (import
-  [hymn.utils [thread-first thread-last thread-bindings]])
+  functools [reduce]
+  hymn.utils [thread-first thread-last thread-bindings odd?])
+
+(require
+  hyrule.argmove [->]
+  hyrule.control [unless]
+  hyrule.macrotools [with-gensyms])
 
 ;; lift tag macro, e.g. #^ + => (lift +)
-(deftag ^ [f]
+(defreader ^ (setv f (.parse-one-form &reader))
   (with-gensyms [lift]
     `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
 
@@ -16,7 +22,7 @@
 ;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
 ;; is equivalent to
 ;; (do-monad [a (Just 1) b (m-return (inc c))] (m-return [a b])
-(deftag = [expr] `(m-return ~expr))
+(defreader = (setv expr (.parse-one-form &reader)) `(m-return ~expr))
 
 (defmacro do-monad [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"
@@ -28,13 +34,13 @@
     (macro-error None "do-monad must have at least one binding form"))
   (defn bind-action [mexpr actions]
     (setv [binding expr] actions)
-    (if
+    (cond
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
       (= binding :let) `(do (setv ~@expr) ~mexpr)
-      (with-gensyms [monad m]
+      True (with-gensyms [monad m]
         `(do
            (setv ~monad ~expr)
-           (>> ~monad (fn [~m &optional [m-return (. ~monad unit)]]
+           (>> ~monad (fn [~m [m-return (. ~monad unit)]]
                         ;; function arguments cannot be unpacked inline, use
                         ;; setv here in case the binding contains structure,
                         ;; e.g [a b]
@@ -80,7 +86,7 @@
   "conditional execution of monadic expressions"
   `(if ~test ~mexpr (m-return None)))
 
-(defmacro monad-comp [expr bindings &optional condition]
+(defmacro monad-comp [expr bindings [condition None]]
   "different syntax for do notation"
   (setv guard (if (none? condition) `() `(:when ~condition)))
   `(do (require hymn.macros)

@@ -3,9 +3,9 @@
 ;; License: BSD New, see LICENSE for details.
 
 (import
-  [hymn.operations [sequence]]
-  [hymn.types [state :as state-module]]
-  [hymn.types.state
+  hymn.operations [sequence]
+  hymn.types [state :as state-module]
+  hymn.types.state
     [state-m
      get-state <-state
      lookup <-
@@ -15,9 +15,12 @@
      set-value
      set-values
      update
-     update-value]])
+     update-value]
+  hymn.utils [instance?]
+  hyrule.misc [inc])
 
-(require hymn.operations)
+(require hymn.operations
+  hyrule.collections [assoc])
 
 (setv env {'a 42 'b None 'c "hello"})
 
@@ -51,7 +54,7 @@
   (setv v (object)
         s (object))
   ;; this test implies the structure of the value inside state monad
-  (assert (= (, v s) (.run (state-m.unit v) s))))
+  (assert (= #(v s) (.run (state-m.unit v) s))))
 
 (defn test-evaluate []
   "evaluate should run the state monad and return the result"
@@ -123,7 +126,7 @@
   "set-values should change values with keys"
   (setv s {})
   (assert (instance? state-m (set-values :a 1 :b 2)))
-  (assert (= {'a 1 'b 2} (.execute (set-values :a 1 :b 2) s)))
+  (assert (= {"a" 1 "b" 2} (.execute (set-values :a 1 :b 2) s)))
   (assert (= s {})))
 
 (defn test-update []

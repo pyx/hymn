@@ -4,8 +4,8 @@
 "hymn.types.identity - the identity monad"
 
 (import
-  [hymn.mixins [Ord]]
-  [hymn.types.monad [Monad]])
+  hymn.mixins [Ord]
+  hymn.types.monad [Monad])
 
 (defclass Identity [Monad Ord]
   "the identity monad"

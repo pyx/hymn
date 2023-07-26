@@ -4,15 +4,16 @@
 "hymn.types.maybe - the maybe monad"
 
 (import
-  [contextlib [suppress]]
-  [functools [partial wraps]]
-  [hymn.mixins [Ord]]
-  [hymn.types.monadplus [MonadPlus]]
-  [hymn.types.monoid [Monoid]])
+  contextlib [suppress]
+  functools [partial wraps]
+  hymn.mixins [Ord]
+  hymn.types.monadplus [MonadPlus]
+  hymn.types.monoid [Monoid])
 
-(deftag ? [f]
+(defreader ? (setv f (.parse-one-form &reader))
+  (require hyrule.macrotools [with-gensyms])
   (with-gensyms [maybe]
-    `(do (import [hymn.types.maybe [maybe :as ~maybe]]) (~maybe ~f))))
+    `(do (import hymn.types.maybe [maybe :as ~maybe]) (~maybe ~f))))
 
 (defclass Maybe [MonadPlus Monoid Ord]
   "the maybe monad
@@ -24,21 +25,21 @@
     (.__init__ (super Maybe self) value))
 
   (defn __lt__ [self other]
-    (if
+    (cond
       (and (nothing? self) (nothing? other)) False
       (nothing? self) True
       (nothing? other) False
-      (.__lt__ (super Maybe self) other)))
+      True (.__lt__ (super Maybe self) other)))
 
   (defn append [self other]
     "the append operation of :class:`Maybe`"
-    (if
+    (cond
       (nothing? self) other
       (nothing? other) self
       ;; NOTE:
       ;; assuming both are of type Maybe here, also assuming the
       ;; underlying values are monoids with + as append.
-      (Just (+ self.value other.value))))
+      True (Just (+ self.value other.value))))
 
   (defn bind [self f]
     "the bind operation of :class:`Maybe`
@@ -54,13 +55,12 @@
     if the :class:`Maybe` is :data:`Nothing`, it returns the default values."
     (if (nothing? self) default self.value))
 
-  (with-decorator classmethod
-    (defn from-value [cls value]
-      "wrap :code:`value` in a :class:`Maybe` monad
+  (defn [classmethod] from-value [cls value]
+    "wrap :code:`value` in a :class:`Maybe` monad
 
-      return a :class:`Just` if the value is evaluated as True.
-      :data:`Nothing` otherwise."
-      (if value (Just value) Nothing))))
+    return a :class:`Just` if the value is evaluated as True.
+    :data:`Nothing` otherwise."
+    (if value (Just value) Nothing)))
 
 (defclass Just [Maybe] ":code:`Just` of the :class:`Maybe`")
 (setv Maybe.unit Just
@@ -91,19 +91,19 @@
   "return :code:`True` if :code:`m` is :data:`Nothing`"
   (is m Nothing))
 
-(defn maybe [&optional func predicate nothing-on-exceptions]
+(defn maybe [[func None] [predicate None] [nothing-on-exceptions None]]
   "decorator to turn func into monadic function of the :class:`Maybe` monad"
-  (if-not func
+  (if (not func)
     (partial maybe
              :predicate predicate
              :nothing-on-exceptions nothing-on-exceptions)
     (do
       (setv exceptions (or nothing-on-exceptions [BaseException]))
-      (with-decorator (wraps func)
-        (fn [&rest args &kwargs kwargs]
-          (setv result Nothing)
-          (with [(suppress #* exceptions)]
-            (setv result (Just (func #* args #** kwargs))))
-          (when (and predicate (not (>> result predicate)))
-            (setv result Nothing))
-          result)))))
+      (defn [(wraps func)] wrapper [#* args #** kwargs]
+        (setv result Nothing)
+        (with [(suppress #* exceptions)]
+          (setv result (Just (func #* args #** kwargs))))
+        (when (and predicate (not (>> result predicate)))
+          (setv result Nothing))
+        result)
+      wrapper)))

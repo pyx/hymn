@@ -7,19 +7,17 @@
   "the monoid class
 
   types with an associative binary operation that has an identity"
-  (with-decorator property
-    (defn empty [self]
-      "the identity of :meth:`append`"
-      (raise NotImplementedError)))
+  (defn [property] empty [self]
+    "the identity of :meth:`append`"
+    (raise NotImplementedError))
 
   (defn append [self other]
     "an associative operation for monoid"
     (raise NotImplementedError))
 
-  (with-decorator classmethod
-    (defn concat [cls seq]
-      "fold a list using the monoid"
-      (reduce cls.append seq cls.empty))))
+  (defn [classmethod] concat [cls seq]
+    "fold a list using the monoid"
+    (reduce cls.append seq cls.empty)))
 
 (defn append [&rest monoids]
   "the associative operation of monoid"
