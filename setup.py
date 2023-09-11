@@ -42,7 +42,7 @@ setup(
     ],
     keywords='hy lisp monad functional programming',
     install_requires=[
-        'hy>=0.19.0',
+        'hy>=0.27.0',
     ],
     extras_require={
         'dev': [
