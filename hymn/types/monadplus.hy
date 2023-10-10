@@ -3,9 +3,7 @@
 ;; License: BSD New, see LICENSE for details.
 "hymn.types.monadplus - base monadplus class"
 
-(import
-  hymn.types.monad [Monad]
-  hymn.types [identity])
+(import .monad [Monad])
 
 (defclass MonadPlus [Monad]
   "the monadplus class
@@ -25,3 +23,5 @@
 
      zero >>= f = zero"
     (raise NotImplementedError)))
+
+(export :objects [MonadPlus])
