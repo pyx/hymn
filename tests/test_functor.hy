@@ -6,6 +6,8 @@
   `(= (run ~m1) (run ~m2)))
 
 (setv data 42)
+(defn inc [x] (+ x 1))
+(defn identity [x] x)
 
 (defn test-fmap [monad-runner]
   "bind should apply function to the value inside the monad"
@@ -27,4 +29,4 @@
         f-g (fn [n] (f (g n))))
   ;; make sure the order is significant
   (assert (!= (f (g data)) (g (f data))))
-  (assert (m= (.fmap m f-g) (-> m (.fmap g) (.fmap f)))))
+  (assert (m= (.fmap m f-g) (.fmap (.fmap m g) f))))
