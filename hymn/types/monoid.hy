@@ -3,7 +3,9 @@
 ;; License: BSD New, see LICENSE for details.
 "hymn.types.monoid - base monoid class"
 
-(defclass Monoid [object]
+(import functools [reduce])
+
+(defclass Monoid []
   "the monoid class
 
   types with an associative binary operation that has an identity"
@@ -19,7 +21,9 @@
     "fold a list using the monoid"
     (reduce cls.append seq cls.empty)))
 
-(defn append [&rest monoids]
+(defn append [#* monoids]
   "the associative operation of monoid"
   (reduce (fn [m1 m2] (m1.append m2)) monoids))
 (setv <> append)
+
+(export :objects [Monoid <> append])
