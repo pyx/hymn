@@ -10,20 +10,22 @@
 ;; This is my own interpretation, especially the implementation of Maybe
 ;; Monad has unbiased plus, which satisfy Monoid and *Left Distribution*.
 
-(require [hymn.macros [do-monad-return]])
+(require hymn.macros [do-monad-return])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
 
 (setv data 42)
 
+(defn inc [x] (+ x 1))
+
 (defn test-zero-implemented [monadplus]
   "monadplus should have zero"
-  (assert (instance? monadplus monadplus.zero)))
+  (assert (isinstance monadplus.zero monadplus)))
 
 (defn test-plus-implemented [monadplus]
   "monadplus should have plus method"
-  (assert (instance? monadplus (monadplus.zero.plus monadplus.zero))))
+  (assert (isinstance (monadplus.zero.plus monadplus.zero) monadplus)))
 
 (defn test-plus-operator [monadplus-runner]
   "monadplus should support + operator"
