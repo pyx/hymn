@@ -3,13 +3,16 @@
 ;; License: BSD New, see LICENSE for details.
 
 (import
-  [hymn.types.identity [identity-m]]
-  [hymn.operations [k-compose <=< k-pipe >=> lift m-map replicate sequence]])
+  hy.pyops [+]
+  hymn.types.identity [identity-m]
+  hymn.operations [k-compose <=< k-pipe >=> lift m-map replicate sequence])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
 
 (setv data 42)
+(defn identity [x] x)
+(defn inc [x] (+ x 1))
 
 (defn test-l-to-r-kleisli-composition [monad-runner]
   "left to right Kleisli composition of monads should work"
@@ -34,15 +37,15 @@
   (setv [monad run] monad-runner
         minc (lift inc)
         unit monad.unit)
-  (assert (instance? monad (minc (unit data))))
+  (assert (isinstance (minc (unit data)) monad))
   (assert (m= (minc (unit data)) (unit (inc data)))))
 
 (defn test-lift-no-argument []
   "lift should work on functions called with no argument"
   (setv mint (lift int)
         mlist (lift list))
-  (assert (instance? identity-m (mint)))
-  (assert (instance? identity-m (mlist)))
+  (assert (isinstance (mint) identity-m))
+  (assert (isinstance (mlist) identity-m))
   (assert (= (>> (mint) identity) (int)))
   (assert (= (>> (mlist) identity) (list))))
 
@@ -89,7 +92,7 @@
         m (unit data)
         n 5
         result (* [data] n))
-  (assert (instance? monad (replicate n m)))
+  (assert (isinstance (replicate n m) monad))
   (assert (m= (replicate n m) (unit result))))
 
 (defn test-sequence [monad-runner]
@@ -97,10 +100,10 @@
   (setv [monad run] monad-runner
         unit monad.unit
         values (list (range data (+ data 5))))
-  (assert (instance? monad (sequence (map unit values))))
+  (assert (isinstance (sequence (map unit values)) monad))
   (assert (m= (sequence (map unit values)) (unit values))))
 
 (defn test-sequence-empty []
   "sequence should return empty list in identity monad when values list empty"
-  (assert (instance? identity-m (sequence [])))
+  (assert (isinstance (sequence []) identity-m))
   (assert (= (>> (sequence []) identity) [])))
