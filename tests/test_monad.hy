@@ -8,14 +8,16 @@
 (setv data 42
       double (fn [n] (* n 2)))
 
+(defn inc [x] (+ x 1))
+
 (defn test-unit [monad]
   "unit should act as a constructor"
-  (assert (instance? monad (monad.unit data))))
+  (assert (isinstance (monad.unit data) monad)))
 
 (defn test-monadic [monad]
   "monadic should turn a fucntion into a monadic one"
   (setv m-inc (monad.monadic inc))
-  (assert (instance? monad (m-inc data))))
+  (assert (isinstance (m-inc data) monad)))
 
 (defn test-join [monad-runner]
   "join should remove one level of monadic structure"
