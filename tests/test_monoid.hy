@@ -2,7 +2,7 @@
 ;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
 ;; License: BSD New, see LICENSE for details.
 
-(import [hymn.types.monoid [append <>]])
+(import hymn.types.monoid [append <>])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
@@ -22,8 +22,8 @@
 
 (defn test-empty [monoid]
   "monoid should have an empty value"
-  (assert (hasattr monoid 'empty))
-  (assert (instance? monoid monoid.empty)))
+  (assert (hasattr monoid "empty"))
+  (assert (isinstance monoid.empty monoid)))
 
 (defn test-append [monoid-runner]
   "monoid should support append operation"
