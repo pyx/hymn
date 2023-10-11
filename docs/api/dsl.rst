@@ -14,16 +14,10 @@ Hy
 
 .. code-block:: clojure
 
-  (import [hymn.dsl [*]])
-
-.. note::
-
-  Some of the function are renamed to more descriptive one to avoid name clash,
-  examples are :func:`hymn.types.reader.lookup` and
-  :func:`hymn.types.state.lookup`
+  (import hymn.dsl [*])
 
 The entire source code of this module is listed here for reference:
 
 .. literalinclude:: ../../hymn/dsl.hy
-  :language: lisp
+  :language: clojure
   :lines: 7-
