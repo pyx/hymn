@@ -3,7 +3,9 @@
 ;; License: BSD New, see LICENSE for details.
 "hymn.types.monad - base monad class"
 
-(defclass Monad [object]
+(import ..utils [compose identity])
+
+(defclass Monad []
   "the monad class
 
   Implements bind operator :code:`>>` and inverted bind operator :code:`<<` as
@@ -54,6 +56,8 @@
 
   (defn [classmethod] monadic [cls f]
     "decorator that turn :code:`f` into monadic function of the monad"
-    (fn [x] (cls.unit(f x))))
+    (compose cls.unit f))
 
   (defn [classmethod] unit [cls value] "the unit of monad" (cls value)))
+
+(export :objects [Monad])
