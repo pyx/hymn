@@ -3,26 +3,19 @@
 ;; License: BSD New, see LICENSE for details.
 
 (import
-  [hymn.operations [sequence]]
-  [hymn.types [reader :as reader-module]]
-  [hymn.types.reader [reader-m asks reader ask local lookup <-]])
+  hymn.operations [sequence]
+  hymn.types.reader [reader-m asks reader ask local lookup <-])
 
 (require hymn.operations)
 
 (setv env {'a 42 'b None 'c "hello"})
 
-(defn test-module-level-unit []
-  "reader module should have a working module level unit function"
-  (assert (instance? reader-m (reader-module.unit identity))))
-
-(defn test-module-level-run []
-  "reader module should have a module level run"
-  (assert (reader-module.run (reader-m.unit True) None)))
+(defn identity [x] x)
 
 (defn test-asks-and-reader-create-reader []
   "asks and reader should create a reader from function"
-  (assert (instance? reader-m (asks identity)))
-  (assert (instance? reader-m (reader identity))))
+  (assert (isinstance (asks identity) reader-m))
+  (assert (isinstance (reader identity) reader-m)))
 
 (defn test-asks-and-reader []
   "asks and reader create a function for the environment"
