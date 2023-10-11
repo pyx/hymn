@@ -3,34 +3,35 @@
 ;; License: BSD New, see LICENSE for details.
 
 (import
-  [hymn.operations [lift]])
+  hy.pyops [+ /]
+  hymn.operations [lift])
 
 (require
-  [hymn.macros
-    [^ =
-     do-monad-return
-     do-monad
-     do-monad-with
-     m-for
-     m-when
-     monad->
-     monad->>
-     monad-comp
-     with-monad]])
+  hymn.macros :readers [^ =]
+  hymn.macros [do-monad-return
+               do-monad
+               do-monad-with
+               m-for
+               m-when
+               monad->
+               monad->>
+               monad-comp
+               with-monad])
 
 (defmacro m= [m1 m2]
   `(= (run ~m1) (run ~m2)))
 
 (setv data 42)
+(defn inc [x] (+ x 1))
 
-(defn test-tag-macro-^ [monad-runner]
-  "lift tag macro ^ should expand to lift call"
+(defn test-reader-macro-^ [monad-runner]
+  "lift reader macro ^ should expand to lift call"
   (setv [monad run] monad-runner
         unit monad.unit)
   (assert (m= ((lift inc) (unit data)) (#^ inc (unit data)))))
 
-(defn test-tag-macro-= [monad-runner]
-  "m-return tag macro = should expand to m-return call"
+(defn test-reader-macro-= [monad-runner]
+  "m-return reader macro = should expand to m-return call"
   (setv [monad run] monad-runner
         unit monad.unit
         m-return unit)
@@ -40,7 +41,7 @@
   "do-monad-return macro should wrap result in monad automatically"
   (setv [monad run] monad-runner
         unit monad.unit)
-  (assert (instance? monad (do-monad-return [a (unit data)] a))))
+  (assert (isinstance (do-monad-return [a (unit data)] a) monad)))
 
 (defn test-do-monad-return [monad-runner]
   "do-monad-return macro should work"
@@ -84,7 +85,7 @@
   "do-monad-with macro should provide a default m-return"
   (setv [monad run] monad-runner
         unit monad.unit)
-  (assert (instance? monad (do-monad-with monad [a (m-return data)] a)))
+  (assert (isinstance (do-monad-with monad [a (m-return data)] a) monad))
   (assert (m= (unit (inc data))
               (do-monad-with monad [a (m-return data)] (inc a)))))
 
@@ -167,4 +168,4 @@
 
 (defn test-with-monad [monad]
   "with-monad should provide default function m-return"
-  (assert (instance? monad (with-monad monad (m-return None)))))
+  (assert (isinstance (with-monad monad (m-return None)) monad)))
