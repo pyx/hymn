@@ -1,7 +1,7 @@
 Macros
 ======
 
-.. automodule:: hymn.macros
+.. module:: hymn.macros
 
 :code:`hymn.macros` provide macros for monad computations
 
@@ -19,9 +19,9 @@ Operation Macros
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad]])
-  => (do-monad [a (Just 41)] (m-return (inc a)))
+  => (import hymn.types.maybe [Just])
+  => (require hymn.macros [do-monad])
+  => (do-monad [a (Just 41)] (m-return (+ a 1)))
   Just(42)
 
 .. function:: do-monad-return [binding-forms expr]
@@ -34,9 +34,9 @@ Operation Macros
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad-return]])
-  => (do-monad-return [a (Just 41)] (inc a))
+  => (import hymn.types.maybe [Just])
+  => (require hymn.macros [do-monad-return])
+  => (do-monad-return [a (Just 41)] (+ a 1))
   Just(42)
 
 .. function:: do-monad-with [monad binding-forms expr]
@@ -48,8 +48,8 @@ Operation Macros
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
-  => (require [hymn.macros [do-monad-with]])
+  => (import hymn.types.maybe [maybe-m])
+  => (require hymn.macros [do-monad-with])
   => (do-monad-with maybe-m [:when True] 42)
   Just(42)
   => (do-monad-with maybe-m [:when False] 42)
@@ -59,8 +59,8 @@ All do monad macros support :code:`:let` binding, like this:
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.types.maybe [Just])
+  => (require hymn.macros [do-monad-return])
   => (defn half [x]
   ...  (do-monad-return
   ...    [:let [two 2]
@@ -75,63 +75,67 @@ All do monad macros support :code:`:when` if the monad is of type
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
-  => (require [hymn.macros [do-monad-with]])
-  => (defn div [a b] (do-monad-with maybe-m [:when (not (zero? b))] (/ a b)))
+  => (import hymn.types.maybe [maybe-m])
+  => (require hymn.macros [do-monad-with])
+  => (defn div [a b] (do-monad-with maybe-m [:when (not (= 0 b))] (/ a b)))
   => (div 1 2)
   Just(0.5)
   => (div 1 0)
   Nothing
 
-.. function:: monad-> [init-value &rest actions]
+.. function:: monad-> [init-value #* actions]
 
   threading macro for monadic actions
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
+  => (import hymn.types.maybe [maybe-m])
+  => (import hy.pyops [/])
+  => (defn inc [x] (+ x 1))
   => (setv m-inc (maybe-m.monadic inc))
   => (setv m-div (maybe-m.monadic /))
-  => (require [hymn.macros [monad->]])
+  => (require hymn.macros [monad->])
   => ;; threading macro for monadic actions
   => (monad-> (maybe-m.unit 99) m-inc (m-div 5) (m-div 2))
   Just(10.0)
   => ;; is equivalent to
-  => (require [hymn.macros [do-monad]])
+  => (require hymn.macros [do-monad])
   => (do-monad [a (maybe-m.unit 99) b (m-inc a) c (m-div b 5)] (m-div c 2))
   Just(10.0)
 
-.. function:: monad->> [init-value &rest actions]
+.. function:: monad->> [init-value #* actions]
 
   threading tail macro for monadic actions
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
+  => (import hymn.types.maybe [maybe-m])
+  => (import hy.pyops [/])
+  => (defn inc [x] (+ x 1))
   => (setv m-inc (maybe-m.monadic inc))
   => (setv m-div (maybe-m.monadic /))
-  => (require [hymn.macros [monad->>]])
+  => (require hymn.macros [monad->>])
   => ;; threading tail macro for monadic actions
   => (monad->> (maybe-m.unit 4) m-inc (m-div 25) (m-div 100))
   Just(20.0)
   => ;; is equivalent to
-  => (require [hymn.macros [do-monad]])
+  => (require hymn.macros [do-monad])
   => (do-monad [a (maybe-m.unit 4) b (m-inc a) c (m-div 25 b)] (m-div 100 c))
   Just(20.0)
 
-.. function:: m-for [[n seq] &rest expr]
+.. function:: m-for [[n seq] #* expr]
 
   macro for sequencing monadic actions
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
-  => (require [hymn.macros [m-for]])
+  => (import hymn.dsl [maybe-m])
+  => (require hymn.macros [m-for])
   => ;; with simple monad, e.g. maybe
   => (m-for [a (range 3)] (maybe-m.unit a))
   Just([0, 1, 2])
   => ;; with reader monad
-  => (import [hymn.types.reader [<-]])
+  => (import hymn.types.reader [<-])
   => (setv readers
   ...  (m-for [a (range 5)]
   ...    (print "create reader" a)
@@ -142,11 +146,11 @@ All do monad macros support :code:`:when` if the monad is of type
   create reader 3
   create reader 4
   => (.run readers [11 12 13 14 15 16])
-  [11, 12, 13, 14, 15]
+  [11 12 13 14 15
   => (.run readers "abcdefg")
-  ['a', 'b', 'c', 'd', 'e']
+  ["a" "b" "c" "d" "e"]
   => ;; with writer monad
-  => (import [hymn.types.writer [tell]])
+  => (import hymn.types.writer [tell])
   => (.execute (m-for [a (range 1 101)] (tell a)))
   5050
 
@@ -154,20 +158,21 @@ All do monad macros support :code:`:when` if the monad is of type
 
   conditional execution of monadic expressions
 
-.. function:: with-monad [monad &rest exprs]
+.. function:: with-monad [monad #* exprs]
 
   provide default function m-return as the unit of the monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [maybe-m]])
-  => (require [hymn.macros [m-when with-monad]])
+  => (import hymn.types.maybe [maybe-m])
+  => (require hymn.macros [m-when with-monad])
+  => (defn even? [x] (= 0 (% x 2)))
   => (with-monad maybe-m (m-when (even? 1) (m-return 42)))
   Just(None)
   => (with-monad maybe-m (m-when (even? 2) (m-return 42)))
   Just(42)
 
-.. function:: monad-comp [expr binding-forms &optional condition]
+.. function:: monad-comp [expr binding-forms [condition None]]
 
   different syntax for :code:`do-monad-return`, in the style of list/dict/set
   comprehensions, the :code:`condition` part is optional and can only be used
@@ -175,30 +180,31 @@ All do monad macros support :code:`:when` if the monad is of type
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just]])
-  => (require [hymn.macros [monad-comp]])
+  => (import hymn.types.maybe [Just])
+  => (require hymn.macros [monad-comp])
   => (monad-comp (+ a b) [a (Just 1) b (Just 2)])
   Just(3)
-  => (monad-comp (/ a b) [a (Just 1) b (Just 0)] (not (zero? b)))
+  => (monad-comp (/ a b) [a (Just 1) b (Just 0)] (not (= 0 b)))
   Nothing
-  => (import [hymn.types.list [list-m]])
+  => (import hymn.types.list [list-m])
   => (list (monad-comp (/ a b) [a (list-m [1 2]) b (list-m [4 8])]))
-  [0.25, 0.125, 0.5, 0.25]
-  => (list (monad-comp (/ a b) [a (list-m [1 2]) b (list-m [0 1])] (not (zero? b))))
-  [1.0, 2.0]
+  [0.25 0.125 0.5 0.25]
+  => (list (monad-comp (/ a b) [a (list-m [1 2]) b (list-m [0 1])] (not (= 0 b))))
+  [1.0 2.0]
 
 
-Tag Macros
-----------
+Reader Macros
+-------------
 
 .. function:: ^ [f]
 
-  :func:`lift` tag macro, :code:`#^ f` is expanded to :code:`(lift f)`
+  :func:`lift` reader macro, :code:`#^ f` is expanded to :code:`(lift f)`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing]])
-  => (require [hymn.macros [^]])
+  => (import hymn.dsl [Just Nothing])
+  => (require hymn.macros :readers [^])
+  => (import hy.pyops [+])
   => (#^ + (Just 1) (Just 2))
   Just(3)
   => (#^ + (Just 1) Nothing)
@@ -206,14 +212,14 @@ Tag Macros
 
 .. function:: = [value]
 
-  tag macro for :code:`m-return`, the :code:`unit` inside do-monad-return macros,
+  reader macro for :code:`m-return`, the :code:`unit` inside do-monad-return macros,
   :code:`#= v` is expanded to :code:`(m-return v)`
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just maybe-m]])
-  => (require [hymn.macros [= do-monad do-monad-with]])
+  => (import hymn.dsl [Just maybe-m])
+  => (require hymn.macros [do-monad do-monad-with] :readers [=])
   => (do-monad-with maybe-m [a #= 1 b #= 2] (+ a b))
   Just(3)
-  => (do-monad [a (Just 1)] #= (inc a))
+  => (do-monad [a (Just 1)] #= (+ a 1))
   Just(2)
