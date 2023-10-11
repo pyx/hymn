@@ -6,11 +6,12 @@
 ;; state monad example
 
 (import
-  [collections [Counter]]
-  [time [time]]
-  [hymn.dsl [get-state replicate set-state]])
+  collections [Counter]
+  itertools [islice]
+  time [time]
+  hymn.dsl [get-state replicate set-state])
 
-(require [hymn.macros [do-monad-return]])
+(require hymn.dsl [do-monad-return])
 
 ;; Knuth!
 (setv a 6364136223846793005
@@ -21,11 +22,11 @@
 (setv random
   (do-monad-return
     [seed get-state
-     _ (set-state (-> seed (* a) (+ c) (% m)))
+     _ (set-state (% (+ (* seed a) c) m))
      new-seed get-state]
     (/ new-seed m)))
 
-(setv random-point (do-monad-return [x random y random] (, x y)))
+(setv random-point (do-monad-return [x random y random] #(x y)))
 
 (defn points [seed]
   "stream of random points"
@@ -39,11 +40,13 @@
 (defn monte-carlo [number-of-points]
   "use monte carlo method to calculate value of pi"
   (setv
-    samples (take number-of-points (points (int (time))))
+    samples (islice (points (int (time))) number-of-points)
     result (Counter (gfor [x y] samples (>= 1.0 (+ (** x 2) (** y 2))))))
-  (-> result (get True) (/ number-of-points) (* 4)))
+  (* 4 (/ (get result True) number-of-points)))
 
-(defmain [&rest args]
-  (if (-> args len (!= 2))
-    (print "usage:" (first args) "number-of-points")
-    (print "the estimate for pi =" (-> args second int monte-carlo))))
+(when (= __name__ "__main__")
+  (import sys)
+  (setv args sys.argv)
+  (if (!= 2 (len args))
+    (print "usage:" (get args 0) "number-of-points")
+    (print "the estimate for pi =" (monte-carlo (int (get args 1))))))
