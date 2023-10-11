@@ -1,22 +1,59 @@
 The Maybe Monad
 ===============
 
-.. automodule:: hymn.types.maybe
-  :members:
-  :show-inheritance:
+.. module:: hymn.types.maybe
 
-.. autodata:: Nothing
-.. autodata:: zero
+.. class:: Maybe
+
+  the maybe monad
+
+  computation that may fail
+
+  .. method:: append(self, other)
+
+    the append operation of :class:`Maybe`
+
+  .. method:: bind(self, f)
+
+    the bind operation of :class:`Maybe`
+
+    apply function to the value if and only if this is a :class:`Just`.
+
+  .. method:: plus(self, other)
+
+  .. method:: from_maybe(self, default)
+
+    return the value contained in the :class:`Maybe`
+
+    if the :class:`Maybe` is :data:`Nothing`, it returns the default values.
+
+  .. method:: from_value(cls, value)
+    :classmethod:
+
+    wrap :code:`value` in a :class:`Maybe` monad
+
+    return a :class:`Just` if the value is evaluated as True.
+    :data:`Nothing` otherwise.
+
+.. class:: Just
+
+  :code:`Just` of the :class:`Maybe`
+
+.. class:: Nothing
+
+  the :class:`Maybe` that represents nothing, a singleton, like :code:`None`
 
 .. function:: from_maybe
-  :noindex:
 
   alias of :meth:`~Maybe.from_maybe`
 
 .. function:: to_maybe
-  :noindex:
 
   alias of :meth:`~Maybe.from_value`
+
+.. function:: is_nothing
+
+   return :code:`True` if :code:`m` is :data:`Nothing`
 
 
 Hy Specific API
@@ -26,31 +63,27 @@ Hy Specific API
 
   alias of :class:`Maybe`
 
-
-Tag Macro
-^^^^^^^^^
-
-.. function:: ? [f]
-
-  turn :code:`f` into monadic function with :func:`maybe`
-
-
-Functions
-^^^^^^^^^
-
 .. function:: <-maybe
 .. function:: from-maybe
 
-  alias of :func:`Maybe.from_maybe`
+  alias of :func:`from_maybe`
 
 .. function:: ->maybe
 .. function:: to-maybe
 
-  alias of :func:`Maybe.from_value`
+  alias of :func:`to_maybe`
 
 .. function:: nothing?
 
   alias of :func:`is_nothing`
+
+
+Reader Macro
+^^^^^^^^^^^^
+
+.. function:: ? [f]
+
+  turn :code:`f` into monadic function with :func:`maybe`
 
 
 Examples
@@ -65,7 +98,7 @@ greater than :data:`Nothing` in any case.
 
 .. code-block:: clojure
 
-  => (import [hymn.types.maybe [Just Nothing]])
+  => (import hymn.types.maybe [Just Nothing])
   => (> (Just 2) (Just 1))
   True
   => (= (Just 1) (Just 2))
@@ -101,7 +134,7 @@ Do Notation with :when
   => (import hymn.types.maybe [maybe-m])
   => (require hymn.macros [do-monad-with])
   => (defn safe-div [a b]
-  ...   (do-monad-with maybe-m [:when (not (zero? b))] (/ a b)))
+  ...   (do-monad-with maybe-m [:when (not (= 0 b))] (/ a b)))
   => (safe-div 1 2)
   Just(0.5)
   => (safe-div 1 0)
@@ -163,11 +196,12 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
 .. code-block:: clojure
 
   => (import hymn.types.maybe [maybe])
-  => (defn [maybe] add1 [n] (inc (int n)))
+  => (defn [maybe] add1 [n] (+ 1 (int n)))
   => (add1 "41")
   Just(42)
   => (add1 "nan")
   Nothing
+  => (import hy.pyops [/])
   => (setv safe-div (maybe /))
   => (safe-div 1 2)
   Just(0.5)
@@ -175,16 +209,17 @@ Use :func:`->maybe` to create a :class:`Maybe` from value
   Nothing
 
 
-Tag Macro
-^^^^^^^^^
+Reader Macro
+^^^^^^^^^^^^
 
 .. code-block:: clojure
 
-  => (require hymn.types.maybe [?])
+  => (require hymn.types.maybe :readers [?])
   => (#? int "42")
   Just(42)
   => (#? int "not a number")
   Nothing
+  => (import hy.pyops [/])
   => (setv safe-div #? /)
   => (safe-div 1 2)
   Just(0.5)
