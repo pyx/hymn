@@ -4,16 +4,15 @@
 "hymn.types.list - the list monad"
 
 (import
-  [itertools [chain]]
-  [hymn.types.monadplus [MonadPlus]]
-  [hymn.types.monoid [Monoid]]
-  [hymn.utils [CachedSequence]])
+  itertools [chain]
+  ..utils [CachedSequence]
+  .monadplus [MonadPlus]
+  .monoid [Monoid])
 
-(deftag ~ [seq]
-  (with-gensyms [List]
-    `(do (import [hymn.types.list [List :as ~List]]) (~List ~seq))))
+(defreader @ (setv seq (.parse-one-form &reader))
+  `(hy.M.hymn.types.list.List ~seq))
 
-(defclass _Zero [object]
+(defclass _Zero []
   "descriptor that returns an empty List"
   (defn __get__ [self instance cls] (cls [])))
 
@@ -39,27 +38,25 @@
     "the append operation of :class:`List`"
     ((type self) (chain self other)))
 
-  (with-decorator classmethod
-    (defn concat [cls list-of-lists]
-      "the concat operation of :class:`List`"
-      (cls (chain.from-iterable list-of-lists))))
+  (defn [classmethod] concat [cls list-of-lists]
+    "the concat operation of :class:`List`"
+    (cls (chain.from-iterable list-of-lists)))
 
   (defn plus [self other] "concatenate two lists" (.append self other))
 
-  (with-decorator classmethod
-    (defn unit [cls &rest values]
-      "the unit, create a :class:`List` from :code:`values`"
-      (cls values)))
+  (defn [classmethod] unit [cls #* values]
+    "the unit, create a :class:`List` from :code:`values`"
+    (cls values))
 
   (setv zero (_Zero)
         empty zero))
-
-;; alias
-(setv list-m List
-      unit List.unit
-      zero List.zero)
 
 (defn fmap [f iterable]
   ":code:`fmap` works like the builtin :code:`map`, but return a :class:`List`
   instead of :code:`list`"
   (list-m (map f iterable)))
+
+;; alias
+(setv list-m List)
+
+(export :objects [List list-m fmap])
