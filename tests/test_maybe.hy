@@ -5,26 +5,17 @@
 (import
   hymn.operations [sequence]
   hymn.types [maybe :as maybe-module]
-  hymn.types.maybe [maybe-m Just Nothing nothing? maybe]
-  hymn.utils [instance? none? zero?])
+  hymn.types.maybe [maybe-m Just Nothing nothing? maybe])
 
 (require
   hymn.types.maybe :readers [?]
   hymn.macros [do-monad-return])
 
-(defn test-tag-macro-maybe []
-  "maybe tag macro ? should wrap a function with decorator maybe"
+(defn test-reader-macro-maybe []
+  "maybe reader macro ? should wrap a function with decorator maybe"
   (setv maybe-int #? int)
-  (assert (instance? maybe-m (maybe-int 1)))
+  (assert (isinstance (maybe-int 1) maybe-m))
   (assert (= (maybe-int 1) (maybe-m.unit 1))))
-
-(defn test-module-level-unit []
-  "maybe module should have a working module level unit function"
-  (assert (instance? maybe-m (maybe-module.unit None))))
-
-(defn test-module-level-zero []
-  "maybe module should have a module level zero"
-  (assert (instance? maybe-m maybe-module.zero)))
 
 (defn test-module-level-from-maybe []
   "maybe module should have a module level from-maybe"
@@ -42,14 +33,13 @@
 
 (defn test-zero-is-nothing []
   "zero of maybe monad should be Nothing"
-  (assert (is maybe-module.zero Nothing))
   (assert (is maybe-m.zero Nothing)))
 
 (defn test-type []
   "Nothing and Just are of maybe monad"
-  (assert (instance? maybe-m Nothing))
-  (assert (instance? maybe-m (Just None)))
-  (assert (not (instance? Just Nothing))))
+  (assert (isinstance Nothing maybe-m))
+  (assert (isinstance (Just None) maybe-m))
+  (assert (not (isinstance Nothing Just))))
 
 (defn test-compare []
   "compare between maybe"
@@ -82,16 +72,16 @@
   (assert (is Nothing (maybe-m.from-value "")))
   (assert (is Nothing (maybe-m.from-value [])))
   (assert (is Nothing (maybe-m.from-value {})))
-  (assert (instance? Just (maybe-m.from-value 1)))
-  (assert (instance? Just (maybe-m.from-value (object))))
-  (assert (instance? Just (maybe-m.from-value [42]))))
+  (assert (isinstance (maybe-m.from-value 1) Just))
+  (assert (isinstance (maybe-m.from-value (object)) Just))
+  (assert (isinstance (maybe-m.from-value [42]) Just)))
 
 (defn test-from-maybe []
   "from-maybe should get the value from Just and return default otherwise"
   (assert (= 1 (.from-maybe (Just 1) None)))
-  (assert (none? (.from-maybe (Just None) 1)))
+  (assert (is None (.from-maybe (Just None) 1)))
   (assert (= 1 (.from-maybe Nothing 1)))
-  (assert (none? (.from-maybe Nothing None))))
+  (assert (is None (.from-maybe Nothing None))))
 
 (defn test-is-nothing []
   "nothing? testing for Nothing"
@@ -117,7 +107,7 @@
             (do-monad-return
               [a (Just 1)
                b (Just 0)
-              :when (not (zero? b))]
+              :when (not (= 0 b))]
               (/ a b)))))
 
 (defn test-maybe-monadplus []
