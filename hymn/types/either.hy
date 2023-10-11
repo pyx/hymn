@@ -5,13 +5,11 @@
 
 (import
   functools [wraps]
-  hymn.mixins [Ord]
-  hymn.types.monadplus [MonadPlus])
+  ..mixins [Ord]
+  .monadplus [MonadPlus])
 
 (defreader | (setv f (.parse-one-form &reader))
-  (with-gensyms [failsafe]
-    `(do (import [hymn.types.either [failsafe :as ~failsafe]])
-       (~failsafe ~f))))
+  `(hy.M.hymn.types.either.failsafe ~f))
 
 ;; NOTE:
 ;; Either itself is not MonadPlus or even Monad in haskell, only Either e is
@@ -27,7 +25,7 @@
   (defn __lt__ [self other]
     "left should always be less than right"
     (cond
-      (not (instance? (, Left Right) self))
+      (not (isinstance self #(Left Right)))
         (raise (TypeError "unorderable types:" (type self) (type other)))
       ;; same monad type, compare against the value inside
       (is (type self) (type other))
@@ -63,20 +61,13 @@
 (setv Either.unit Right
       Either.zero (Left "unknown error"))
 
-;; alias
-(setv either-m Either
-      unit Either.unit
-      zero Either.zero
-      ->either Either.from-value
-      to-either ->either)
-
 (defn left? [m]
   "return :code:`True` if :code:`m` is a :class:`Left`"
-  (instance? Left m))
+  (isinstance m Left))
 
 (defn right? [m]
   "return :code:`True` if :code:`m` is a :class:`Right`"
-  (instance? Right m))
+  (isinstance m Right))
 
 (defn either [handle-left handle-right m]
   "case analysis for :class:`Either`
@@ -91,9 +82,24 @@
 
 (defn failsafe [func]
   "decorator to turn func into monadic function of :class:`Either` monad"
-  (with-decorator (wraps func)
-    (fn [&rest args &kwargs kwargs]
-      (try
-        (Right (func #* args #** kwargs))
-        (except [e BaseException]
-          (Left e))))))
+  (defn [(wraps func)] wrapper [#* args #** kwargs]
+    (try
+      (Right (func #* args #** kwargs))
+      (except [e BaseException]
+        (Left e))))
+  wrapper)
+
+;; alias
+(setv either-m Either
+      ->either Either.from-value
+      to-either ->either
+      is-left left?
+      is-right right?)
+
+(export
+  :objects [either-m Either
+            ->either to-either
+            Left Right
+            left? right?
+            is-left is-right
+            either failsafe])
