@@ -1,19 +1,40 @@
 The Lazy Monad
 ==============
 
-.. automodule:: hymn.types.lazy
-  :members:
-  :show-inheritance:
+.. module:: hymn.types.lazy
 
-.. function:: unit
-  :noindex:
+.. class:: Lazy
 
-  alias of :meth:`Lazy.unit`
+  the lazy monad
 
-.. function:: evaluate
-  :noindex:
+  lazy computation as monad
 
-  alias of :meth:`Lazy.evaluate`
+
+  .. method:: bind(self, f)
+
+    the bind operator of :class:`Lazy`
+
+  .. method:: unit(cls, value)
+    :classmethod:
+
+    the unit of lazy monad
+
+  .. method:: evaluate(self)
+
+    evaluate the lazy monad
+
+  .. property:: evaluated
+
+    return :code:`True` if this computation is evaluated
+
+.. function:: force(m)
+
+  force the deferred computation :code:`m` if it is a :class:`Lazy`, act as
+  function :code:`identity` otherwise, return the result
+
+.. function:: is_lazy(m)
+
+  return :code:`True` if :code:`v` is a :class:`Lazy`
 
 
 Hy Specific API
@@ -23,22 +44,19 @@ Hy Specific API
 
   alias of :class:`Lazy`
 
+.. function:: lazy?
+
+  alias of :meth:`is_lazy`
+
 
 Macro
 ^^^^^
 
-.. function:: lazy [&rest exprs]
+.. function:: lazy [#* exprs]
 
   create a :class:`Lazy` from expressions, the expressions will not be
   evaluated until being forced by :func:`force` or :meth:`~Lazy.evaluate`
 
-
-Function
-^^^^^^^^
-
-.. function:: lazy?
-
-  alias of :func:`is_lazy`
 
 
 Examples
@@ -50,8 +68,8 @@ Do Notation
 
 .. code-block:: clojure
 
-  => (require [hymn.macros [do-monad-return]])
-  => (require [hymn.types.lazy [lazy]])
+  => (require hymn.macros [do-monad-return])
+  => (require hymn.types.lazy [lazy])
   => (setv two (do-monad-return [x (lazy (print "evaluate two") 2)] x))
   => two
   Lazy(_)
@@ -68,7 +86,7 @@ computation will not be evaluated until asked explicitly
 
 .. code-block:: clojure
 
-  => (require [hymn.types.lazy [lazy]])
+  => (require hymn.types.lazy [lazy])
   => (setv answer (lazy (print "the answer is ...") 42))
   => answer
   Lazy(_)
@@ -83,7 +101,7 @@ function
 
 .. code-block:: clojure
 
-  => (import [hymn.types.lazy [lazy-m]])
+  => (import hymn.types.lazy [lazy-m])
   => (setv a (lazy-m (fn [] (print "^o^") 42)))
   => (.evaluate a)
   ^o^
@@ -94,16 +112,17 @@ cached
 
 .. code-block:: clojure
 
-  => (require [hymn.types.lazy [lazy]])
+  => (require hymn.types.lazy [lazy])
   => (setv who (lazy (input "enter your name? ")))
   => who
   Lazy(_)
   => (.evaluate who)
   enter your name? Marvin
-  'Marvin'
+  "Marvin"
   => who
   Lazy('Marvin')
-  => (import [hymn.operations [lift]])
+  => (import hymn.operations [lift])
+  => (import hy.pyops [+])
   => (setv m+ (lift +))
   => (setv x (lazy (print "get x") 2))
   => x
@@ -123,8 +142,8 @@ Use :func:`force` to evaluate :class:`Lazy` as well as other values
 
 .. code-block:: clojure
 
-  => (import [hymn.types.lazy [force]])
-  => (require [hymn.types.lazy [lazy]])
+  => (import hymn.types.lazy [force])
+  => (require hymn.types.lazy [lazy])
   => (force (lazy (print "yes") 1))
   yes
   1
@@ -143,8 +162,8 @@ Use :func:`force` to evaluate :class:`Lazy` as well as other values
 
 .. code-block:: clojure
 
-  => (import [hymn.types.lazy [lazy?]])
-  => (require [hymn.types.lazy [lazy]])
+  => (import hymn.types.lazy [lazy?])
+  => (require hymn.types.lazy [lazy])
   => (lazy? 1)
   False
   => (lazy? (lazy 1))
