@@ -5,13 +5,14 @@
 
 ;; lazy monad example
 
-(import [hymn.dsl [force lift]])
+(import hymn.dsl [force lift]
+        hymn.utils [constantly])
 
-(require [hymn.types.lazy [lazy]])
+(require hymn.types.lazy [lazy])
 
 (setv depends (lift (constantly None)))
 
-(defmacro deftask [n &rest actions]
+(defmacro deftask [n #* actions]
   `(setv ~n
      (depends (lazy (print "(started" '~n))
               ~@actions
@@ -26,5 +27,5 @@
 (deftask g (depends b d))
 (deftask h (depends g e f))
 
-(defmain [&rest args]
+(when (= __name__ "__main__")
   (force h))
