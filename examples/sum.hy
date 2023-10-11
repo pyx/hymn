@@ -5,12 +5,14 @@
 
 ;; writer monad example
 
-(import [hymn.dsl [sequence tell]])
+(import hymn.dsl [sequence tell])
 
 (defn wicked-sum [numbers]
   (.execute (sequence (map tell numbers))))
 
-(defmain [&rest args]
-  (if (-> args len (= 1))
-    (print "usage:" (first args) "number1 number2 .. numberN")
-    (print "sum:" (->> args rest (map int) wicked-sum))))
+(when (= __name__ "__main__")
+  (import sys)
+  (setv [prog_name #* args] sys.argv)
+  (if (= 0 (len args))
+    (print "usage:" prog_name "number1 number2 .. numberN")
+    (print "sum:" (wicked-sum (map int args)))))
