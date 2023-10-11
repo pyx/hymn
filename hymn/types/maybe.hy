@@ -6,14 +6,12 @@
 (import
   contextlib [suppress]
   functools [partial wraps]
-  hymn.mixins [Ord]
-  hymn.types.monadplus [MonadPlus]
-  hymn.types.monoid [Monoid])
+  ..mixins [Ord]
+  .monadplus [MonadPlus]
+  .monoid [Monoid])
 
 (defreader ? (setv f (.parse-one-form &reader))
-  (require hyrule.macrotools [with-gensyms])
-  (with-gensyms [maybe]
-    `(do (import hymn.types.maybe [maybe :as ~maybe]) (~maybe ~f))))
+  `(hy.M.hymn.types.maybe.maybe ~f))
 
 (defclass Maybe [MonadPlus Monoid Ord]
   "the maybe monad
@@ -79,14 +77,6 @@
       Maybe.zero Nothing
       Maybe.empty Nothing)
 
-;; alias
-(setv maybe-m Maybe
-      zero Maybe.zero
-      from-maybe Maybe.from-maybe
-      <-maybe from-maybe
-      to-maybe Maybe.from-value
-      ->maybe to-maybe)
-
 (defn nothing? [m]
   "return :code:`True` if :code:`m` is :data:`Nothing`"
   (is m Nothing))
@@ -107,3 +97,18 @@
           (setv result Nothing))
         result)
       wrapper)))
+
+;; alias
+(setv maybe-m Maybe
+      from-maybe Maybe.from-maybe
+      <-maybe from-maybe
+      to-maybe Maybe.from-value
+      ->maybe to-maybe
+      is_nothing nothing?)
+
+(export
+  :objects [maybe-m Maybe
+            <-maybe from-maybe
+            ->maybe to-maybe
+            Just Nothing
+            nothing? maybe is_nothing])
