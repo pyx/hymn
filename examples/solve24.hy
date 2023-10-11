@@ -6,15 +6,16 @@
 ;; list and maybe monad example
 
 (import
-  [functools [partial]]
-  [itertools [permutations]])
+  functools [partial]
+  itertools [permutations]
+  hy.pyops [+ - * /])
 
-(require
-  [hymn.macros [do-monad do-monad-return]]
-  [hymn.types.list [~]]
-  [hymn.types.maybe [?]])
+(require hymn.dsl [do-monad do-monad-return] :readers [@ ?])
 
 (setv ops [+ - * /])
+
+(defn name [op]
+  (get (setx mapping {+ "+" - "-" * "*" / "/"}) op))
 
 (defmacro infix-repr [fmt]
   `(.format ~fmt :a a :b b :c c :d d :op1 (name op1)
@@ -26,24 +27,24 @@
 (defn template [numbers]
   (setv [a b c d] numbers)
   (do-monad
-    [op1 #~ ops
-     op2 #~ ops
-     op3 #~ ops]
+    [op1 #@ ops
+     op2 #@ ops
+     op3 #@ ops]
     ;; (, result infix-representation)
-    [(, (safe (op1 (op2 a b) (op3 c d)))
-        (infix-repr "({a} {op2} {b}) {op1} ({c} {op3} {d})"))
-     (, (safe (op1 a (op2 b (op3 c d))))
-        (infix-repr "{a} {op1} ({b} {op2} ({c} {op3} {d}))"))
-     (, (safe (op1 (op2 (op3 a b) c) d))
-        (infix-repr "(({a} {op3} {b}) {op2} {c}) {op1} {d}"))]))
+    [#((safe (op1 (op2 a b) (op3 c d)))
+       (infix-repr "({a} {op2} {b}) {op1} ({c} {op3} {d})"))
+     #((safe (op1 a (op2 b (op3 c d))))
+       (infix-repr "{a} {op1} ({b} {op2} ({c} {op3} {d}))"))
+     #((safe (op1 (op2 (op3 a b) c) d))
+       (infix-repr "(({a} {op3} {b}) {op2} {c}) {op1} {d}"))]))
 
 (defn combinations [numbers]
   (do-monad-return
     [:let [seemed (set)]
-     [a b c d] #~ (permutations numbers 4)
-     :when (not-in (, a b c d) seemed)]
+     [a b c d] #@ (permutations numbers 4)
+     :when (not-in #(a b c d) seemed)]
     (do
-      (.add seemed (, a b c d))
+      (.add seemed #(a b c d))
       [a b c d])))
 
 ;; In python, 8 / (3 - (8 / 3)) = 23.99999999999999, it should be 24 in fact,
@@ -56,7 +57,9 @@
      :when (>> result (partial close-enough 24))]
     infix-repr))
 
-(defmain [&rest args]
-  (if (-> args len (!= 5))
-    (print "usage:" (first args) "number1 number2 number3 number4")
-    (->> args rest (map int) solve (.join "\n") print)))
+(when (= __name__ "__main__")
+  (import sys)
+  (setv [prog_name #* args] sys.argv)
+  (if (!= 4 (len args))
+    (print "usage:" prog_name "number1 number2 number3 number4")
+    (print (.join "\n" (solve (map int args))))))
