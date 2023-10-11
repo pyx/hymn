@@ -2,9 +2,10 @@
 ;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
 ;; License: BSD New, see LICENSE for details.
 
-(import
-  [hymn.types [identity :as identity-module]])
+(import hymn.types.identity [identity-m])
 
-(defn test-module-level-unit []
-  "identity module should have a working module level unit function"
-  (assert (instance? identity-module.Identity (identity-module.unit None))))
+(defn test-ord-mixin []
+  "identity should be comparable, with mixin Ord"
+  (assert (< (identity-m.unit 98) (identity-m.unit 731)))
+  (assert (!= (identity-m.unit None) (identity-m.unit "")))
+  (assert (= (identity-m.unit False) (identity-m.unit False))))
