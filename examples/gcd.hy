@@ -5,12 +5,12 @@
 
 ;; writer monad example
 
-(import [hymn.dsl [tell]])
+(import hymn.dsl [tell])
 
-(require [hymn.macros [do-monad do-monad-return]])
+(require hymn.dsl [do-monad do-monad-return])
 
 (defn gcd [a b]
-  (if (zero? b)
+  (if (= 0 b)
     (do-monad-return
       [_ (tell (.format "the result is: {}\n" (abs a)))]
       (abs a))
@@ -18,10 +18,12 @@
       [_ (tell (.format "{} mod {} = {}\n" a b (% a b)))]
       (gcd b (% a b)))))
 
-(defmain [&rest args]
-  (if (-> args len (!= 3))
-    (print "usage:" (first args) "number1 number2")
+(when (= __name__ "__main__")
+  (import sys)
+  (setv [prog_name #* args] sys.argv)
+  (if (!= 2 (len args))
+    (print "usage:" prog_name "number1 number2")
     (do
-      (setv a (int (get args 1)) b (int (get args 2)))
+      (setv [a b] args)
       (print "calculating the greatest common divisor of" a "and" b)
-      (print (.execute (gcd a b))))))
+      (print (.execute (gcd (int a) (int b)))))))
