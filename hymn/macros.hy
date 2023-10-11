@@ -5,19 +5,13 @@
 
 (import
   functools [reduce]
-  hymn.utils [thread-first thread-last thread-bindings odd?])
+  .utils [repeatedly thread-first thread-last thread-bindings])
 
-(require
-  hyrule.argmove [->]
-  hyrule.control [unless]
-  hyrule.macrotools [with-gensyms])
-
-;; lift tag macro, e.g. #^ + => (lift +)
+;; lift reader macro, e.g. #^ + => (lift +)
 (defreader ^ (setv f (.parse-one-form &reader))
-  (with-gensyms [lift]
-    `(do (import [hymn.operations [lift :as ~lift]]) (~lift ~f))))
+  `(hy.M.hymn.operations.lift ~f))
 
-;; monad return tag macro, replaced by 'm-return, used in do-monad,
+;; monad return reader macro, replaced by 'm-return, used in do-monad,
 ;; e.g.
 ;; (do-monad [a (Just 1) b #= (inc a)] #= [a b])
 ;; is equivalent to
@@ -26,26 +20,28 @@
 
 (defmacro do-monad [binding-forms expr]
   "macro for sequencing monadic computations, a.k.a do notation in haskell"
-  (when (odd? (len binding-forms))
+  (when (= 1 (% (len binding-forms) 2))
     (macro-error None "do-monad binding forms must come in pairs"))
   (setv iterator (iter binding-forms)
-        bindings (-> (zip iterator iterator) list reversed list))
-  (unless (len bindings)
+        bindings (list (reversed (list (zip iterator iterator)))))
+  (when (not (len bindings))
     (macro-error None "do-monad must have at least one binding form"))
   (defn bind-action [mexpr actions]
     (setv [binding expr] actions)
     (cond
       (= binding :when) `(if ~expr ~mexpr (. (m-return None) zero))
       (= binding :let) `(do (setv ~@expr) ~mexpr)
-      True (with-gensyms [monad m]
-        `(do
-           (setv ~monad ~expr)
-           (>> ~monad (fn [~m [m-return (. ~monad unit)]]
-                        ;; function arguments cannot be unpacked inline, use
-                        ;; setv here in case the binding contains structure,
-                        ;; e.g [a b]
-                        (setv ~binding ~m)
-                        ~mexpr))))))
+      True (let [monad (hy.gensym)
+                 m (hy.gensym)]
+             `(do
+                (setv ~monad ~expr)
+                (>> ~monad
+                    (fn [~m [m-return (. ~monad unit)]]
+                      ;; function arguments cannot be unpacked inline, use
+                      ;; setv here in case the binding contains structure,
+                      ;; e.g [a b]
+                      (setv ~binding ~m)
+                      ~mexpr))))))
   (reduce bind-action bindings expr))
 
 (defmacro do-monad-return [binding-forms expr]
@@ -59,28 +55,28 @@
      (hymn.macros.with-monad ~monad
        (hymn.macros.do-monad-return ~binding-forms ~expr))))
 
-(defmacro monad-> [init-value &rest actions]
+(defmacro monad-> [init-value #* actions]
   "threading macro for monad"
-  (setv bindings (list (thread-bindings thread-first init-value actions)))
+  (setv
+    [#* bindings e] (list (thread-bindings thread-first init-value actions)))
   `(do (require hymn.macros)
     (hymn.macros.do-monad
-      [~@(butlast bindings)]
-      ~(last bindings))))
+      [~@bindings]
+      ~e)))
 
-(defmacro monad->> [init-value &rest actions]
+(defmacro monad->> [init-value #* actions]
   "threading tail macro for monad"
-  (setv bindings (list (thread-bindings thread-last init-value actions)))
+  (setv
+    [#* bindings e] (list (thread-bindings thread-last init-value actions)))
   `(do (require hymn.macros)
      (hymn.macros.do-monad
-       [~@(butlast bindings)]
-       ~(last bindings))))
+       [~@bindings]
+       ~e)))
 
-(defmacro m-for [forms &rest mexpr]
+(defmacro m-for [forms #* mexpr]
   "macro for sequencing monadic actions"
   (setv [n seq] forms)
-  (with-gensyms [m-map]
-    `(do (import [hymn.operations [m-map :as ~m-map]])
-       (~m-map (fn [~n] ~@mexpr) ~seq))))
+  `(hy.M.hymn.operations.m-map (fn [~n] ~@mexpr) ~seq))
 
 (defmacro m-when [test mexpr]
   "conditional execution of monadic expressions"
@@ -88,10 +84,17 @@
 
 (defmacro monad-comp [expr bindings [condition None]]
   "different syntax for do notation"
-  (setv guard (if (none? condition) `() `(:when ~condition)))
+  (setv guard (if (is None condition) `() `(:when ~condition)))
   `(do (require hymn.macros)
      (hymn.macros.do-monad-return ~(+ bindings guard) ~expr)))
 
-(defmacro with-monad [monad &rest exprs]
+(defmacro with-monad [monad #* exprs]
   "provide default function m-return as the unit of the monad"
   `(do (setv m-return (. ~monad unit)) ~@exprs))
+
+(export
+  :macros [do-monad do-monad-return do-monad-with
+           monad-> monad->>
+           m-for m-when
+           monad-comp
+           with-monad])
