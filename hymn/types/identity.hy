@@ -4,13 +4,14 @@
 "hymn.types.identity - the identity monad"
 
 (import
-  hymn.mixins [Ord]
-  hymn.types.monad [Monad])
+  ..mixins [Ord]
+  .monad [Monad])
 
 (defclass Identity [Monad Ord]
   "the identity monad"
   (defn bind [self f] (f self.value)))
 
 ;; alias
-(setv identity-m Identity
-      unit Identity.unit)
+(setv identity-m Identity)
+
+(export :objects [identity-m Identity])
