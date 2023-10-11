@@ -1,35 +1,73 @@
 The State Monad
 ===============
 
-.. automodule:: hymn.types.state
-  :members: State, state_m, lookup, gets, modify, set_state, set_value,
-            set_values, update, update_value
-  :show-inheritance:
+.. module:: hymn.types.state
 
-.. function:: unit
+.. class:: State
 
-  alias of :meth:`State.unit`
+  the state monad
 
-.. function:: evaluate
+  computation with a shared state
 
-  alias of :meth:`State.evaluate`
+  .. method:: bind(self, f)
 
-.. function:: execute
+    the bind operation of :class:`State`
 
-  alias of :meth:`State.execute`
+    use the final state of this computation as the initial state of the
+    second"
 
-.. function:: run
+  .. method:: unit(cls, a)
+    :classmethod:
 
-  alias of :meth:`State.run`
+    the unit of state monad
 
-.. data:: get_state
+  .. method:: evaluate(self, s)
+
+    evaluate state monad with initial state and return the result
+
+  .. method:: execute(self, s)
+
+    execute state monad with initial state, return the final state
+
+  .. method:: run(self, s)
+
+    evaluate state monad with initial state, return result and state
+
+.. function:: get_state
 
   return the current state
 
+.. function:: lookup(key)
+
+  return a monadic function that lookup the vaule with key in the state
+
 .. function:: gets(f)
-  :noindex:
 
   gets specific component of the state, using a projection function :code:`f`
+
+.. function:: modify(f)
+
+  maps the current state with `f` to a new state inside a state monad
+
+.. function:: set_state(s)
+
+  replace the current state and return the previous one
+
+.. function:: set_value(key, value)
+
+  return a monadic function that set the vaule of key in the state
+
+.. function:: set_values(**values)
+
+   return a monadic function that set the vaules of keys in the state
+
+.. function:: update(key, f)
+
+  return a monadic function that update the vaule by f with key in the state
+
+.. function:: update_value(key, value)
+
+  return a monadic function that update the vaule with key in the state
 
 
 Hy Specific API
@@ -38,10 +76,6 @@ Hy Specific API
 .. class:: state-m
 
   alias of :class:`State`
-
-
-Functions
-^^^^^^^^^
 
 .. function:: <-
 
@@ -82,7 +116,7 @@ Do Notation
   => (import hymn.types.state [gets])
   => (require hymn.macros [do-monad-return])
   => (.run (do-monad-return [a (gets (fn [x] (get x 0)))] a) [1 2 3])
-  (1, [1, 2, 3])
+  #(1 [1 2 3])
 
 
 Operations
@@ -95,9 +129,9 @@ Use :func:`get-state` to fetch the shared state, :code:`<-state` is an alias of
 
   => (import hymn.types.state [get-state <-state])
   => (.run get-state [1 2 3])
-  ([1, 2, 3], [1, 2, 3])
+  #([1 2 3] [1 2 3])
   => (.run <-state [1 2 3])
-  ([1, 2, 3], [1, 2, 3])
+  #([1 2 3] [1 2 3])
 
 Use :func:`lookup` to get the value of key in the shared state, :code:`<-` is
 an alias of :func:`lookup`
@@ -106,13 +140,13 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [lookup <-])
   => (.run (lookup 1) [1 2 3])
-  (2, [1, 2, 3])
+  #(2 [1 2 3])
   => (.evaluate (lookup 1) [1 2 3])
   2
   => (.evaluate (lookup 'a) {'a 1 'b 2})
   1
   => (.run (<- 1) [1 2 3])
-  (2, [1, 2, 3])
+  #(2 [1 2 3])
   => (.evaluate (<- 1) [1 2 3])
   2
   => (.evaluate (<- 'a) {'a 1 'b 2})
@@ -124,27 +158,25 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [gets])
   => (.run (gets (fn [x] (get x 0))) [1 2 3])
-  (1, [1, 2, 3])
+  #(1 [1 2 3])
   => (.run (gets (fn [x] (get x 1))) [1 2 3])
-  (2, [1, 2, 3])
+  #(2 [1 2 3])
   => (.run (gets len) [1 2 3])
-  (3, [1, 2, 3])
+  #(3 [1 2 3])
 
 :func:`modify` changes the current state with a function
 
 .. code-block:: clojure
 
-  => (import
-        hymn.types.state [modify]
-        hyrule.misc [inc])
-  => (.run (modify inc) 41)
-  (41, 42)
-  => (.evaluate (modify inc) 41)
+  => (import hymn.types.state [modify])
+  => (.run (modify (fn [x] (+ x 1))) 41)
+  #(41 42)
+  => (.evaluate (modify (fn [x] (+ x 1))) 41)
   41
-  => (.execute (modify inc) 41)
+  => (.execute (modify (fn [x] (+ x 1))) 41)
   42
   => (.run (modify str) 42)
-  (42, '42')
+  #(42 "42")
 
 :func:`set-state` replaces the current state and returns the previous one,
 :data:`state<-` is an alias of :func:`set-state`
@@ -153,9 +185,9 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [set-state state<-])
   => (.run (set-state 42) 1)
-  (1, 42)
+  #(1 42)
   => (.run (state<- 42) 1)
-  (1, 42)
+  #(1 42)
 
 :func:`set-value` sets the value in the state with the key
 
@@ -163,7 +195,7 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [set-value])
   => (.run (set-value 2 42) [1 2 3])
-  ([1, 2, 3], [1, 2, 42])
+  #([1 2 3] [1 2 42])
 
 :func:`set-values` sets multiple values at once
 
@@ -171,17 +203,15 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [set-values])
   => (.run (set-values :a 1 :b 2) {})
-  ({}, {'a': 1, 'b': 2})
+  #({} {"a" 1  "b" 2})
 
 :func:`update` changes the value with the key by applying a function to it
 
 .. code-block:: clojure
 
-  => (import
-        hymn.types.state [update]
-        hyrule.misc [inc])
-  => (.run (update 0 inc) [0 1 2])
-  (0, [1, 1, 2])
+  => (import hymn.types.state [update])
+  => (.run (update 0 (fn [x] (+ x 1))) [0 1 2])
+  #(0 [1 1 2])
 
 :func:`update-value` sets the value in the state with the key
 
@@ -189,4 +219,4 @@ an alias of :func:`lookup`
 
   => (import hymn.types.state [update-value])
   => (.run (update-value 0 42) [0 1 2])
-  (0, [42, 1, 2])
+  #(0 [42 1 2])
