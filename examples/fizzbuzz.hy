@@ -6,15 +6,17 @@
 ;; maybe monad example
 ;; The fizzbuzz test, in the style inspired by c_wraith on Freenode #haskell
 
-(import [hymn.dsl [<> from-maybe maybe-m]])
+(import
+  itertools [chain cycle]
+  hymn.dsl [<> from-maybe maybe-m])
 
-(require [hymn.macros [do-monad-with]])
+(require hymn.dsl [do-monad-with])
 
 (defn fizzbuzz [i]
   (from-maybe
     (<>
-      (do-monad-with maybe-m [:when (zero? (% i 3))] "fizz")
-      (do-monad-with maybe-m [:when (zero? (% i 5))] "buzz"))
+      (do-monad-with maybe-m [:when (= 0 (% i 3))] "fizz")
+      (do-monad-with maybe-m [:when (= 0 (% i 5))] "buzz"))
     (str i)))
 
 ;; using monoid operation, it is easy to add new case, just add one more line
@@ -22,15 +24,20 @@
 (defn fizzbuzzbazz [i]
   (from-maybe
     (<>
-      (do-monad-with maybe-m [:when (zero? (% i 3))] "fizz")
-      (do-monad-with maybe-m [:when (zero? (% i 5))] "buzz")
-      (do-monad-with maybe-m [:when (zero? (% i 7))] "bazz"))
+      (do-monad-with maybe-m [:when (= 0 (% i 3))] "fizz")
+      (do-monad-with maybe-m [:when (= 0 (% i 5))] "buzz")
+      (do-monad-with maybe-m [:when (= 0 (% i 7))] "bazz"))
     (str i)))
+
+(defn interleave [#* ss]
+  (chain.from-iterable (zip #* ss)))
 
 (defn format [seq]
   (.join "" (interleave seq (cycle "\t\t\t\t\n"))))
 
-(defmain [&rest args]
-  (if (-> args len (= 1))
-    (print "usage:" (first args) "up-to-number")
-    (print (->> args second int inc (range 1) (map fizzbuzz) format))))
+(when (= __name__ "__main__")
+  (import sys)
+  (setv [prog_name #* args] sys.argv)
+  (if (!= 1 (len args))
+    (print "usage:" prog_name "up-to-number")
+    (print (format (map fizzbuzz (range 1 (+ (int (get args 0)) 1)))))))
