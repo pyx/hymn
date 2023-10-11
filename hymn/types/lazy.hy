@@ -4,56 +4,57 @@
 "hymn.types.lazy - the lazy monad"
 
 (import
-  [hymn.types.monad [Monad]])
+  ..utils [constantly]
+  .monad [Monad])
 
-(defmacro lazy [&rest exprs]
+(defmacro lazy [#* exprs]
   "create a :class:`Lazy` from expressions"
-  (with-gensyms [lazy-m]
-    `(do
-       (import [hymn.types.lazy [lazy-m :as ~lazy-m]])
-       (~lazy-m (fn [] ~@exprs)))))
+  `(hy.M.hymn.types.lazy.lazy-m (fn [] ~@exprs)))
 
 (defclass Lazy [Monad]
   "the lazy monad
 
   lazy computation as monad"
   (defn __init__ [self value]
-    (unless (callable value)
+    (when (not (callable value))
       (raise (TypeError (.format "{} object is not callable" value))))
-    (setv self.value (, False value)))
+    (setv self.value #(False value)))
 
   (defn __repr__ [self]
     (.format "{}({})"
-             (name (type self))
-             (if self.evaluated (repr (second self.value)) '_)))
+             (. (type self) __name__)
+             (if self.evaluated (repr (get self.value 1)) "_")))
   (defn bind [self f]
     "the bind operator of :class:`Lazy`"
     ((type self) (fn [] (.evaluate (f (.evaluate self))))))
 
-  (with-decorator classmethod
-    (defn unit [cls value] "the unit of lazy monad" (cls (constantly value))))
+  (defn [classmethod] unit [cls value]
+    "the unit of lazy monad"
+    (cls (constantly value)))
 
   (defn evaluate [self]
     "evaluate the lazy monad"
-    (unless self.evaluated
-     (setv self.value (, True ((second self.value)))))
-    (second self.value))
+    (when (not self.evaluated)
+     (setv self.value #(True ((get self.value 1)))))
+    (get self.value 1))
 
-  (with-decorator property
-    (defn evaluated [self]
-      "return :code:`True` if this computation is evaluated"
-      (first self.value))))
-
-;; alias
-(setv lazy-m Lazy
-      unit Lazy.unit
-      evaluate Lazy.evaluate)
+  (defn [property] evaluated [self]
+    "return :code:`True` if this computation is evaluated"
+    (get self.value 0)))
 
 (defn force [m]
   "force the deferred computation :code:`m` if it is a :class:`Lazy`, act as
   function :code:`identity` otherwise, return the result"
-  (if (instance? Lazy m) (.evaluate m) m))
+  (if (lazy? m) (.evaluate m) m))
 
 (defn lazy? [v]
   "return :code:`True` if :code:`v` is a :class:`Lazy`"
-  (instance? Lazy v))
+  (isinstance v Lazy))
+
+;; alias
+(setv lazy-m Lazy
+      is_lazy lazy?)
+
+(export
+  :objects [Lazy lazy-m force lazy? is_lazy]
+  :macros [lazy])
