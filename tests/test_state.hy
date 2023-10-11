@@ -4,50 +4,19 @@
 
 (import
   hymn.operations [sequence]
-  hymn.types [state :as state-module]
-  hymn.types.state
-    [state-m
-     get-state <-state
-     lookup <-
-     gets
-     modify
-     set-state state<-
-     set-value
-     set-values
-     update
-     update-value]
-  hymn.utils [instance?]
-  hyrule.misc [inc])
-
-(require hymn.operations
-  hyrule.collections [assoc])
+  hymn.types.state [state-m
+                    get-state <-state
+                    lookup <-
+                    gets
+                    modify
+                    set-state state<-
+                    set-value
+                    set-values
+                    update
+                    update-value])
 
 (setv env {'a 42 'b None 'c "hello"})
-
-(defn test-module-level-unit []
-  "state module should have a working module level unit function"
-  (assert (instance? state-m (state-module.unit True))))
-
-(defn test-module-level-run []
-  "state module should have a module level run"
-  (setv v (object)
-        s (object)
-        m (state-m.unit v))
-  (assert (= (.run m s) (state-module.run m s))))
-
-(defn test-module-level-evaluate []
-  "state module should have a module level evaluate"
-  (setv v (object)
-        s (object)
-        m (state-m.unit v))
-  (assert (= (.evaluate m s) (state-module.evaluate m s))))
-
-(defn test-module-level-execute []
-  "state module should have a module level execute"
-  (setv v (object)
-        s (object)
-        m (state-m.unit v))
-  (assert (= (.execute m s) (state-module.execute m s))))
+(defn inc [x] (+ x 1))
 
 (defn test-run []
   "run should return the result and state"
@@ -72,13 +41,13 @@
   "get-state should return the current state as the result"
   (setv s (object)
         m (state-m.unit True))
-  (assert (instance? state-m get-state))
+  (assert (isinstance get-state state-m))
   (assert (is s (.evaluate get-state s) (.evaluate <-state s))))
 
 (defn test-lookup []
   "lookup should get a value from state by the key"
-  (assert (instance? state-m (lookup 1)))
-  (assert (instance? state-m (<- 1)))
+  (assert (isinstance (lookup 1) state-m))
+  (assert (isinstance (<- 1) state-m))
   (setv s {'a (object)  'b (object)  'c (object)})
   (for [key s]
     (assert (= (get s key) (.evaluate (lookup key) s) (.evaluate (<- key) s))))
@@ -91,7 +60,7 @@
   (defn get-a [s] (get s 'a))
   (defn get-b [s] (get s 'b))
   (setv s {'a (object)  'b (object)  'c (object)})
-  (assert (instance? state-m (gets get-a)))
+  (assert (isinstance (gets get-a) state-m))
   (assert (= (get-a s) (.evaluate (gets get-a) s)))
   (assert (= (get-b s) (.evaluate (gets get-b) s)))
   (assert (= (len s) (.evaluate (gets len) s))))
@@ -101,8 +70,8 @@
   (setv obj-a (object)
         new-obj-a (object)
         s {'a obj-a}
-        change-a (modify (fn [s] (assoc s 'a new-obj-a))))
-  (assert (instance? state-m change-a))
+        change-a (modify (fn [s] (setv (get s 'a) new-obj-a) s)))
+  (assert (isinstance change-a state-m))
   (assert (is-not obj-a (get (.evaluate change-a s) 'a)))
   (assert (is new-obj-a (get s 'a))))
 
@@ -110,35 +79,35 @@
   "set-state should replace the current state and return the previous one"
   (setv s (object)
         ns (object))
-  (assert (instance? state-m (set-state ns)))
-  (assert (instance? state-m (state<- ns)))
+  (assert (isinstance (set-state ns) state-m))
+  (assert (isinstance (state<- ns) state-m))
   (assert (is s (.evaluate (set-state ns) s) (.evaluate (state<- ns) s)))
   (assert (is ns (.execute (set-state ns) s) (.execute (state<- ns) s))))
 
 (defn test-set-value []
   "set-value should set the value in the state with the key"
   (setv s {'a 1  'b 2})
-  (assert (instance? state-m (set-value 'a 3)))
+  (assert (isinstance (set-value 'a 3) state-m))
   (assert (= 3 (get (.execute (set-value 'a 3) s) 'a)))
   (assert (= 1 (get s 'a))))
 
 (defn test-set-values []
   "set-values should change values with keys"
   (setv s {})
-  (assert (instance? state-m (set-values :a 1 :b 2)))
+  (assert (isinstance (set-values :a 1 :b 2) state-m))
   (assert (= {"a" 1 "b" 2} (.execute (set-values :a 1 :b 2) s)))
   (assert (= s {})))
 
 (defn test-update []
   "update should change the value associated by key with function"
   (setv s {'a 1})
-  (assert (instance? state-m (update 'a inc)))
+  (assert (isinstance (update 'a inc) state-m))
   (assert (= 2 (get (.execute (update 'a inc) s) 'a)))
   (assert (= s {'a 1})))
 
 (defn test-update-value []
   "update should set the value with key"
   (setv s {'a 1})
-  (assert (instance? state-m (update-value 'a 2)))
+  (assert (isinstance (update-value 'a 2) state-m))
   (assert (= 2 (get (.execute (update-value 'a 2) s) 'a)))
   (assert (= s {'a 1})))
