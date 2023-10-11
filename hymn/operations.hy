@@ -5,16 +5,17 @@
 
 (import
   functools [reduce]
-  hymn.types.identity [identity-m]
-  hymn.utils [empty?]
-  hyrule.iterables [rest])
+  itertools [islice repeat]
+  hy.pyops [>>]
+  .types.identity [identity-m])
 
-(require
-  hymn.macros [do-monad-return]
-  hyrule.anaphoric [ap-if]
-  hyrule.argmove [doto])
+(require .macros [do-monad-return])
 
-(defn k-compose [&rest monadic-funcs]
+(defn first [c] (get c 0))
+(defn second [c] (get c 1))
+(defn empty? [coll] (= (len coll) 0))
+
+(defn k-compose [#* monadic-funcs]
   "right-to-left Kleisli composition of monads."
   (>=> #* (reversed monadic-funcs)))
 (setv <=< k-compose)
@@ -22,9 +23,8 @@
 (defn k-pipe [#* monadic-funcs]
   "left-to-right Kleisli composition of monads."
   (fn [#* args #** kwargs]
-    (reduce >>
-            (rest monadic-funcs)
-            ((get monadic-funcs 0) #* args #** kwargs))))
+    (setv [mf #* funcs] monadic-funcs)
+    (reduce >> funcs (mf #* args #** kwargs))))
 (setv >=> k-pipe)
 
 (defn lift [f]
@@ -40,9 +40,9 @@
       True (do
         (setv
           keys/values (list (.items kwargs))
-          keys (list (map next keys/values))
+          keys (list (map first keys/values))
           values (sequence (map second keys/values)))
-        (if-not (empty? args)
+        (if (not (empty? args))
           (do-monad-return
             [unwrapped-kwargs values
              unwrapped-args (sequence args)]
@@ -58,7 +58,7 @@
 
 (defn replicate [n m]
   "perform the monadic action n times, gathering the results"
-  (sequence (take n (repeat m))))
+  (sequence (islice (repeat m) n)))
 
 (defn sequence [m-values]
   "evaluate each action in the sequence, and collect the results"
@@ -67,8 +67,9 @@
     (do-monad-return
       [value m
        value-list mlist]
-      ;; NOTE: cannot use cons as cons will turn None into "None"
-      (doto [value] (.extend value-list))))
-  (ap-if (list m-values)
+      (do (.extend (setx res [value]) value-list) res)))
+  (if (setx it (list m-values))
     (reduce collect (reversed it) (.unit (get it 0) []))
     (identity-m.unit [])))
+
+(export :objects [k-compose <=< k-pipe >=> lift m-map replicate sequence])
