@@ -3,14 +3,7 @@
 # License: BSD New, see LICENSE for details.
 """Hy Monad Notation - a monad library for Hy"""
 
-__version__ = (1, 0)
-__release__ = '.dev0'
+__version__ = "1.0.0"
 
-VERSION = '%d.%d' % __version__ + __release__
-
-try:
-    # make .hy file importable
-    import hy  # noqa
-except ImportError:
-    # ignore import error, need this for setup.py: import .version
-    pass
+# make .hy file importable
+import hy  # noqa

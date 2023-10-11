@@ -1,0 +1,53 @@
+[project]
+name = "hymn"
+description = "Hy Monad Notation - a monad library for Hy"
+authors = [
+    {name = "Philip Xu", email = "pyx@xrefactor.com"},
+]
+dependencies = [
+    "hy>=0.27.0",
+]
+dynamic = ["version"]
+requires-python = ">=3.8,<3.13"
+readme = "README.rst"
+license = {text = "BSD-New"}
+keywords = ["hy lisp monad functional programming"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Lisp",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/pyx/hymn/"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+doc = [
+    "Sphinx",
+]
+lint = [
+    "flake8",
+]
+test = [
+    "pytest",
+]
+
+[tool.pdm.scripts]
+doc_html = {shell = "cd docs; make html; cd .."}
+doc_pdf = {shell = "cd docs; make latexpdf; cd .."}
+docs = {composite = ["doc_html", "doc_pdf"]}
+lint = "flake8 hymn tests"
+test = "pytest"
+
+[tool.pdm.version]
+source = "file"
+path = "hymn/__init__.py"
