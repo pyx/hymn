@@ -1,6 +1,8 @@
 Mixin Class
 ===========
 
-.. automodule:: hymn.mixins
-  :members:
-  :show-inheritance:
+.. module:: hymn.mixins
+
+.. class:: Ord
+
+   mixin class that implements rich comparison ordering methods
