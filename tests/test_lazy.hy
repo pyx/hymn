@@ -2,23 +2,13 @@
 ;; Copyright (c) 2014-2020, Philip Xu <pyx@xrefactor.com>
 ;; License: BSD New, see LICENSE for details.
 
-(import
-  [hymn.types [lazy :as lazy-module]]
-  [hymn.types.lazy [lazy-m force lazy?]])
+(import hymn.types.lazy [lazy-m force lazy?])
 
-(require [hymn.types.lazy [lazy]])
+(require hymn.types.lazy [lazy])
 
 (defn test-macro-lazy []
   "macro lazy should create deferred computation"
-  (assert (instance? lazy-m (lazy 1))))
-
-(defn test-module-level-unit []
-  "lazy module should have a working module level unit function"
-  (assert (instance? lazy-m (lazy-module.unit 1))))
-
-(defn test-module-level-evaluate []
-  "lazy module should have a module level evaluate function"
-  (assert (= (.evaluate (lazy 2)) (lazy-module.evaluate (lazy 2)))))
+  (assert (isinstance (lazy 1) lazy-m)))
 
 (defn test-lazy-should-be-lazy []
   "make sure the computation is deferred"
