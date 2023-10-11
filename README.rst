@@ -15,55 +15,56 @@ The continuation monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.continuation [cont-m call-cc]])
+  => (import hymn.dsl [cont-m call/cc])
   => ;; computations in continuation passing style
   => (defn double [x] (cont-m.unit (* x 2)))
   => (setv length (cont-m.monadic len))
   => ;; chain with bind
   => (.run (>> (cont-m.unit [1 2 3]) length double))
   6
-  => (defn square [n] (call-cc (fn [k] (k (** n 2)))))
+  => (defn square [n] (call/cc (fn [k] (k (** n 2)))))
   => (.run (square 12))
   144
-  => (.run (square 12) inc)
+  => (.run (square 12) (fn [x] (+ x 1)))
   145
   => (.run (square 12) str)
-  '144'
-  => (require [hymn.macros [do-monad-return]])
+  "144"
+  => (require hymn.dsl [do-monad-return])
   => (.run (do-monad-return [sqr (square 42)] (.format "answer^2 = {}" sqr)))
-  'answer^2 = 1764'
+  "answer^2 = 1764"
 
 The either monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.either [Left Right either failsafe]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [Left Right either failsafe])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with either monad
   => (do-monad-return [a (Right 1) b (Right 2)] (/ a b))
   Right(0.5)
   => (do-monad-return [a (Right 1) b (Left NaN)] (/ a b))
   Left(nan)
   => ;; failsafe is a function decorator that wraps return value into either
+  => (import hy.pyops [/])
   => (setv safe-div (failsafe /))
   => ;; returns Right if nothing wrong
   => (safe-div 4 2)
   Right(2.0)
   => ;; returns Left when bad thing happened, like exception being thrown
   => (safe-div 1 0)
-  Left(ZeroDivisionError('division by zero',))
+  Left(ZeroDivisionError('division by zero'))
   => ;; function either tests the value and calls functions accordingly
-  => (either print inc (safe-div 4 2))
+  => (either print (fn [x] (+ x 1)) (safe-div 4 2))
   3.0
-  => (either print inc (safe-div 1 0))
+  => (either print (fn [x] (+ x 1)) (safe-div 1 0))
   division by zero
 
 The identity monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.identity [identity-m]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [identity-m])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with identity monad is like let binding
   => (do-monad-return [a (identity-m 1) b (identity-m 2)] (+ a b))
   Identity(3)
@@ -72,8 +73,8 @@ The lazy monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.lazy [force]])
-  => (require [hymn.types.lazy [lazy]])
+  => (import hymn.dsl [force])
+  => (require hymn.dsl [lazy])
   => ;; lazy computation implemented as monad
   => ;; macro lazy creates deferred computation
   => (setv a (lazy (print "evaluate a") 42))
@@ -100,7 +101,7 @@ The lazy monad
   => ;; force on values other than lazy return the value unchanged
   => (force 42)
   42
-  => (require [hymn.macros [do-monad-return]])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with lazy monad
   => (setv c (do-monad-return
   ...          [x (lazy (print "get x") 1)
@@ -122,30 +123,30 @@ The list monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.list [list-m]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [list-m])
+  => (require hymn.dsl [do-monad-return])
   => ;; use list-m contructor to turn sequence into list monad
   => (setv xs (list-m (range 2)))
   => (setv ys (list-m (range 3)))
   => ;; do notation with list monad is list comprehension
-  => (list (do-monad-return [x xs y ys :when (not (zero? y))] (/ x y)) )
-  [0.0, 0.0, 1.0, 0.5]
-  => (require [hymn.types.list [~]])
-  => ;; ~ is the tag macro for list-m
+  => (list (do-monad-return [x xs y ys :when (not (= 0 y))] (/ x y)))
+  [0.0 0.0 1.0 0.5]
+  => (require hymn.dsl :readers [@])
+  => ;; @ is the reader macro for list-m
   => (list
   ...  (do-monad-return
-  ...    [x #~ (range 2)
-  ...     y #~ (range 3)
-  ...     :when (not (zero? y))]
+  ...    [x #@ (range 2)
+  ...     y #@ (range 3)
+  ...     :when (not (= 0 y))]
   ...    (/ x y)))
-  [0.0, 0.0, 1.0, 0.5]
+  [0.0 0.0 1.0 0.5]
 
 The maybe monad
 
 .. code-block:: clojure
 
-  => (import hymn.types.maybe [Just Nothing maybe])
-  => (require hymn.macros [do-monad-return])
+  => (import hymn.dsl [Just Nothing maybe])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with maybe monad
   => (do-monad-return [a (Just 1) b (Just 1)] (/ a b))
   Just(1.0)
@@ -154,6 +155,7 @@ The maybe monad
   Nothing
   => ;; maybe is a function decorator that wraps return value into maybe
   => ;; a safe-div with maybe monad
+  => (import hy.pyops [/])
   => (setv safe-div (maybe /))
   => (safe-div 42 42)
   Just(1.0)
@@ -166,11 +168,11 @@ The reader monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.reader [lookup]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [lookup-reader])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with reader monad,
   => ;; lookup assumes the environment is subscriptable
-  => (setv r (do-monad-return [a (lookup 'a) b (lookup 'b)] (+ a b)))
+  => (setv r (do-monad-return [a (lookup-reader 'a) b (lookup-reader 'b)] (+ a b)))
   => ;; run reader monad r with environment
   => (.run r {'a 1 'b 2})
   3
@@ -179,21 +181,21 @@ The state monad
 
 .. code-block::
 
-  => (import [hymn.types.state [lookup set-value]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [lookup-state set-value])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with state monad,
   => ;; set-value sets the value with key in the state
-  => (setv s (do-monad-return [x (lookup "a") _ (set-value "b" (inc x))] x))
+  => (setv s (do-monad-return [x (lookup-state "a") _ (set-value "b" (+ x 1))] x))
   => ;; run state monad s with initial state
   => (.run s {"a" 1})
-  (1, {'a': 1, 'b': 2})
+  #(1 {"a" 1  "b" 2})
 
 The writer monad
 
 .. code-block:: clojure
 
-  => (import [hymn.types.writer [tell]])
-  => (require [hymn.macros [do-monad-return]])
+  => (import hymn.dsl [tell])
+  => (require hymn.dsl [do-monad-return])
   => ;; do notation with writer monad
   => (do-monad-return [_ (tell "hello") _ (tell " world")] None)
   StrWriter((None, 'hello world'))
@@ -205,60 +207,62 @@ Operations on monads
 
 .. code-block:: clojure
 
-  => (import [hymn.operations [lift]])
+  => (import hymn.dsl [lift])
   => ;; lift promotes function into monad
+  => (import hy.pyops [+])
   => (setv m+ (lift +))
   => ;; lifted function can work on any monad
   => ;; on the maybe monad
-  => (import [hymn.types.maybe [Just Nothing]])
+  => (import hymn.dsl [Just Nothing])
   => (m+ (Just 1) (Just 2))
   Just(3)
   => (m+ (Just 1) Nothing)
   Nothing
   => ;; on the either monad
-  => (import [hymn.types.either [Left Right]])
+  => (import hymn.dsl [Left Right])
   => (m+ (Right 1) (Right 2))
   Right(3)
   => (m+ (Left 1) (Right 2))
   Left(1)
   => ;; on the list monad
-  => (import [hymn.types.list [list-m]])
+  => (import hymn.dsl [list-m])
   => (list (m+ (list-m "ab") (list-m "123")))
-  ['a1', 'a2', 'a3', 'b1', 'b2', 'b3']
+  ["a1" "a2" "a3" "b1" "b2" "b3"]
   => (list (m+ (list-m "+-") (list-m "123") (list-m "xy")))
-  ['+1x', '+1y', '+2x', '+2y', '+3x', '+3y', '-1x', '-1y', '-2x', '-2y', '-3x', '-3y']
+  ["+1x" "+1y" "+2x" "+2y" "+3x" "+3y" "-1x" "-1y" "-2x" "-2y" "-3x" "-3y"]
   => ;; can be used as normal function
+  => (import functools [reduce])
   => (reduce m+ [(Just 1) (Just 2) (Just 3)])
   Just(6)
   => (reduce m+ [(Just 1) Nothing (Just 3)])
   Nothing
-  => ;; <- is an alias of lookup
-  => (import [hymn.types.reader [<-]])
-  => (require [hymn.macros [^]])
-  => ;; ^ is the tag macro for lift
-  => (setv p (#^ print (<- 'message) :end (<- 'end)))
+  => ;; <-r is an alias of lookup-reader
+  => (import hymn.dsl [<-r])
+  => (require hymn.dsl :readers [^])
+  => ;; ^ is the reader macro for lift
+  => (setv p (#^ print (<-r 'message) :end (<-r 'end)))
   => (.run p {'message "Hello world" 'end "!\n"})
   Hello world!
   => ;; pseudo random number - linear congruential generator
-  => (import [hymn.types.state [get-state set-state]])
+  => (import hymn.dsl [state-m get-state set-state])
   => (setv random
   ...      (>> get-state
-  ...          (fn [s] (-> s (* 69069) inc (% (** 2 32))
-  ...          set-state))))
+  ...          (fn [s] (state-m.unit (% (+ (* s 69069) 1) (** 2 32))))
+  ...          set-state))
   => (.run random 1234)
-  (1234, 85231147)
+  #(1234 85231147)
   => ;; random can be even shorter by using modify
-  => (import [hymn.types.state [modify]])
-  => (setv random (modify (fn [s] (-> s (* 69069) inc (% (** 2 32))))))
+  => (import hymn.dsl [modify])
+  => (setv random (modify (fn [s] (% (+ (* s 69069) 1) (** 2 32)))))
   => (.run random 1234)
-  (1234, 85231147)
+  #(1234 85231147)
   => ;; use replicate to do computation repeatly
-  => (import [hymn.operations [replicate]])
+  => (import hymn.dsl [replicate])
   => (.evaluate (replicate 5 random) 42)
-  [42, 2900899, 2793697416, 2186085609, 1171637142]
+  [42 2900899 2793697416 2186085609 1171637142]
   => ;; sequence on writer monad
-  => (import [hymn.operations [sequence]])
-  => (import [hymn.types.writer [tell]])
+  => (import hymn.dsl [sequence])
+  => (import hymn.dsl [tell])
   => (.execute (sequence (map tell (range 1 101))))
   5050
 
@@ -287,7 +291,9 @@ Using Hymn in Python
 Requirements
 ============
 
-- hy >= 0.19.0
+- hy >= 0.27.0
+
+For hy version 0.19, please install hymn 0.9
 
 For hy version 0.14, please install hymn 0.8
 
@@ -306,11 +312,6 @@ Installation
 Install from PyPI::
 
   pip install hymn
-
-Install from source, download source package, decompress, then :code:`cd` into
-source directory, run::
-
-  make install
 
 
 License
