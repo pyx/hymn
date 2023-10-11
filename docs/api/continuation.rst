@@ -1,19 +1,28 @@
 The Continuation Monad
 ======================
 
-.. automodule:: hymn.types.continuation
-  :members:
-  :show-inheritance:
+.. module:: hymn.types.continuation
 
-.. function:: unit
-  :noindex:
+.. class:: Continuation
 
-  alias of :meth:`Continuation.unit`
+  the continuation monad
 
-.. function:: run
-  :noindex:
+  .. method:: bind(self, f)
 
-  alias of :meth:`Continuation.run`
+    the bind operation of :class:`Continuation`
+
+  .. method:: unit(cls, value)
+    :classmethod:
+
+    the unit of continuation monad
+
+  .. method:: run(self, k=identity)
+
+    run the continuation
+
+.. function:: call_cc(f)
+
+  call with current continuation
 
 
 Hy Specific API
@@ -24,35 +33,30 @@ Hy Specific API
 
   alias of :class:`Continuation`
 
+.. function:: call/cc
 
-Tag Macro
-^^^^^^^^^
+  alias of :func:`call_cc`
+
+
+Reader Macro
+^^^^^^^^^^^^
 
 .. function:: < [v]
 
   create a :class:`Continuation` of :code:`v`
 
 
-Functions
-^^^^^^^^^
-
-.. function:: call-cc
-
-  alias of :func:`call_cc`
-
-
 Examples
 --------
-
 
 Do Notation
 ^^^^^^^^^^^
 
 .. code-block:: clojure
 
-  => (import [hymn.types.continuation [cont-m]])
-  => (require [hymn.macros [do-monad-return]])
-  => (.run (do-monad-return [a (cont-m.unit 1)] (inc a)))
+  => (import hymn.types.continuation [cont-m])
+  => (require hymn.macros [do-monad-return])
+  => (.run (do-monad-return [a (cont-m.unit 1)] (+ a 1)))
   2
 
 
@@ -63,28 +67,28 @@ Operations
 
 .. code-block:: clojure
 
-  => (import [hymn.types.continuation [call-cc cont-m]])
-  => (require [hymn.macros [m-when do-monad-with]])
+  => (import hymn.types.continuation [call/cc cont-m])
+  => (require hymn.macros [m-when do-monad-with])
   => (defn search [n seq]
-  ...    (call-cc
+  ...    (call/cc
   ...      (fn [exit]
   ...        (do-monad-with cont-m
   ...          [_ (m-when (in n seq) (exit (.index seq n)))]
   ...          "not found."))))
   => (.run (search 0 [1 2 3 4 5]))
-  'not found.'
+  "not found."
   => (.run (search 0 [1 2 3 0 5]))
   3
 
 
-Tag Macro
-^^^^^^^^^
+Reader Macro
+^^^^^^^^^^^^
 
 .. code-block:: clojure
 
-  => (require [hymn.types.continuation [<]])
+  => (require hymn.types.continuation :readers [<])
   => (#< 42)
   42
-  => (require [hymn.macros [do-monad-return]])
+  => (require hymn.macros [do-monad-return])
   => (.run (do-monad-return [a #< 25 b #< 17] (+ a b)))
   42
