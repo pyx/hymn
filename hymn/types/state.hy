@@ -5,13 +5,10 @@
 
 (import
   operator [itemgetter]
-  hymn.types.monad [Monad]
-  hyrule.misc [constantly])
+  ..utils [constantly]
+  .monad [Monad])
 
-(require
-  hymn.macros [do-monad-return]
-  hyrule.collections [assoc]
-  hyrule.argmove [doto])
+(require hymn.macros [do-monad-return])
 
 (defclass State [Monad]
   "the state monad
@@ -27,7 +24,9 @@
     second"
     ((type self) (fn [s] (setv #(a ns) (.run self s)) (.run (f a) ns))))
 
-  (defn [classmethod] unit [cls a] "the unit of state monad" (cls (fn [s] #(a s))))
+  (defn [classmethod] unit [cls a]
+    "the unit of state monad"
+    (cls (fn [s] #(a s))))
 
   (defn evaluate [self s]
     "evaluate state monad with initial state and return the result"
@@ -41,20 +40,11 @@
     "evaluate state monad with initial state, return result and state"
     (self.value s)))
 
-;; alias
-(setv state-m State
-      unit State.unit
-      evaluate State.evaluate
-      execute State.execute
-      run State.run)
-
 (defn [State] get-state [s] "return the current state" #(s s))
-(setv <-state get-state)
 
 (defn lookup [key]
   "return a monadic function that lookup the vaule with key in the state"
   (gets (itemgetter key)))
-(setv <- lookup)
 
 ;; gets specific component of the state, using a projection function f
 (setv gets get-state.fmap)
@@ -66,24 +56,39 @@
 (defn set-state [s]
   "replace the current state and return the previous one"
   (State (fn [ps] #(ps s))))
-(setv state<- set-state)
 
 (defn set-value [key value]
   "return a monadic function that set the vaule of key in the state"
-  (modify (fn [s] (doto ((type s) s) (assoc key value)))))
+  (modify (fn [s] (setv m ((type s) s) (get m key) value) m)))
 
 (defn set-values [#** keys/values]
   "return a monadic function that set the vaules of keys in the state"
-  (modify (fn [s] (doto ((type s) s) (.update keys/values)))))
+  (modify (fn [s] (setv m ((type s) s)) (.update m keys/values) m)))
 
 (defn update [key f]
   "return a monadic function that update the vaule by f with key in the state"
   (do-monad-return
     [s get-state
      value (<- key)
-     _ (set-state (doto ((type s) s) (assoc key (f value))))]
+     _ (set-state (do (setv m ((type s) s) (get m key) (f value)) m))]
     value))
 
 (defn update-value [key value]
   "return a monadic function that update the vaule with key in the state"
   (update key (constantly value)))
+
+;; alias
+(setv state-m State
+      <-state get-state
+      <- lookup
+      state<- set-state)
+
+(export
+  :objects [state-m State
+            get-state <-state
+            lookup <-
+            gets
+            modify
+            set-state state<-
+            set-value set-values
+            update update-value])
