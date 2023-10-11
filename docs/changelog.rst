@@ -1,6 +1,12 @@
 Changelog
 =========
 
+- 1.0
+
+  - Backward incompatible change supporting hy 0.27
+  - Support python 3.8+
+  - Renamed reader macro ~ to @
+
 - 0.9
 
   - Backward incompatible change supporting hy 0.19
