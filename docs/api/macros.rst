@@ -146,7 +146,7 @@ All do monad macros support :code:`:when` if the monad is of type
   create reader 3
   create reader 4
   => (.run readers [11 12 13 14 15 16])
-  [11 12 13 14 15
+  [11 12 13 14 15]
   => (.run readers "abcdefg")
   ["a" "b" "c" "d" "e"]
   => ;; with writer monad
