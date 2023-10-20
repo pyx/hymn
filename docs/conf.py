@@ -4,6 +4,7 @@
 import pathlib
 import sys
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
+import hymn
 
 extensions = [
     'sphinx.ext.doctest',
@@ -18,7 +19,7 @@ project = u'Hymn'
 copyright = u'2014-2023, Philip Xu'
 author = u'Philip Xu'
 
-release = "1.0.0"
+release = hymn.__version__
 
 exclude_patterns = ['_build']
 
@@ -40,6 +41,6 @@ man_pages = [
 
 texinfo_documents = [
   (master_doc, 'Hymn', u'Hymn Documentation',
-   author, 'Hymn', "Hy Monad Notation - a monad library for Hy",
+   author, 'Hymn', hymn.__doc__,
    'Miscellaneous'),
 ]
