@@ -10,7 +10,7 @@
   .monoid [Monoid])
 
 (defreader @ (setv seq (.parse-one-form &reader))
-  `(hy.M.hymn.types.list.List ~seq))
+  `(hy.I.hymn.types.list.List ~seq))
 
 (defclass _Zero []
   "descriptor that returns an empty List"

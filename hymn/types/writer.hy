@@ -9,7 +9,7 @@
   .monad [Monad])
 
 (defreader + (setv w (.parse-one-form &reader))
-  `(hy.M.hymn.types.writer.tell ~w))
+  `(hy.I.hymn.types.writer.tell ~w))
 
 (defclass Writer [Monad]
   "the writer monad

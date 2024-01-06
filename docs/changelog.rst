@@ -1,6 +1,10 @@
 Changelog
 =========
 
+- 1.1
+
+  - Backward incompatible change supporting hy 0.28
+
 - 1.0
 
   - Backward incompatible change supporting hy 0.27

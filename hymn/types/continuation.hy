@@ -8,7 +8,7 @@
   .monad [Monad])
 
 (defreader < (setv v (.parse-one-form &reader))
-  `(hy.M.hymn.types.continuation.Continuation.unit ~v))
+  `(hy.I.hymn.types.continuation.Continuation.unit ~v))
 
 (defclass Continuation [Monad]
   "the continuation monad"

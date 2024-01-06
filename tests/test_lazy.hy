@@ -4,7 +4,7 @@
 
 (import hymn.types.lazy [lazy-m force lazy?])
 
-(require hymn.types.lazy [lazy])
+(require hymn.dsl [lazy])
 
 (defn test-macro-lazy []
   "macro lazy should create deferred computation"

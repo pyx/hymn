@@ -9,7 +9,7 @@
 
 (defmacro lazy [#* exprs]
   "create a :class:`Lazy` from expressions"
-  `(hy.M.hymn.types.lazy.lazy-m (fn [] ~@exprs)))
+  `(hy.I.hymn.types.lazy.lazy-m (fn [] ~@exprs)))
 
 (defclass Lazy [Monad]
   "the lazy monad

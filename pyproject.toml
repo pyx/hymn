@@ -5,7 +5,7 @@ authors = [
     {name = "Philip Xu", email = "pyx@xrefactor.com"},
 ]
 dependencies = [
-    "hy>=0.27.0",
+    "hy>=0.28.0",
 ]
 dynamic = ["version"]
 requires-python = ">=3.8,<3.13"

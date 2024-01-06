@@ -9,7 +9,7 @@
 
 ;; lift reader macro, e.g. #^ + => (lift +)
 (defreader ^ (setv f (.parse-one-form &reader))
-  `(hy.M.hymn.operations.lift ~f))
+  `(hy.I.hymn.operations.lift ~f))
 
 ;; monad return reader macro, replaced by 'm-return, used in do-monad,
 ;; e.g.
@@ -76,7 +76,7 @@
 (defmacro m-for [forms #* mexpr]
   "macro for sequencing monadic actions"
   (setv [n seq] forms)
-  `(hy.M.hymn.operations.m-map (fn [~n] ~@mexpr) ~seq))
+  `(hy.I.hymn.operations.m-map (fn [~n] ~@mexpr) ~seq))
 
 (defmacro m-when [test mexpr]
   "conditional execution of monadic expressions"

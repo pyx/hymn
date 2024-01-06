@@ -11,7 +11,7 @@
   .monoid [Monoid])
 
 (defreader ? (setv f (.parse-one-form &reader))
-  `(hy.M.hymn.types.maybe.maybe ~f))
+  `(hy.I.hymn.types.maybe.maybe ~f))
 
 (defclass Maybe [MonadPlus Monoid Ord]
   "the maybe monad

@@ -9,7 +9,7 @@
   .monadplus [MonadPlus])
 
 (defreader | (setv f (.parse-one-form &reader))
-  `(hy.M.hymn.types.either.failsafe ~f))
+  `(hy.I.hymn.types.either.failsafe ~f))
 
 ;; NOTE:
 ;; Either itself is not MonadPlus or even Monad in haskell, only Either e is
